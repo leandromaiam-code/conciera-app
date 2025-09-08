@@ -12,16 +12,6 @@ interface DashboardViewProps {
 export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
   const [isLoading] = useState(false); // For demonstration of skeleton states
 
-  // Simulate reading from configuration - in real app this would come from context/props
-  const [activeChannels] = useState({
-    whatsappAtivo: true,
-    telefoneAtivo: true,
-    emailAtivo: false,
-    portalAtivo: false,
-    instagramAtivo: false,
-    formulariosAtivo: false
-  });
-
   if (isLoading) {
     return (
       <div className="space-y-8 animate-fade-in">
@@ -41,7 +31,6 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
         {/* Orchestration Panel - Takes 2 columns */}
         <OrchestrationPanel 
           onWhatsAppClick={onWhatsAppClick} 
-          activeChannels={activeChannels}
         />
 
         {/* KPI Cards - Takes 1 column */}
