@@ -3,6 +3,11 @@ import { LoginCard } from "@/components/ui/login-card";
 import { AppLayout } from "@/components/layout/app-layout";
 import { DashboardView } from "@/components/dashboard/dashboard-view";
 import { WhatsAppSimulation } from "@/components/dashboard/whatsapp-simulation";
+import { AgendaView } from "@/pages/AgendaView";
+import { AnalyticsView } from "@/pages/AnalyticsView";
+import { ConversasView } from "@/pages/ConversasView";
+import { PlaybooksView } from "@/pages/PlaybooksView";
+import { ConfiguracoesView } from "@/pages/ConfiguracoesView";
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,60 +27,15 @@ const Index = () => {
       case "dashboard":
         return <DashboardView onWhatsAppClick={handleWhatsAppClick} />;
       case "agenda":
-        return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Controle de Agendamentos</h2>
-              <p className="text-gray-600 text-sm">
-                Funcionalidade em desenvolvimento - Interface de gestão da agenda em breve.
-              </p>
-            </div>
-          </div>
-        );
+        return <AgendaView />;
       case "analytics":
-        return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Analytics e Relatórios</h2>
-              <p className="text-gray-600 text-sm">
-                Métricas avançadas e relatórios personalizados em desenvolvimento.
-              </p>
-            </div>
-          </div>
-        );
+        return <AnalyticsView />;
       case "conversas":
-        return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Histórico de Conversas</h2>
-              <p className="text-gray-600 text-sm">
-                Acesso completo ao histórico de interações em breve.
-              </p>
-            </div>
-          </div>
-        );
+        return <ConversasView />;
       case "playbooks":
-        return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Gestão de Playbooks</h2>
-              <p className="text-gray-600 text-sm">
-                Centro de controle da inteligência de IA em desenvolvimento.
-              </p>
-            </div>
-          </div>
-        );
+        return <PlaybooksView />;
       case "configuracoes":
-        return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Configurações do Sistema</h2>
-              <p className="text-gray-600 text-sm">
-                Painel de configurações e preferências em breve.
-              </p>
-            </div>
-          </div>
-        );
+        return <ConfiguracoesView />;
       default:
         return <DashboardView onWhatsAppClick={handleWhatsAppClick} />;
     }

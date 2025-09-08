@@ -6,8 +6,7 @@ import {
   BookOpen,
   Settings
 } from "lucide-react";
-import { useState } from "react";
-import concieraLogo from "@/assets/conciera-logo.png";
+import { ConcieraLogo } from "@/components/ui/logo";
 
 interface AppSidebarProps {
   currentPage: string;
@@ -28,11 +27,7 @@ export const AppSidebar = ({ currentPage, onPageChange }: AppSidebarProps) => {
     <aside className="fixed left-0 top-0 h-full w-20 bg-gray-900 z-40 flex flex-col items-center py-4">
       {/* Logo */}
       <div className="mb-8">
-        <img 
-          src={concieraLogo} 
-          alt="CONCIERA" 
-          className="w-10 h-10 object-contain filter brightness-0 invert"
-        />
+        <ConcieraLogo className="w-10 h-10 text-white" />
       </div>
 
       {/* Navigation Items */}
