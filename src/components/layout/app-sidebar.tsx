@@ -1,0 +1,60 @@
+import { 
+  LayoutDashboard, 
+  Calendar,
+  BarChart3,
+  MessageSquare,
+  BookOpen,
+  Settings
+} from "lucide-react";
+import { useState } from "react";
+import concieraLogo from "@/assets/conciera-logo.png";
+
+interface AppSidebarProps {
+  currentPage: string;
+  onPageChange: (page: string) => void;
+}
+
+const navigationItems = [
+  { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { id: "agenda", icon: Calendar, label: "Agendamentos" },
+  { id: "analytics", icon: BarChart3, label: "Analytics" },
+  { id: "conversas", icon: MessageSquare, label: "Conversas" },
+  { id: "playbooks", icon: BookOpen, label: "Playbooks" },
+  { id: "configuracoes", icon: Settings, label: "Configurações" },
+];
+
+export const AppSidebar = ({ currentPage, onPageChange }: AppSidebarProps) => {
+  return (
+    <aside className="fixed left-0 top-0 h-full w-20 bg-onyx z-40 flex flex-col items-center py-sm">
+      {/* Logo */}
+      <div className="mb-lg">
+        <img 
+          src={concieraLogo} 
+          alt="CONCIERA" 
+          className="w-10 h-10 object-contain filter brightness-0 invert"
+        />
+      </div>
+
+      {/* Navigation Items */}
+      <nav className="flex flex-col gap-xxs w-full px-xxs">
+        {navigationItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = currentPage === item.id;
+          
+          return (
+            <button
+              key={item.id}
+              onClick={() => onPageChange(item.id)}
+              className={`nav-item w-12 h-12 flex items-center justify-center ${
+                isActive ? 'active' : ''
+              }`}
+              title={item.label}
+            >
+              <Icon size={24} />
+            </button>
+          );
+        })}
+      </nav>
+    </aside>
+  );
+};

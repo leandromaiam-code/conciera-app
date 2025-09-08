@@ -13,7 +13,23 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'playfair': ['Playfair Display', 'serif'],
+        'inter': ['Inter', 'sans-serif'],
+      },
       colors: {
+        /* CONCIERA Brand Colors */
+        onyx: "hsl(var(--onyx))",
+        marfim: "hsl(var(--marfim))",
+        dourado: "hsl(var(--dourado))",
+        grafite: "hsl(var(--grafite))",
+        esmeralda: "hsl(var(--esmeralda))",
+        'branco-puro': "hsl(var(--branco-puro))",
+        'cinza-borda': "hsl(var(--cinza-borda))",
+        'cinza-fundo-hover': "hsl(var(--cinza-fundo-hover))",
+        erro: "hsl(var(--erro))",
+        
+        /* shadcn compatibility */
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -58,10 +74,25 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      spacing: {
+        'xxs': 'var(--space-xxs)',
+        'xs': 'var(--space-xs)', 
+        'sm': 'var(--space-sm)',
+        'md': 'var(--space-md)',
+        'lg': 'var(--space-lg)', 
+        'xl': 'var(--space-xl)',
+        'xxl': 'var(--space-xxl)',
+      },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        'sm': 'var(--radius-sm)',
+        DEFAULT: 'var(--radius)',
+        'lg': 'var(--radius-lg)',
+        'md': 'calc(var(--radius) - 2px)',
+      },
+      boxShadow: {
+        'sm': 'var(--shadow-sm)',
+        'md': 'var(--shadow-md)', 
+        'lg': 'var(--shadow-lg)',
       },
       keyframes: {
         "accordion-down": {
@@ -80,10 +111,33 @@ export default {
             height: "0",
           },
         },
+        "pulse-ring": {
+          "0%": {
+            "box-shadow": "0 0 0 0 hsl(var(--dourado) / 0.4)",
+          },
+          "70%": {
+            "box-shadow": "0 0 0 20px hsl(var(--dourado) / 0)",
+          },
+          "100%": {
+            "box-shadow": "0 0 0 0 hsl(var(--dourado) / 0)",
+          },
+        },
+        "fade-in": {
+          from: {
+            opacity: "0",
+            transform: "translateY(10px)",
+          },
+          to: {
+            opacity: "1", 
+            transform: "translateY(0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-ring": "pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "fade-in": "fade-in 400ms cubic-bezier(0.4, 0, 0.2, 1)",
       },
     },
   },

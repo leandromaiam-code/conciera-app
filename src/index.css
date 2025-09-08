@@ -2,95 +2,249 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* CONCIERA Design System - Fonte Canônica da Verdade
+   Sistema de design completo seguindo especificação v6.0
+   Todas as cores devem ser HSL para consistência */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* === CONCIERA Brand Colors === */
+    /* Primárias */
+    --onyx: 210 14% 5%;          /* #0B0D0E - Texto principal, fundos de alto contraste */
+    --marfim: 45 29% 95%;        /* #F5F2E9 - Fundo principal das telas */
+    --dourado: 51 61% 52%;       /* #D4AF37 - Acentos, links, estados hover/foco */
+    --grafite: 213 9% 19%;       /* #2E3134 - Texto secundário, bordas, ícones */
+    --esmeralda: 171 85% 23%;    /* #0F6D5C - Sucesso, validação, status ativo */
+    
+    /* Neutras para UI */
+    --branco-puro: 0 0% 100%;    /* #FFFFFF - Fundo de componentes para contraste */
+    --cinza-borda: 213 9% 19% / 0.2;       /* Bordas padrão */
+    --cinza-fundo-hover: 213 9% 19% / 0.05; /* Hover sutil para listas */
+    
+    /* Semânticas */
+    --erro: 0 93% 41%;           /* #B00020 - Mensagens de erro */
+    
+    /* === Mapeamento para shadcn === */
+    --background: var(--marfim);
+    --foreground: var(--onyx);
+    --card: var(--branco-puro);
+    --card-foreground: var(--onyx);
+    --popover: var(--branco-puro);
+    --popover-foreground: var(--onyx);
+    --primary: var(--onyx);
+    --primary-foreground: var(--branco-puro);
+    --secondary: var(--grafite);
+    --secondary-foreground: var(--branco-puro);
+    --muted: var(--grafite);
+    --muted-foreground: var(--branco-puro);
+    --accent: var(--dourado);
+    --accent-foreground: var(--onyx);
+    --destructive: var(--erro);
+    --destructive-foreground: var(--branco-puro);
+    --border: var(--cinza-borda);
+    --input: var(--cinza-borda);
+    --ring: var(--dourado);
+    
+    /* === Espaçamento Baseado em 8px === */
+    --space-xxs: 4px;   /* Entre ícone e texto */
+    --space-xs: 8px;    /* Espaçamento interno mínimo */
+    --space-sm: 16px;   /* Entre elementos relacionados */
+    --space-md: 24px;   /* Interno em cards e painéis */
+    --space-lg: 32px;   /* Entre cards ou seções */
+    --space-xl: 48px;   /* Entre grandes blocos */
+    --space-xxl: 64px;  /* Margens principais */
+    
+    /* === Raios de Borda === */
+    --radius-sm: 8px;   /* Botões e inputs */
+    --radius: 12px;     /* Padrão para cards */
+    --radius-lg: 16px;  /* Cards especiais */
+    
+    /* === Sombras e Elevação === */
+    --shadow-sm: 0px 2px 4px hsl(var(--onyx) / 0.05);     /* Hover interativo */
+    --shadow-md: 0px 4px 12px hsl(var(--onyx) / 0.08);    /* Cards e painéis */
+    --shadow-lg: 0px 10px 30px hsl(var(--onyx) / 0.12);   /* Modais e painéis flutuantes */
+    
+    /* Sidebar específico para manter compatibilidade */
+    --sidebar-background: var(--onyx);
+    --sidebar-foreground: var(--grafite);
+    --sidebar-primary: var(--dourado);
+    --sidebar-primary-foreground: var(--onyx);
+    --sidebar-accent: var(--grafite);
+    --sidebar-accent-foreground: var(--dourado);
+    --sidebar-border: var(--grafite);
+    --sidebar-ring: var(--dourado);
+  }
+}
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+@layer base {
+  * {
+    @apply border-border;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  body {
+    @apply bg-background text-foreground font-inter;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+  /* === Tipografia === */
+  h1, h2, h3 {
+    @apply font-playfair;
+    letter-spacing: -0.02em;
+  }
+  
+  h1 {
+    @apply text-4xl font-bold;
+    font-size: 36px;
+    letter-spacing: -0.5px;
+  }
+  
+  h2 {
+    @apply text-2xl font-semibold;
+    font-size: 24px;
+    letter-spacing: -0.25px;
+  }
+  
+  h3 {
+    @apply text-xl font-semibold;
+    font-size: 20px;
+    letter-spacing: 0px;
+  }
+  
+  p {
+    @apply text-base;
+    font-size: 16px;
+    letter-spacing: 0.25px;
+  }
+  
+  .text-secondary {
+    @apply text-grafite;
+    font-size: 14px;
+    letter-spacing: 0.25px;
+  }
+  
+  .text-micro {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    @apply font-medium;
+  }
+}
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+@layer components {
+  /* === Animações Principais === */
+  .animate-pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-slide-in-right {
+    animation: slide-in-right 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* === Transições Elegantes === */
+  .transition-elegant {
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* === Elevação Interativa === */
+  .hover-elevate {
+    @apply transition-elegant;
+  }
+  
+  .hover-elevate:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  /* === Cards de KPI === */
+  .kpi-card {
+    @apply bg-branco-puro p-6 rounded-xl;
+    box-shadow: var(--shadow-md);
+  }
+  
+  /* === Estados de Navegação === */
+  .nav-item {
+    @apply transition-elegant p-2 rounded-lg;
+  }
+  
+  .nav-item:hover,
+  .nav-item.active {
+    @apply bg-grafite text-dourado;
+  }
+  
+  /* === Inputs com Foco Dourado === */
+  .input-elegant {
+    @apply border border-cinza-borda rounded-lg px-4 py-3 transition-elegant bg-white/50;
+  }
+  
+  .input-elegant:focus {
+    @apply outline-none ring-2 ring-dourado border-dourado;
+  }
+  
+  /* === Botões com Variantes === */
+  .btn-primary {
+    @apply bg-onyx text-branco-puro px-6 py-3 rounded-lg font-semibold transition-elegant hover-elevate;
+  }
+  
+  .btn-primary:hover {
+    @apply bg-grafite;
+  }
+  
+  .btn-secondary {
+    @apply border border-cinza-borda text-grafite px-6 py-3 rounded-lg font-semibold transition-elegant hover-elevate;
+  }
+  
+  .btn-quick-reply {
+    @apply bg-dourado text-onyx px-4 py-2 rounded-full text-sm font-semibold transition-elegant hover-elevate;
+  }
+}
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--dourado) / 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 20px hsl(var(--dourado) / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--dourado) / 0);
+  }
+}
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
 
