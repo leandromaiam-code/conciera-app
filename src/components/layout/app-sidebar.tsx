@@ -40,14 +40,19 @@ export const AppSidebar = ({ currentPage, onPageChange }: AppSidebarProps) => {
             <button
               key={item.id}
               onClick={() => onPageChange(item.id)}
-              className={`w-12 h-12 flex items-center justify-center rounded-lg transition-all duration-200 ${
+              className={`nav-item w-12 h-12 flex items-center justify-center rounded-lg relative group ${
                 isActive 
-                  ? 'bg-gray-700 text-yellow-500' 
-                  : 'text-gray-400 hover:bg-gray-700 hover:text-yellow-500'
+                  ? 'active' 
+                  : ''
               }`}
               title={item.label}
             >
-              <Icon size={24} />
+              <Icon size={24} className="transition-transform group-hover:scale-110" />
+              
+              {/* Tooltip */}
+              <span className="absolute left-full ml-3 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-onyx px-2 py-1 text-xs text-branco-puro opacity-0 transition-opacity group-hover:opacity-100 z-50">
+                {item.label}
+              </span>
             </button>
           );
         })}

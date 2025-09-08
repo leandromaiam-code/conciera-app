@@ -1,5 +1,6 @@
 import { MessageCircle, Phone, Mail, Users, Instagram, FileText } from "lucide-react";
 import { ConcieraLogo } from "@/components/ui/logo";
+import React from "react";
 
 interface ChannelNodeProps {
   icon: React.ElementType;
@@ -37,6 +38,13 @@ interface OrchestrationPanelProps {
 }
 
 export const OrchestrationPanel = ({ onWhatsAppClick, activeChannels }: OrchestrationPanelProps) => {
+  const [animateConnections, setAnimateConnections] = React.useState(false);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setAnimateConnections(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const defaultChannels = {
     whatsappAtivo: true,
     telefoneAtivo: true,
@@ -88,12 +96,42 @@ export const OrchestrationPanel = ({ onWhatsAppClick, activeChannels }: Orchestr
             </defs>
             
             {/* Lines to each channel - arranged in circle */}
-            <line x1="200" y1="150" x2="120" y2="80" stroke="url(#connectionGradient)" strokeWidth="2" />
-            <line x1="200" y1="150" x2="280" y2="80" stroke="url(#connectionGradient)" strokeWidth="2" />
-            <line x1="200" y1="150" x2="320" y2="150" stroke="url(#connectionGradient)" strokeWidth="2" />
-            <line x1="200" y1="150" x2="280" y2="220" stroke="url(#connectionGradient)" strokeWidth="2" />
-            <line x1="200" y1="150" x2="120" y2="220" stroke="url(#connectionGradient)" strokeWidth="2" />
-            <line x1="200" y1="150" x2="80" y2="150" stroke="url(#connectionGradient)" strokeWidth="2" />
+            <line x1="200" y1="150" x2="120" y2="80" 
+              stroke="url(#connectionGradient)" 
+              strokeWidth="2"
+              opacity={animateConnections ? "0.8" : "0"}
+              className="transition-opacity duration-1000"
+            />
+            <line x1="200" y1="150" x2="280" y2="80" 
+              stroke="url(#connectionGradient)" 
+              strokeWidth="2"
+              opacity={animateConnections ? "0.8" : "0"}
+              className="transition-opacity duration-1000 delay-200"
+            />
+            <line x1="200" y1="150" x2="320" y2="150" 
+              stroke="url(#connectionGradient)" 
+              strokeWidth="2"
+              opacity={animateConnections ? "0.8" : "0"}
+              className="transition-opacity duration-1000 delay-300"
+            />
+            <line x1="200" y1="150" x2="280" y2="220" 
+              stroke="url(#connectionGradient)" 
+              strokeWidth="2"
+              opacity={animateConnections ? "0.8" : "0"}
+              className="transition-opacity duration-1000 delay-400"
+            />
+            <line x1="200" y1="150" x2="120" y2="220" 
+              stroke="url(#connectionGradient)" 
+              strokeWidth="2"
+              opacity={animateConnections ? "0.8" : "0"}
+              className="transition-opacity duration-1000 delay-500"
+            />
+            <line x1="200" y1="150" x2="80" y2="150" 
+              stroke="url(#connectionGradient)" 
+              strokeWidth="2"
+              opacity={animateConnections ? "0.8" : "0"}
+              className="transition-opacity duration-1000 delay-600"
+            />
           </svg>
 
           {/* Channel Nodes - arranged in circle */}
