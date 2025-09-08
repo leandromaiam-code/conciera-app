@@ -47,7 +47,14 @@ export const AppSidebar = ({ currentPage, onPageChange }: AppSidebarProps) => {
               }`}
               title={item.label}
             >
-              <Icon size={24} className="transition-transform group-hover:scale-110" />
+              <Icon 
+                size={24} 
+                className={`transition-elegant ${
+                  isActive 
+                    ? 'text-dourado' 
+                    : 'text-branco-puro/70 hover:text-branco-puro group-hover:scale-110'
+                }`}
+              />
               
               {/* Tooltip */}
               <span className="absolute left-full ml-3 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-onyx px-2 py-1 text-xs text-branco-puro opacity-0 transition-opacity group-hover:opacity-100 z-50">

@@ -51,6 +51,8 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
             subtitle="Consultas confirmadas"
             value={24}
             trend={{ value: "+12%", isPositive: true }}
+            sparklineData={[18, 22, 19, 25, 21, 24]}
+            tooltipDescription="Agendamentos confirmados nas últimas 24 horas"
           />
           
           <KPICard
@@ -58,6 +60,8 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
             subtitle="Chat para agendamento"
             value="87%"
             trend={{ value: "+5%", isPositive: true }}
+            sparklineData={[82, 85, 83, 88, 86, 87]}
+            tooltipDescription="Percentual de conversas que resultaram em agendamento"
           />
         </div>
       </div>
@@ -69,6 +73,8 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
           subtitle="Últimas 24h"
           value={156}
           trend={{ value: "+18%", isPositive: true }}
+          sparklineData={[120, 135, 142, 138, 151, 156]}
+          tooltipDescription="Total de mensagens processadas automaticamente pelo sistema"
         />
         
         <KPICard
@@ -76,6 +82,8 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
           subtitle="Resolução automática"
           value="2.3s"
           trend={{ value: "-15%", isPositive: true }}
+          sparklineData={[2.8, 2.6, 2.4, 2.5, 2.2, 2.3]}
+          tooltipDescription="Tempo médio para processar e responder mensagens automaticamente"
         />
         
         <KPICard
@@ -83,6 +91,8 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
           subtitle="Avaliação média"
           value="4.8"
           trend={{ value: "+0.2", isPositive: true }}
+          sparklineData={[4.6, 4.7, 4.8, 4.7, 4.9, 4.8]}
+          tooltipDescription="Nota média das avaliações dos clientes (escala 1-5)"
         />
         
         <KPICard
@@ -90,6 +100,8 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
           subtitle="Via automação hoje"
           value="R$ 8.4k"
           trend={{ value: "+23%", isPositive: true }}
+          sparklineData={[6200, 7100, 7800, 7500, 8100, 8400]}
+          tooltipDescription="Receita total gerada através dos agendamentos automatizados"
         />
       </div>
 

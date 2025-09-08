@@ -24,9 +24,13 @@ export const AppLayout = ({ children, currentPage, onPageChange }: AppLayoutProp
   const pageTitle = getPageTitle(currentPage);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-marfim">
       <AppSidebar currentPage={currentPage} onPageChange={onPageChange} />
-      <AppHeader pageTitle={pageTitle} onPageChange={onPageChange} />
+      <AppHeader 
+        pageTitle={pageTitle} 
+        currentPage={currentPage}
+        onPageChange={onPageChange} 
+      />
       
       <main className="ml-20 pt-20 p-16">
         {children}
