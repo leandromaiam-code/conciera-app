@@ -1,6 +1,5 @@
-import { MessageCircle, Phone, Mail, Users } from "lucide-react";
-import { useState } from "react";
-import concieraLogo from "@/assets/conciera-logo.png";
+import { MessageCircle, Phone, Mail, Users, Instagram, FileText } from "lucide-react";
+import { ConcieraLogo } from "@/components/ui/logo";
 
 interface ChannelNodeProps {
   icon: React.ElementType;
@@ -27,10 +26,28 @@ const ChannelNode = ({ icon: Icon, name, isActive = false, onClick }: ChannelNod
 
 interface OrchestrationPanelProps {
   onWhatsAppClick: () => void;
+  activeChannels?: {
+    whatsappAtivo: boolean;
+    telefoneAtivo: boolean;
+    emailAtivo: boolean;
+    portalAtivo: boolean;
+    instagramAtivo: boolean;
+    formulariosAtivo: boolean;
+  };
 }
 
-export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps) => {
-  const [activeChannels] = useState(['whatsapp', 'phone']);
+export const OrchestrationPanel = ({ onWhatsAppClick, activeChannels }: OrchestrationPanelProps) => {
+  const defaultChannels = {
+    whatsappAtivo: true,
+    telefoneAtivo: true,
+    emailAtivo: false,
+    portalAtivo: false,
+    instagramAtivo: false,
+    formulariosAtivo: false
+  };
+  
+  const channels = activeChannels || defaultChannels;
+  const activeCount = Object.values(channels).filter(Boolean).length;
 
   return (
     <div className="col-span-2 bg-white/50 rounded-xl p-8 relative overflow-hidden">
@@ -53,11 +70,7 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
           {/* Central AI Node */}
           <div className="absolute z-20 flex flex-col items-center">
             <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center animate-pulse">
-              <img 
-                src={concieraLogo} 
-                alt="CONCIERA AI" 
-                className="w-8 h-8 object-contain filter brightness-0 invert" 
-              />
+              <ConcieraLogo className="w-8 h-8 text-white" />
             </div>
             <span className="mt-1 text-sm font-semibold text-gray-900">CONCIERA AI</span>
             <span className="text-xs text-green-600">● Online</span>
@@ -74,44 +87,62 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
               </linearGradient>
             </defs>
             
-            {/* Lines to each channel */}
-            <line x1="200" y1="150" x2="100" y2="100" stroke="url(#connectionGradient)" strokeWidth="2" />
-            <line x1="200" y1="150" x2="300" y2="100" stroke="url(#connectionGradient)" strokeWidth="2" />
-            <line x1="200" y1="150" x2="100" y2="200" stroke="url(#connectionGradient)" strokeWidth="2" />
-            <line x1="200" y1="150" x2="300" y2="200" stroke="url(#connectionGradient)" strokeWidth="2" />
+            {/* Lines to each channel - arranged in circle */}
+            <line x1="200" y1="150" x2="120" y2="80" stroke="url(#connectionGradient)" strokeWidth="2" />
+            <line x1="200" y1="150" x2="280" y2="80" stroke="url(#connectionGradient)" strokeWidth="2" />
+            <line x1="200" y1="150" x2="320" y2="150" stroke="url(#connectionGradient)" strokeWidth="2" />
+            <line x1="200" y1="150" x2="280" y2="220" stroke="url(#connectionGradient)" strokeWidth="2" />
+            <line x1="200" y1="150" x2="120" y2="220" stroke="url(#connectionGradient)" strokeWidth="2" />
+            <line x1="200" y1="150" x2="80" y2="150" stroke="url(#connectionGradient)" strokeWidth="2" />
           </svg>
 
-          {/* Channel Nodes */}
-          <div className="absolute top-8 left-16">
+          {/* Channel Nodes - arranged in circle */}
+          <div className="absolute top-4 left-28">
             <ChannelNode 
               icon={MessageCircle} 
               name="WhatsApp" 
-              isActive={activeChannels.includes('whatsapp')}
+              isActive={channels.whatsappAtivo}
               onClick={onWhatsAppClick}
             />
           </div>
           
-          <div className="absolute top-8 right-16">
+          <div className="absolute top-4 right-28">
             <ChannelNode 
               icon={Phone} 
               name="Telefone" 
-              isActive={activeChannels.includes('phone')}
+              isActive={channels.telefoneAtivo}
             />
           </div>
           
-          <div className="absolute bottom-8 left-16">
+          <div className="absolute top-1/2 -translate-y-1/2 right-4">
+            <ChannelNode 
+              icon={Instagram} 
+              name="Instagram" 
+              isActive={channels.instagramAtivo}
+            />
+          </div>
+          
+          <div className="absolute bottom-4 right-28">
             <ChannelNode 
               icon={Mail} 
               name="Email" 
-              isActive={false}
+              isActive={channels.emailAtivo}
             />
           </div>
           
-          <div className="absolute bottom-8 right-16">
+          <div className="absolute bottom-4 left-28">
+            <ChannelNode 
+              icon={FileText} 
+              name="Formulários" 
+              isActive={channels.formulariosAtivo}
+            />
+          </div>
+          
+          <div className="absolute top-1/2 -translate-y-1/2 left-4">
             <ChannelNode 
               icon={Users} 
               name="Portal" 
-              isActive={false}
+              isActive={channels.portalAtivo}
             />
           </div>
         </div>
@@ -120,7 +151,7 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
         <div className="flex justify-center gap-8 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-            <span className="text-gray-600">2 Canais Ativos</span>
+            <span className="text-gray-600">{activeCount} Canais Ativos</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
