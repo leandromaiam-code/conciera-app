@@ -17,14 +17,14 @@ const ChannelNode = ({ icon: Icon, name, status, onClick, onConfigure }: Channel
   const getStatusStyles = () => {
     switch (status) {
       case 'active':
-        return 'bg-esmeralda text-branco-puro shadow-lg border-esmeralda animate-pulse-ring';
+        return 'bg-esmeralda text-white shadow-lg border-4 border-esmeralda animate-pulse-ring scale-110';
       case 'connected': 
-        return 'bg-dourado text-onyx border-dourado';
+        return 'bg-dourado text-onyx border-4 border-dourado shadow-md';
       case 'connecting':
-        return 'bg-dourado/20 text-dourado border-dourado animate-pulse';
+        return 'bg-yellow-300 text-yellow-800 border-4 border-yellow-500 animate-pulse shadow-lg';
       case 'disconnected':
       default:
-        return 'bg-branco-puro text-grafite border-cinza-borda hover:border-dourado hover:text-dourado';
+        return 'bg-white text-gray-600 border-2 border-gray-300 hover:border-dourado hover:text-dourado hover:shadow-md';
     }
   };
 
@@ -86,7 +86,12 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
   }, []);
 
   const handleChannelClick = (channelKey: ChannelKey) => {
-    if (channels[channelKey].status === 'connecting') return;
+    console.log(`Channel clicked: ${channelKey}, status: ${channels[channelKey].status}`);
+    
+    if (channels[channelKey].status === 'connecting') {
+      console.log('Channel is connecting, ignoring click');
+      return;
+    }
     
     if (channelKey === 'whatsapp' && onWhatsAppClick) {
       onWhatsAppClick();

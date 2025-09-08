@@ -42,6 +42,8 @@ export const useChannelControl = () => {
   });
 
   const updateChannelStatus = (channelKey: ChannelKey, status: ChannelStatus) => {
+    console.log(`Updating channel ${channelKey} to status: ${status}`);
+    
     setChannels(prev => ({
       ...prev,
       [channelKey]: {
@@ -60,29 +62,41 @@ export const useChannelControl = () => {
       connecting: `Conectando ${channel.name}...`
     };
 
+    const toastMessage = statusMessages[status];
+    console.log(`Showing toast: ${toastMessage}`);
+    
     toast({
-      title: statusMessages[status],
+      title: toastMessage,
       variant: status === 'disconnected' ? 'destructive' : 'default'
     });
   };
 
   const toggleChannel = (channelKey: ChannelKey) => {
     const currentStatus = channels[channelKey].status;
+    console.log(`Toggle channel ${channelKey}, current status: ${currentStatus}`);
+    
     let newStatus: ChannelStatus;
 
     switch (currentStatus) {
       case 'disconnected':
         newStatus = 'connecting';
-        // Simulate connection process
-        setTimeout(() => updateChannelStatus(channelKey, 'connected'), 1500);
+        console.log(`Starting connection for ${channelKey}`);
+        // Simulate connection process - increased timeout for better visibility
+        setTimeout(() => {
+          console.log(`Connection completed for ${channelKey}`);
+          updateChannelStatus(channelKey, 'connected');
+        }, 3000);
         break;
       case 'connected':
         newStatus = 'active';
+        console.log(`Activating ${channelKey}`);
         break;
       case 'active':
         newStatus = 'disconnected';
+        console.log(`Disconnecting ${channelKey}`);
         break;
       default:
+        console.log(`Unknown status for ${channelKey}: ${currentStatus}`);
         return;
     }
 
