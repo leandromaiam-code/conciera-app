@@ -19,24 +19,24 @@ export const LoginCard = ({ onLogin }: LoginCardProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-onyx flex items-center justify-center p-xxl animate-fade-in">
-      <Card className="w-full max-w-md">
-        <CardContent className="p-xl">
-          <div className="text-center mb-lg">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-16">
+      <Card className="w-full max-w-md bg-white shadow-xl">
+        <CardContent className="p-12">
+          <div className="text-center mb-8">
             <img 
               src={concieraLogo} 
               alt="CONCIERA Suite™️" 
-              className="mx-auto w-20 h-20 mb-md object-contain"
+              className="mx-auto w-20 h-20 mb-6 object-contain"
             />
-            <h1 className="text-onyx mb-xxs">Bem-vindo(a)</h1>
-            <p className="text-grafite text-secondary">
+            <h1 className="text-gray-900 text-3xl font-bold mb-2 font-serif">Bem-vindo(a)</h1>
+            <p className="text-gray-600 text-sm">
               Faça login para acessar a Conciera Suite™️.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-sm">
-            <div className="space-y-xxs">
-              <Label htmlFor="email" className="text-onyx font-medium">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1">
+              <Label htmlFor="email" className="text-gray-900 font-medium">
                 Email
               </Label>
               <Input
@@ -44,14 +44,14 @@ export const LoginCard = ({ onLogin }: LoginCardProps) => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="input-elegant h-12"
+                className="h-12 rounded-lg border-gray-300 bg-white/50 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500"
                 placeholder="seu@email.com"
                 required
               />
             </div>
 
-            <div className="space-y-xxs">
-              <Label htmlFor="password" className="text-onyx font-medium">
+            <div className="space-y-1">
+              <Label htmlFor="password" className="text-gray-900 font-medium">
                 Senha
               </Label>
               <Input
@@ -59,7 +59,7 @@ export const LoginCard = ({ onLogin }: LoginCardProps) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input-elegant h-12"
+                className="h-12 rounded-lg border-gray-300 bg-white/50 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500"
                 placeholder="••••••••"
                 required
               />
@@ -67,7 +67,7 @@ export const LoginCard = ({ onLogin }: LoginCardProps) => {
 
             <Button 
               type="submit" 
-              className="btn-primary w-full h-12 mt-lg"
+              className="w-full h-12 mt-8 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
             >
               Entrar
             </Button>

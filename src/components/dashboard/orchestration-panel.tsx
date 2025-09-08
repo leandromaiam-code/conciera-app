@@ -11,17 +11,17 @@ interface ChannelNodeProps {
 
 const ChannelNode = ({ icon: Icon, name, isActive = false, onClick }: ChannelNodeProps) => (
   <div 
-    className={`flex flex-col items-center gap-xxs cursor-pointer transition-elegant hover:scale-110 ${
-      onClick ? 'hover-elevate' : ''
+    className={`flex flex-col items-center gap-1 cursor-pointer transition-all duration-200 hover:scale-110 ${
+      onClick ? 'hover:-translate-y-1 hover:shadow-sm' : ''
     }`}
     onClick={onClick}
   >
-    <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-elegant ${
-      isActive ? 'bg-esmeralda text-branco-puro' : 'bg-branco-puro text-grafite border border-cinza-borda'
+    <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
+      isActive ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-300'
     }`}>
       <Icon size={24} />
     </div>
-    <span className="text-xs font-medium text-grafite">{name}</span>
+    <span className="text-xs font-medium text-gray-600">{name}</span>
   </div>
 );
 
@@ -33,17 +33,17 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
   const [activeChannels] = useState(['whatsapp', 'phone']);
 
   return (
-    <div className="col-span-2 bg-white/50 rounded-xl p-lg relative overflow-hidden">
+    <div className="col-span-2 bg-white/50 rounded-xl p-8 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 left-10 w-32 h-32 border border-dourado rounded-full"></div>
-        <div className="absolute bottom-10 right-10 w-24 h-24 border border-esmeralda rounded-full"></div>
+        <div className="absolute top-10 left-10 w-32 h-32 border border-yellow-500 rounded-full"></div>
+        <div className="absolute bottom-10 right-10 w-24 h-24 border border-green-600 rounded-full"></div>
       </div>
 
       <div className="relative z-10">
-        <div className="mb-lg">
-          <h2 className="text-onyx mb-xxs">Centro de Orquestração</h2>
-          <p className="text-secondary text-grafite">
+        <div className="mb-8">
+          <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-1">Centro de Orquestração</h2>
+          <p className="text-gray-600 text-sm">
             Visualização em tempo real dos canais conectados à sua IA
           </p>
         </div>
@@ -52,15 +52,15 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
         <div className="flex items-center justify-center min-h-64 relative">
           {/* Central AI Node */}
           <div className="absolute z-20 flex flex-col items-center">
-            <div className="w-16 h-16 bg-onyx rounded-full flex items-center justify-center animate-pulse-ring">
+            <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center animate-pulse">
               <img 
                 src={concieraLogo} 
                 alt="CONCIERA AI" 
                 className="w-8 h-8 object-contain filter brightness-0 invert" 
               />
             </div>
-            <span className="mt-xxs text-sm font-semibold text-onyx">CONCIERA AI</span>
-            <span className="text-xs text-esmeralda">● Online</span>
+            <span className="mt-1 text-sm font-semibold text-gray-900">CONCIERA AI</span>
+            <span className="text-xs text-green-600">● Online</span>
           </div>
 
           {/* Connection Lines */}
@@ -68,9 +68,9 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
             {/* Animated connection lines */}
             <defs>
               <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="hsl(var(--dourado))" stopOpacity="0.3" />
-                <stop offset="50%" stopColor="hsl(var(--dourado))" stopOpacity="1" />
-                <stop offset="100%" stopColor="hsl(var(--dourado))" stopOpacity="0.3" />
+                <stop offset="0%" stopColor="rgb(234, 179, 8)" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="rgb(234, 179, 8)" stopOpacity="1" />
+                <stop offset="100%" stopColor="rgb(234, 179, 8)" stopOpacity="0.3" />
               </linearGradient>
             </defs>
             
@@ -117,14 +117,14 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
         </div>
 
         {/* Status Info */}
-        <div className="flex justify-center gap-lg text-sm">
-          <div className="flex items-center gap-xxs">
-            <div className="w-2 h-2 bg-esmeralda rounded-full"></div>
-            <span className="text-grafite">2 Canais Ativos</span>
+        <div className="flex justify-center gap-8 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+            <span className="text-gray-600">2 Canais Ativos</span>
           </div>
-          <div className="flex items-center gap-xxs">
-            <div className="w-2 h-2 bg-dourado rounded-full"></div>
-            <span className="text-grafite">Processando 24/7</span>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+            <span className="text-gray-600">Processando 24/7</span>
           </div>
         </div>
       </div>

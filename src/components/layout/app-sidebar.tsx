@@ -25,9 +25,9 @@ const navigationItems = [
 
 export const AppSidebar = ({ currentPage, onPageChange }: AppSidebarProps) => {
   return (
-    <aside className="fixed left-0 top-0 h-full w-20 bg-onyx z-40 flex flex-col items-center py-sm">
+    <aside className="fixed left-0 top-0 h-full w-20 bg-gray-900 z-40 flex flex-col items-center py-4">
       {/* Logo */}
-      <div className="mb-lg">
+      <div className="mb-8">
         <img 
           src={concieraLogo} 
           alt="CONCIERA" 
@@ -36,7 +36,7 @@ export const AppSidebar = ({ currentPage, onPageChange }: AppSidebarProps) => {
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex flex-col gap-xxs w-full px-xxs">
+      <nav className="flex flex-col gap-2 w-full px-2">
         {navigationItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentPage === item.id;
@@ -45,8 +45,10 @@ export const AppSidebar = ({ currentPage, onPageChange }: AppSidebarProps) => {
             <button
               key={item.id}
               onClick={() => onPageChange(item.id)}
-              className={`nav-item w-12 h-12 flex items-center justify-center ${
-                isActive ? 'active' : ''
+              className={`w-12 h-12 flex items-center justify-center rounded-lg transition-all duration-200 ${
+                isActive 
+                  ? 'bg-gray-700 text-yellow-500' 
+                  : 'text-gray-400 hover:bg-gray-700 hover:text-yellow-500'
               }`}
               title={item.label}
             >

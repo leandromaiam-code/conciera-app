@@ -13,20 +13,20 @@ interface KPICardProps {
 
 export const KPICard = ({ title, subtitle, value, trend, className = "" }: KPICardProps) => {
   return (
-    <div className={`kpi-card ${className}`}>
-      <div className="mb-sm">
-        <h3 className="text-onyx mb-xxs">{title}</h3>
-        <p className="text-secondary text-grafite">{subtitle}</p>
+    <div className={`bg-white p-6 rounded-xl shadow-lg ${className}`}>
+      <div className="mb-4">
+        <h3 className="text-gray-900 text-xl font-semibold font-serif mb-1">{title}</h3>
+        <p className="text-gray-600 text-sm">{subtitle}</p>
       </div>
       
       <div className="flex items-end justify-between">
-        <div className="text-5xl font-bold text-onyx font-playfair">
+        <div className="text-5xl font-bold text-gray-900 font-serif">
           {value}
         </div>
         
         {trend && (
-          <div className={`flex items-center gap-xxs text-sm font-semibold ${
-            trend.isPositive ? 'text-esmeralda' : 'text-erro'
+          <div className={`flex items-center gap-1 text-sm font-semibold ${
+            trend.isPositive ? 'text-green-600' : 'text-red-600'
           }`}>
             {trend.isPositive ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
             {trend.value}
