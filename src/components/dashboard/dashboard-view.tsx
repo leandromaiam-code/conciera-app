@@ -101,51 +101,51 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
       {/* Insights de Performance - Terceira linha */}
       <div className="grid grid-cols-2 gap-8 animate-fade-in" style={{ animationDelay: '400ms' }}>
         <div className="kpi-card hover-elevate">
-          <h3 className="text-onyx text-xl font-semibold font-playfair mb-4">Picos de Atividade</h3>
+          <h3 className="text-gray-900 text-xl font-semibold font-playfair mb-4">Picos de Atividade</h3>
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-grafite text-sm">08:00 - 10:00</span>
-              <span className="font-semibold text-onyx">42 mensagens</span>
+              <span className="text-gray-600 text-sm">08:00 - 10:00</span>
+              <span className="font-semibold text-gray-900">42 mensagens</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-grafite text-sm">14:00 - 16:00</span>
-              <span className="font-semibold text-onyx">38 mensagens</span>
+              <span className="text-gray-600 text-sm">14:00 - 16:00</span>
+              <span className="font-semibold text-gray-900">38 mensagens</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-grafite text-sm">18:00 - 20:00</span>
-              <span className="font-semibold text-onyx">29 mensagens</span>
+              <span className="text-gray-600 text-sm">18:00 - 20:00</span>
+              <span className="font-semibold text-gray-900">29 mensagens</span>
             </div>
           </div>
         </div>
 
         <div className="kpi-card hover-elevate">
-          <h3 className="text-onyx text-xl font-semibold font-playfair mb-4">Performance de Conversão</h3>
+          <h3 className="text-gray-900 text-xl font-semibold font-playfair mb-4">Performance de Conversão</h3>
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-grafite text-sm">Agendamentos</span>
+              <span className="text-gray-600 text-sm">Agendamentos</span>
               <div className="flex items-center gap-2">
-                <div className="w-16 h-2 bg-cinza-borda rounded-full overflow-hidden">
-                  <div className="h-full bg-esmeralda rounded-full transition-all duration-1000" style={{ width: '67%' }}></div>
+                <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-green-600 rounded-full transition-all duration-1000" style={{ width: '67%' }}></div>
                 </div>
-                <span className="font-semibold text-onyx text-sm">67%</span>
+                <span className="font-semibold text-gray-900 text-sm">67%</span>
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-grafite text-sm">Informações</span>
+              <span className="text-gray-600 text-sm">Informações</span>
               <div className="flex items-center gap-2">
-                <div className="w-16 h-2 bg-cinza-borda rounded-full overflow-hidden">
-                  <div className="h-full bg-dourado rounded-full transition-all duration-1000" style={{ width: '23%' }}></div>
+                <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-yellow-600 rounded-full transition-all duration-1000" style={{ width: '23%' }}></div>
                 </div>
-                <span className="font-semibold text-onyx text-sm">23%</span>
+                <span className="font-semibold text-gray-900 text-sm">23%</span>
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-grafite text-sm">Reagendamentos</span>
+              <span className="text-gray-600 text-sm">Reagendamentos</span>
               <div className="flex items-center gap-2">
-                <div className="w-16 h-2 bg-cinza-borda rounded-full overflow-hidden">
-                  <div className="h-full bg-grafite rounded-full transition-all duration-1000" style={{ width: '10%' }}></div>
+                <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-gray-600 rounded-full transition-all duration-1000" style={{ width: '10%' }}></div>
                 </div>
-                <span className="font-semibold text-onyx text-sm">10%</span>
+                <span className="font-semibold text-gray-900 text-sm">10%</span>
               </div>
             </div>
           </div>

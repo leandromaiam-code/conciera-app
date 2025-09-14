@@ -12,7 +12,7 @@ export const Sparkline = ({
   data, 
   width = 80, 
   height = 24, 
-  color = "hsl(var(--dourado))",
+  color = "#eab308",
   className = ""
 }: SparklineProps) => {
   const pathData = useMemo(() => {
@@ -34,7 +34,7 @@ export const Sparkline = ({
   if (!data || data.length === 0) {
     return (
       <div className={`${className}`} style={{ width, height }}>
-        <div className="w-full h-full bg-grafite/20 rounded animate-pulse" />
+        <div className="w-full h-full bg-gray-600/20 rounded animate-pulse" />
       </div>
     );
   }
