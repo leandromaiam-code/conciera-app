@@ -24,11 +24,11 @@ export const ChannelStatusIndicator = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-esmeralda';
-      case 'connected': return 'bg-dourado';
+      case 'active': return 'bg-green-600';
+      case 'connected': return 'bg-yellow-600';
       case 'connecting': return 'bg-yellow-500';
-      case 'disconnected': return 'bg-grafite';
-      default: return 'bg-grafite';
+      case 'disconnected': return 'bg-gray-600';
+      default: return 'bg-gray-600';
     }
   };
 
@@ -45,7 +45,7 @@ export const ChannelStatusIndicator = () => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="flex items-center gap-2 text-grafite hover:text-onyx">
+          <Button variant="ghost" size="sm" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
             <Activity size={18} />
             <span className="text-sm font-medium">Status dos Canais</span>
             <Badge variant="secondary" className="text-xs">
@@ -54,7 +54,7 @@ export const ChannelStatusIndicator = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-64">
-          <DropdownMenuLabel className="text-xs text-grafite font-medium">
+          <DropdownMenuLabel className="text-xs text-gray-600 font-medium">
             Canais de Comunicação
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -69,14 +69,14 @@ export const ChannelStatusIndicator = () => {
               >
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <channel.icon size={18} className="text-grafite" />
+                    <channel.icon size={18} className="text-gray-600" />
                     <div 
                       className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(channel.status)}`}
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-onyx">{channel.name}</p>
-                    <p className="text-xs text-grafite capitalize">{channel.status}</p>
+                    <p className="text-sm font-medium text-gray-900">{channel.name}</p>
+                    <p className="text-xs text-gray-600 capitalize">{channel.status}</p>
                   </div>
                 </div>
                 <Button
@@ -86,7 +86,7 @@ export const ChannelStatusIndicator = () => {
                     e.stopPropagation();
                     handleConfigure(key as ChannelKey);
                   }}
-                  className="p-1 h-auto text-grafite hover:text-onyx"
+                  className="p-1 h-auto text-gray-600 hover:text-gray-900"
                 >
                   <Settings size={14} />
                 </Button>
@@ -96,7 +96,7 @@ export const ChannelStatusIndicator = () => {
           
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="text-xs text-grafite cursor-default"
+            className="text-xs text-gray-600 cursor-default"
             onSelect={(e) => e.preventDefault()}
           >
             Clique para alternar • Gear para configurar

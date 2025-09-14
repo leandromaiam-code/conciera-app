@@ -36,10 +36,10 @@ export const ContextualTooltip = ({
           <div className="space-y-1">
             <p className="font-semibold text-sm">{title}</p>
             {description && (
-              <p className="text-xs text-grafite">{description}</p>
+              <p className="text-xs text-gray-600">{description}</p>
             )}
             {trend && (
-              <p className="text-xs text-dourado font-medium">
+              <p className="text-xs text-yellow-600 font-medium">
                 {trend.value} vs {trend.period}
               </p>
             )}
