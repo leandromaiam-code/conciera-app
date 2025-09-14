@@ -20,7 +20,7 @@ export const ConversionFunnelCard = ({
 }: ConversionFunnelCardProps) => {
   return (
     <div className={`kpi-card hover-elevate transition-elegant ${className}`}>
-      <h3 className="text-onyx text-xl font-semibold font-playfair mb-6">
+      <h3 className="text-gray-900 text-xl font-semibold font-playfair mb-6">
         Funil de Conversão Hoje
       </h3>
       
@@ -29,16 +29,16 @@ export const ConversionFunnelCard = ({
         <Button
           variant="ghost"
           onClick={onLeadsClick}
-          className="flex flex-col items-center p-6 h-auto hover:bg-dourado/5 transition-elegant"
+          className="flex flex-col items-center p-6 h-auto hover:bg-yellow-50 transition-elegant"
         >
-          <div className="p-3 bg-dourado/10 rounded-full mb-3">
-            <MessageSquare className="text-dourado" size={20} />
+          <div className="p-3 bg-yellow-100 rounded-full mb-3">
+            <MessageSquare className="text-yellow-600" size={20} />
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-onyx font-playfair mb-1">
+            <div className="text-2xl font-bold text-gray-900 font-playfair mb-1">
               {newLeads}
             </div>
-            <p className="text-grafite text-sm">Novos Leads</p>
+            <p className="text-gray-600 text-sm">Novos Leads</p>
           </div>
         </Button>
 
@@ -46,35 +46,35 @@ export const ConversionFunnelCard = ({
         <Button
           variant="ghost"
           onClick={onAppointmentsClick}
-          className="flex flex-col items-center p-6 h-auto hover:bg-esmeralda/5 transition-elegant"
+          className="flex flex-col items-center p-6 h-auto hover:bg-green-50 transition-elegant"
         >
-          <div className="p-3 bg-esmeralda/10 rounded-full mb-3">
-            <Calendar className="text-esmeralda" size={20} />
+          <div className="p-3 bg-green-100 rounded-full mb-3">
+            <Calendar className="text-green-600" size={20} />
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-onyx font-playfair mb-1">
+            <div className="text-2xl font-bold text-gray-900 font-playfair mb-1">
               {scheduledAppointments}
             </div>
-            <p className="text-grafite text-sm">Agendamentos</p>
+            <p className="text-gray-600 text-sm">Agendamentos</p>
           </div>
         </Button>
 
         {/* Taxa de Conversão */}
         <div className="flex flex-col items-center p-6">
-          <div className="p-3 bg-grafite/10 rounded-full mb-3">
-            <TrendingUp className="text-grafite" size={20} />
+          <div className="p-3 bg-gray-100 rounded-full mb-3">
+            <TrendingUp className="text-gray-600" size={20} />
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-onyx font-playfair mb-1">
+            <div className="text-2xl font-bold text-gray-900 font-playfair mb-1">
               {conversionRate}%
             </div>
-            <p className="text-grafite text-sm">Conversão</p>
+            <p className="text-gray-600 text-sm">Conversão</p>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-cinza-borda">
-        <p className="text-grafite text-xs text-center">
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <p className="text-gray-600 text-xs text-center">
           Clique nos números para ver detalhes nas conversas
         </p>
       </div>
