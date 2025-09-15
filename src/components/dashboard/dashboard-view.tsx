@@ -27,7 +27,7 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
       <ConversionFunnelWidget />
 
       {/* Secondary KPI Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-md">
         <KPICard
           title="Mensagens Processadas"
           subtitle="Últimas 24h"
