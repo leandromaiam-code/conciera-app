@@ -10,7 +10,7 @@ export const ConversionFunnelWidget = () => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-3 gap-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-sm">
         {[1, 2, 3].map((i) => (
           <div key={i} className="kpi-card animate-pulse">
             <div className="h-16 bg-cinza-fundo-hover rounded"></div>
@@ -54,7 +54,7 @@ export const ConversionFunnelWidget = () => {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-sm">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-sm">
       {funnelItems.map((item) => (
         <div
           key={item.title}
@@ -74,7 +74,7 @@ export const ConversionFunnelWidget = () => {
           </div>
 
           <div className="mb-xxs">
-            <div className="text-2xl font-bold text-onyx font-playfair group-hover:scale-105 transition-elegant">
+            <div className="text-xl sm:text-2xl font-bold text-onyx font-playfair group-hover:scale-105 transition-elegant">
               {item.value}
             </div>
           </div>

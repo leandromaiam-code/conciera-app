@@ -177,35 +177,37 @@ export const ConversasView = () => {
           
           return (
             <Card key={conversa.id} className="cursor-pointer hover:shadow-md transition-all">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-4 flex-1">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                  <div className="flex items-start gap-3 flex-1">
                     {/* Channel Icon */}
-                    <div className="p-2 rounded-lg bg-cinza-claro/20">
-                      <ChannelIcon className="w-5 h-5 text-grafite" />
+                    <div className="p-2 rounded-lg bg-cinza-claro/20 flex-shrink-0">
+                      <ChannelIcon className="w-4 h-4 sm:w-5 sm:h-5 text-grafite" />
                     </div>
 
                     {/* Conversation Info */}
-                    <div className="space-y-2 flex-1">
-                      <div className="flex items-center gap-3">
-                        <h3 className="font-semibold text-onyx">{conversa.paciente_nome}</h3>
-                        <TemperatureIndicator temperatura={conversa.temperatura} />
-                        <Badge className={getStatusColor(conversa.status)}>
-                          {conversa.status.charAt(0).toUpperCase() + conversa.status.slice(1)}
-                        </Badge>
+                    <div className="space-y-2 flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                        <h3 className="font-semibold text-onyx text-sm sm:text-base">{conversa.paciente_nome}</h3>
+                        <div className="flex items-center gap-2">
+                          <TemperatureIndicator temperatura={conversa.temperatura} />
+                          <Badge className={`${getStatusColor(conversa.status)} text-xs`}>
+                            {conversa.status.charAt(0).toUpperCase() + conversa.status.slice(1)}
+                          </Badge>
+                        </div>
                       </div>
 
                       {conversa.procedimento_interesse && (
-                        <p className="text-dourado font-medium">
+                        <p className="text-dourado font-medium text-xs sm:text-sm">
                           Interesse: {conversa.procedimento_interesse}
                         </p>
                       )}
 
-                      <p className="text-grafite text-sm line-clamp-2">
+                      <p className="text-grafite text-xs sm:text-sm line-clamp-2">
                         {conversa.ultima_mensagem}
                       </p>
 
-                      <div className="flex items-center gap-4 text-xs text-grafite">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-grafite">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {new Date(conversa.data_inicio).toLocaleDateString('pt-BR')}
@@ -218,14 +220,14 @@ export const ConversasView = () => {
                   </div>
 
                   {/* Value and Actions */}
-                  <div className="flex flex-col items-end gap-2">
+                  <div className="flex flex-row sm:flex-col justify-between sm:items-end gap-2 sm:gap-2 flex-shrink-0">
                     {conversa.valor_estimado && (
-                      <p className="text-dourado font-semibold text-sm">
+                      <p className="text-dourado font-semibold text-xs sm:text-sm">
                         R$ {conversa.valor_estimado.toLocaleString()}
                       </p>
                     )}
                     
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" className="text-xs">
                       Ver Conversa
                     </Button>
                   </div>

@@ -20,7 +20,7 @@ export const KPICard = ({ title, subtitle, value, trend, className = "" }: KPICa
       </div>
       
       <div className="flex items-end justify-between">
-        <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-onyx font-playfair">
+        <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-onyx font-playfair">
           {value}
         </div>
         
