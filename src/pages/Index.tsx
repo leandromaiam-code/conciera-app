@@ -8,17 +8,11 @@ import { AnalyticsView } from "@/pages/AnalyticsView";
 import { ConversasView } from "@/pages/ConversasView";
 import { PlaybooksView } from "@/pages/PlaybooksView";
 import { ConfiguracoesView } from "@/pages/ConfiguracoesView";
-import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
-import { NotificationSystem, Notification } from "@/components/ui/notification-system";
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-
-  // Initialize keyboard shortcuts
-  useKeyboardShortcuts({ onPageChange: setCurrentPage });
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -26,15 +20,6 @@ const Index = () => {
 
   const handleWhatsAppClick = () => {
     setIsWhatsAppOpen(true);
-  };
-
-  const addNotification = (notification: Omit<Notification, 'id'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    setNotifications(prev => [...prev, { ...notification, id }]);
-  };
-
-  const dismissNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
   const renderPageContent = () => {
@@ -73,11 +58,6 @@ const Index = () => {
       <WhatsAppSimulation 
         isOpen={isWhatsAppOpen} 
         onClose={() => setIsWhatsAppOpen(false)} 
-      />
-      
-      <NotificationSystem 
-        notifications={notifications}
-        onDismiss={dismissNotification}
       />
     </>
   );
