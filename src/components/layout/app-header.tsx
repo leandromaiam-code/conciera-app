@@ -1,17 +1,19 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Bell, ChevronDown } from "lucide-react";
+import { Bell, ChevronDown, MessageCircle } from "lucide-react";
 
 interface AppHeaderProps {
   pageTitle: string;
   clinicName?: string;
   userName?: string;
+  onWhatsAppClick?: () => void;
 }
 
 export const AppHeader = ({ 
   pageTitle, 
   clinicName = "Clínica Exemplo",
-  userName = "Dr. Silva" 
+  userName = "Dr. Silva",
+  onWhatsAppClick
 }: AppHeaderProps) => {
   return (
     <header className="fixed top-0 left-20 right-0 h-20 bg-background border-b border-cinza-borda z-30 flex items-center justify-between px-xxl">
@@ -22,6 +24,20 @@ export const AppHeader = ({
 
       {/* Right Side - Clinic Identity */}
       <div className="flex items-center gap-md">
+        {/* Channel Status - WhatsApp Quick Access */}
+        {onWhatsAppClick && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onWhatsAppClick}
+            className="flex items-center gap-xxs text-esmeralda hover:text-esmeralda/80 hover:bg-esmeralda/10"
+          >
+            <MessageCircle size={16} />
+            <div className="w-2 h-2 bg-esmeralda rounded-full animate-pulse"></div>
+            <span className="text-xs font-medium">WhatsApp</span>
+          </Button>
+        )}
+
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="text-grafite hover:text-onyx">
           <Bell size={20} />

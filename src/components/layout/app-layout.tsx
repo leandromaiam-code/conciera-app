@@ -6,6 +6,7 @@ interface AppLayoutProps {
   currentPage: string;
   onPageChange: (page: string) => void;
   pageTitle: string;
+  onWhatsAppClick?: () => void;
 }
 
 const getPageTitle = (page: string): string => {
@@ -20,13 +21,13 @@ const getPageTitle = (page: string): string => {
   return titles[page] || "CONCIERA Suite™️";
 };
 
-export const AppLayout = ({ children, currentPage, onPageChange }: AppLayoutProps) => {
+export const AppLayout = ({ children, currentPage, onPageChange, onWhatsAppClick }: AppLayoutProps) => {
   const pageTitle = getPageTitle(currentPage);
 
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar currentPage={currentPage} onPageChange={onPageChange} />
-      <AppHeader pageTitle={pageTitle} />
+      <AppHeader pageTitle={pageTitle} onWhatsAppClick={onWhatsAppClick} />
       
       <main className="ml-20 pt-20 p-xxl">
         {children}

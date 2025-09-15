@@ -91,6 +91,7 @@ const Index = () => {
         currentPage={currentPage} 
         onPageChange={setCurrentPage}
         pageTitle=""
+        onWhatsAppClick={handleWhatsAppClick}
       >
         {renderPageContent()}
       </AppLayout>

@@ -1,5 +1,7 @@
 import { KPICard } from "./kpi-card";
-import { OrchestrationPanel } from "./orchestration-panel";
+import { RevenuePerformancePanel } from "./revenue-performance-panel";
+import { ConversionFunnelWidget } from "./conversion-funnel-widget";
+import { OpportunityFeed } from "./opportunity-feed";
 
 interface DashboardViewProps {
   onWhatsAppClick: () => void;
@@ -8,28 +10,19 @@ interface DashboardViewProps {
 export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
   return (
     <div className="animate-fade-in space-y-lg">
-      {/* Main Dashboard Grid */}
+      {/* Main Dashboard Grid - Revenue Focus */}
       <div className="grid grid-cols-3 gap-lg">
-        {/* Orchestration Panel - Takes 2 columns */}
-        <OrchestrationPanel onWhatsAppClick={onWhatsAppClick} />
+        {/* Revenue Performance Panel - Takes 2 columns */}
+        <RevenuePerformancePanel />
 
-        {/* KPI Cards - Takes 1 column */}
+        {/* Opportunity Feed - Takes 1 column */}
         <div className="space-y-md">
-          <KPICard
-            title="Agendamentos Hoje"
-            subtitle="Consultas confirmadas"
-            value={24}
-            trend={{ value: "+12%", isPositive: true }}
-          />
-          
-          <KPICard
-            title="Taxa de Conversão"
-            subtitle="Chat para agendamento"
-            value="87%"
-            trend={{ value: "+5%", isPositive: true }}
-          />
+          <OpportunityFeed />
         </div>
       </div>
+
+      {/* Conversion Funnel Widget */}
+      <ConversionFunnelWidget />
 
       {/* Secondary KPI Row */}
       <div className="grid grid-cols-4 gap-md">
