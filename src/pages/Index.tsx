@@ -23,10 +23,10 @@ const Index = () => {
         return <DashboardView onWhatsAppClick={handleWhatsAppClick} />;
       case "agenda":
         return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Controle de Agendamentos</h2>
-              <p className="text-gray-600 text-sm">
+          <div className="animate-fade-in">
+            <div className="kpi-card text-center py-xxl">
+              <h2 className="text-onyx mb-sm">Controle de Agendamentos</h2>
+              <p className="text-secondary text-grafite">
                 Funcionalidade em desenvolvimento - Interface de gestão da agenda em breve.
               </p>
             </div>
@@ -34,10 +34,10 @@ const Index = () => {
         );
       case "analytics":
         return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Analytics e Relatórios</h2>
-              <p className="text-gray-600 text-sm">
+          <div className="animate-fade-in">
+            <div className="kpi-card text-center py-xxl">
+              <h2 className="text-onyx mb-sm">Analytics e Relatórios</h2>
+              <p className="text-secondary text-grafite">
                 Métricas avançadas e relatórios personalizados em desenvolvimento.
               </p>
             </div>
@@ -45,10 +45,10 @@ const Index = () => {
         );
       case "conversas":
         return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Histórico de Conversas</h2>
-              <p className="text-gray-600 text-sm">
+          <div className="animate-fade-in">
+            <div className="kpi-card text-center py-xxl">
+              <h2 className="text-onyx mb-sm">Histórico de Conversas</h2>
+              <p className="text-secondary text-grafite">
                 Acesso completo ao histórico de interações em breve.
               </p>
             </div>
@@ -56,10 +56,10 @@ const Index = () => {
         );
       case "playbooks":
         return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Gestão de Playbooks</h2>
-              <p className="text-gray-600 text-sm">
+          <div className="animate-fade-in">
+            <div className="kpi-card text-center py-xxl">
+              <h2 className="text-onyx mb-sm">Gestão de Playbooks</h2>
+              <p className="text-secondary text-grafite">
                 Centro de controle da inteligência de IA em desenvolvimento.
               </p>
             </div>
@@ -67,10 +67,10 @@ const Index = () => {
         );
       case "configuracoes":
         return (
-          <div className="">
-            <div className="bg-white p-16 rounded-xl shadow-lg text-center">
-              <h2 className="text-gray-900 text-2xl font-semibold font-serif mb-4">Configurações do Sistema</h2>
-              <p className="text-gray-600 text-sm">
+          <div className="animate-fade-in">
+            <div className="kpi-card text-center py-xxl">
+              <h2 className="text-onyx mb-sm">Configurações do Sistema</h2>
+              <p className="text-secondary text-grafite">
                 Painel de configurações e preferências em breve.
               </p>
             </div>
