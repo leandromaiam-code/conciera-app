@@ -5,9 +5,10 @@ import { OpportunityFeed } from "./opportunity-feed";
 
 interface DashboardViewProps {
   onWhatsAppClick: () => void;
+  onPageChange?: (page: string) => void;
 }
 
-export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
+export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewProps) => {
   return (
     <div className="animate-fade-in space-y-sm lg:space-y-md">
       {/* Main Dashboard Grid - Revenue Focus */}
@@ -19,7 +20,7 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
 
         {/* Opportunity Feed - Takes 1 column on desktop, full width on mobile */}
         <div>
-          <OpportunityFeed />
+          <OpportunityFeed onPageChange={onPageChange} />
         </div>
       </div>
 
@@ -50,10 +51,10 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
         />
         
         <KPICard
-          title="Receita Gerada"
-          subtitle="Via automação hoje"
-          value="R$ 8.4k"
-          trend={{ value: "+23%", isPositive: true }}
+          title="Taxa de Comparecimento"
+          subtitle="Percentual este mês"
+          value="87%"
+          trend={{ value: "+5%", isPositive: true }}
         />
       </div>
 

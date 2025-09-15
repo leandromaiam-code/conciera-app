@@ -32,7 +32,7 @@ export const RevenuePerformancePanel = () => {
       {/* Background gradiente sutil */}
       <div className="absolute inset-0 bg-gradient-to-br from-dourado/5 to-transparent rounded-xl"></div>
       
-      <div className="kpi-card relative z-10 border border-dourado/20">
+      <div className="kpi-card relative z-10 border border-dourado/20 min-h-[280px] py-lg">
         <div className="mb-md">
           <div className="flex items-center justify-between mb-xxs">
             <h2 className="text-onyx">Receita de Pipeline Gerado</h2>

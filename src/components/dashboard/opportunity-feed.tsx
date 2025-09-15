@@ -1,11 +1,15 @@
 import { Clock, TrendingUp } from "lucide-react";
 import { useOpportunityFeed } from "@/hooks/use-opportunity-feed";
 
+interface OpportunityFeedProps {
+  onPageChange?: (page: string) => void;
+}
+
 /**
  * Feed de Oportunidades de Alto Valor
  * Lista interativa dos próximos agendamentos com maior potencial de receita
  */
-export const OpportunityFeed = () => {
+export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
   const { opportunities, isLoading } = useOpportunityFeed();
 
   if (isLoading) {
@@ -100,9 +104,12 @@ export const OpportunityFeed = () => {
         ))}
       </div>
 
-      {/* Footer CTA */}
-      <div className="pt-xs border-t border-cinza-borda">
-        <button className="text-xs text-dourado hover:text-onyx transition-elegant font-medium">
+      {/* Footer CTA - sem separação visual */}
+      <div className="mt-xs">
+        <button 
+          onClick={() => onPageChange?.("agenda")}
+          className="text-xs text-dourado hover:text-onyx transition-elegant font-medium"
+        >
           Ver todas as oportunidades na Agenda →
         </button>
       </div>

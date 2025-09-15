@@ -25,7 +25,7 @@ const Index = () => {
   const renderPageContent = () => {
     switch (currentPage) {
       case "dashboard":
-        return <DashboardView onWhatsAppClick={handleWhatsAppClick} />;
+        return <DashboardView onWhatsAppClick={handleWhatsAppClick} onPageChange={setCurrentPage} />;
       case "agenda":
         return <AgendaView />;
       case "analytics":
@@ -37,7 +37,7 @@ const Index = () => {
       case "configuracoes":
         return <ConfiguracoesView />;
       default:
-        return <DashboardView onWhatsAppClick={handleWhatsAppClick} />;
+        return <DashboardView onWhatsAppClick={handleWhatsAppClick} onPageChange={setCurrentPage} />;
     }
   };
 
