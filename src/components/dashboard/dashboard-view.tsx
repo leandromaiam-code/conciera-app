@@ -9,7 +9,7 @@ interface DashboardViewProps {
 
 export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
   return (
-    <div className="animate-fade-in space-y-md lg:space-y-lg">
+    <div className="animate-fade-in space-y-sm lg:space-y-md">
       {/* Main Dashboard Grid - Revenue Focus */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
         {/* Revenue Performance Panel - Takes 2 columns on desktop, full width on mobile */}
@@ -18,7 +18,7 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
         </div>
 
         {/* Opportunity Feed - Takes 1 column on desktop, full width on mobile */}
-        <div className="space-y-md">
+        <div>
           <OpportunityFeed />
         </div>
       </div>

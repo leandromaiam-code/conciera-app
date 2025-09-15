@@ -55,48 +55,48 @@ export const OpportunityFeed = () => {
 
       <div className="space-y-xs">
         {opportunities.map((opportunity) => (
-          <div
-            key={opportunity.id}
-            className="kpi-card cursor-pointer transition-elegant hover-elevate hover:border-dourado/30 group"
-            onClick={() => handleOpportunityClick(opportunity)}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-sm mb-xxs">
-                  <h4 className="font-semibold text-onyx group-hover:text-dourado transition-elegant">
-                    {opportunity.paciente_nome}
-                  </h4>
-                  <div className="flex items-center gap-xxs">
-                    {getTemperaturaPoints(opportunity.temperatura)}
+            <div
+              key={opportunity.id}
+              className="kpi-card py-sm px-md cursor-pointer transition-elegant hover-elevate hover:border-dourado/30 group"
+              onClick={() => handleOpportunityClick(opportunity)}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-sm mb-1">
+                    <h4 className="font-semibold text-onyx group-hover:text-dourado transition-elegant text-sm">
+                      {opportunity.paciente_nome}
+                    </h4>
+                    <div className="flex items-center gap-xxs">
+                      {getTemperaturaPoints(opportunity.temperatura)}
+                    </div>
+                  </div>
+                  
+                  <p className="text-xs text-grafite mb-1">
+                    {opportunity.procedimento}
+                  </p>
+                  
+                  <div className="flex items-center gap-lg text-xs text-grafite">
+                    <div className="flex items-center gap-xxs">
+                      <Clock size={12} />
+                      <span>{opportunity.horario}</span>
+                    </div>
+                    <div className="font-semibold text-dourado">
+                      R$ {opportunity.valor_estimado.toLocaleString('pt-BR')}
+                    </div>
                   </div>
                 </div>
-                
-                <p className="text-sm text-grafite mb-xxs">
-                  {opportunity.procedimento}
-                </p>
-                
-                <div className="flex items-center gap-lg text-xs text-grafite">
-                  <div className="flex items-center gap-xxs">
-                    <Clock size={12} />
-                    <span>{opportunity.horario}</span>
-                  </div>
-                  <div className="font-semibold text-dourado">
-                    R$ {opportunity.valor_estimado.toLocaleString('pt-BR')}
-                  </div>
-                </div>
-              </div>
 
-              <div className="flex flex-col items-end gap-xxs">
-                <div className={`text-xs font-medium ${getTemperaturaColor(opportunity.temperatura)}`}>
-                  {opportunity.temperatura === 3 ? 'Quente' : 
-                   opportunity.temperatura === 2 ? 'Morno' : 'Frio'}
-                </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-elegant text-xs text-dourado">
-                  Ver briefing →
+                <div className="flex flex-col items-end gap-1">
+                  <div className={`text-xs font-medium ${getTemperaturaColor(opportunity.temperatura)}`}>
+                    {opportunity.temperatura === 3 ? 'Quente' : 
+                     opportunity.temperatura === 2 ? 'Morno' : 'Frio'}
+                  </div>
+                  <div className="opacity-0 group-hover:opacity-100 transition-elegant text-xs text-dourado">
+                    Ver briefing →
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
         ))}
       </div>
 
