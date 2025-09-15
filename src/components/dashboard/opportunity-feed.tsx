@@ -44,7 +44,7 @@ export const OpportunityFeed = () => {
   };
 
   return (
-    <div className="space-y-md">
+    <div className="space-y-sm">
       <div className="flex items-center justify-between">
         <h3 className="text-onyx">Próximas Oportunidades</h3>
         <div className="flex items-center gap-xxs text-xs text-grafite">
@@ -53,7 +53,7 @@ export const OpportunityFeed = () => {
         </div>
       </div>
 
-      <div className="space-y-sm">
+      <div className="space-y-xs">
         {opportunities.map((opportunity) => (
           <div
             key={opportunity.id}
@@ -101,7 +101,7 @@ export const OpportunityFeed = () => {
       </div>
 
       {/* Footer CTA */}
-      <div className="pt-sm border-t border-cinza-borda">
+      <div className="pt-xs border-t border-cinza-borda">
         <button className="text-xs text-dourado hover:text-onyx transition-elegant font-medium">
           Ver todas as oportunidades na Agenda →
         </button>

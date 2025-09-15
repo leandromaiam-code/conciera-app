@@ -13,7 +13,7 @@ interface AppLayoutProps {
 
 const getPageTitle = (page: string): string => {
   const titles: Record<string, string> = {
-    dashboard: "Dashboard Omnichannel",
+    dashboard: "Dashboard",
     agenda: "Controle de Agendamentos", 
     analytics: "Analytics e Relatórios",
     conversas: "Histórico de Conversas",
