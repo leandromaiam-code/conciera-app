@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { KPICard } from "./kpi-card";
 import { OrchestrationPanel } from "./orchestration-panel";
 
@@ -7,24 +6,12 @@ interface DashboardViewProps {
 }
 
 export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
-  // Simulate reading from configuration - in real app this would come from context/props
-  const [activeChannels] = useState({
-    whatsappAtivo: true,
-    telefoneAtivo: true,
-    emailAtivo: false,
-    portalAtivo: false,
-    instagramAtivo: false,
-    formulariosAtivo: false
-  });
   return (
     <div className="space-y-8">
       {/* Main Dashboard Grid */}
       <div className="grid grid-cols-3 gap-8">
         {/* Orchestration Panel - Takes 2 columns */}
-        <OrchestrationPanel 
-          onWhatsAppClick={onWhatsAppClick} 
-          activeChannels={activeChannels}
-        />
+        <OrchestrationPanel onWhatsAppClick={onWhatsAppClick} />
 
         {/* KPI Cards - Takes 1 column */}
         <div className="space-y-6">
