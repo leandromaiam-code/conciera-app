@@ -170,7 +170,7 @@
   
   /* === Estados de Navegação === */
   .nav-item {
-    @apply transition-elegant p-2 rounded-lg;
+    @apply transition-elegant p-2 rounded-lg text-branco-puro/70;
   }
   
   .nav-item:hover,

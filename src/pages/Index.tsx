@@ -3,6 +3,11 @@ import { LoginCard } from "@/components/ui/login-card";
 import { AppLayout } from "@/components/layout/app-layout";
 import { DashboardView } from "@/components/dashboard/dashboard-view";
 import { WhatsAppSimulation } from "@/components/dashboard/whatsapp-simulation";
+import { AgendaView } from "@/components/pages/agenda-view";
+import { AnalyticsView } from "@/components/pages/analytics-view";
+import { ConversasView } from "@/components/pages/conversas-view";
+import { PlaybooksView } from "@/components/pages/playbooks-view";
+import { ConfiguracoesView } from "@/components/pages/configuracoes-view";
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,60 +27,15 @@ const Index = () => {
       case "dashboard":
         return <DashboardView onWhatsAppClick={handleWhatsAppClick} />;
       case "agenda":
-        return (
-          <div className="animate-fade-in">
-            <div className="kpi-card text-center py-xxl">
-              <h2 className="text-onyx mb-sm">Controle de Agendamentos</h2>
-              <p className="text-secondary text-grafite">
-                Funcionalidade em desenvolvimento - Interface de gestão da agenda em breve.
-              </p>
-            </div>
-          </div>
-        );
+        return <AgendaView />;
       case "analytics":
-        return (
-          <div className="animate-fade-in">
-            <div className="kpi-card text-center py-xxl">
-              <h2 className="text-onyx mb-sm">Analytics e Relatórios</h2>
-              <p className="text-secondary text-grafite">
-                Métricas avançadas e relatórios personalizados em desenvolvimento.
-              </p>
-            </div>
-          </div>
-        );
+        return <AnalyticsView />;
       case "conversas":
-        return (
-          <div className="animate-fade-in">
-            <div className="kpi-card text-center py-xxl">
-              <h2 className="text-onyx mb-sm">Histórico de Conversas</h2>
-              <p className="text-secondary text-grafite">
-                Acesso completo ao histórico de interações em breve.
-              </p>
-            </div>
-          </div>
-        );
+        return <ConversasView />;
       case "playbooks":
-        return (
-          <div className="animate-fade-in">
-            <div className="kpi-card text-center py-xxl">
-              <h2 className="text-onyx mb-sm">Gestão de Playbooks</h2>
-              <p className="text-secondary text-grafite">
-                Centro de controle da inteligência de IA em desenvolvimento.
-              </p>
-            </div>
-          </div>
-        );
+        return <PlaybooksView />;
       case "configuracoes":
-        return (
-          <div className="animate-fade-in">
-            <div className="kpi-card text-center py-xxl">
-              <h2 className="text-onyx mb-sm">Configurações do Sistema</h2>
-              <p className="text-secondary text-grafite">
-                Painel de configurações e preferências em breve.
-              </p>
-            </div>
-          </div>
-        );
+        return <ConfiguracoesView />;
       default:
         return <DashboardView onWhatsAppClick={handleWhatsAppClick} />;
     }
