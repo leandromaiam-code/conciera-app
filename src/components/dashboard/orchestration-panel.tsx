@@ -1,110 +1,61 @@
-import { MessageCircle, Phone, Mail, Users, Instagram, FileText, Settings, Zap, Loader2 } from "lucide-react";
+import { MessageCircle, Phone, Mail, Users, Instagram, FileText } from "lucide-react";
 import { ConcieraLogo } from "@/components/ui/logo";
-import { ChannelConfigModal } from "./channel-config-modal";
-import { useChannelControl } from "@/hooks/use-channel-control";
-import { ChannelKey, ChannelStatus } from "@/types/channel";
 import React from "react";
 
 interface ChannelNodeProps {
   icon: React.ElementType;
   name: string;
-  status: ChannelStatus;
+  isActive?: boolean;
   onClick?: () => void;
-  onConfigure?: () => void;
 }
 
-const ChannelNode = ({ icon: Icon, name, status, onClick, onConfigure }: ChannelNodeProps) => {
-  const getStatusStyles = () => {
-    switch (status) {
-      case 'active':
-        return 'bg-esmeralda text-white shadow-lg border-4 border-esmeralda animate-pulse-ring scale-110';
-      case 'connected': 
-        return 'bg-dourado text-onyx border-4 border-dourado shadow-md';
-      case 'connecting':
-        return 'bg-yellow-300 text-yellow-800 border-4 border-yellow-500 animate-pulse shadow-lg';
-      case 'disconnected':
-      default:
-        return 'bg-white text-gray-600 border-2 border-gray-300 hover:border-dourado hover:text-dourado hover:shadow-md';
-    }
-  };
-
-  const getStatusIndicator = () => {
-    switch (status) {
-      case 'active':
-        return <Zap size={12} className="absolute -top-1 -right-1 bg-esmeralda text-branco-puro rounded-full p-0.5" />;
-      case 'connecting':
-        return <Loader2 size={12} className="absolute -top-1 -right-1 bg-dourado text-onyx rounded-full p-0.5 animate-spin" />;
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="relative group">
-      <div 
-        className={`flex flex-col items-center gap-1 cursor-pointer transition-elegant hover:scale-110 hover:-translate-y-1`}
-        onClick={onClick}
-      >
-        <div className={`relative w-12 h-12 rounded-full flex items-center justify-center transition-elegant border-2 ${getStatusStyles()}`}>
-          <Icon size={20} />
-          {getStatusIndicator()}
-        </div>
-        <span className="text-xs font-medium text-grafite">{name}</span>
-      </div>
-      
-      {/* Configuration button - shown on hover */}
-      {onConfigure && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onConfigure();
-          }}
-          className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-6 h-6 bg-onyx text-branco-puro rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-elegant hover:scale-110"
-        >
-          <Settings size={12} />
-        </button>
-      )}
+const ChannelNode = ({ icon: Icon, name, isActive = false, onClick }: ChannelNodeProps) => (
+  <div 
+    className={`flex flex-col items-center gap-1 cursor-pointer transition-all duration-200 hover:scale-110 ${
+      onClick ? 'hover:-translate-y-1 hover:shadow-sm' : ''
+    }`}
+    onClick={onClick}
+  >
+    <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
+      isActive ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-300'
+    }`}>
+      <Icon size={24} />
     </div>
-  );
-};
+    <span className="text-xs font-medium text-gray-600">{name}</span>
+  </div>
+);
 
 interface OrchestrationPanelProps {
-  onWhatsAppClick?: () => void;
+  onWhatsAppClick: () => void;
+  activeChannels?: {
+    whatsappAtivo: boolean;
+    telefoneAtivo: boolean;
+    emailAtivo: boolean;
+    portalAtivo: boolean;
+    instagramAtivo: boolean;
+    formulariosAtivo: boolean;
+  };
 }
 
-export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps) => {
+export const OrchestrationPanel = ({ onWhatsAppClick, activeChannels }: OrchestrationPanelProps) => {
   const [animateConnections, setAnimateConnections] = React.useState(false);
-  const [configModal, setConfigModal] = React.useState<{ isOpen: boolean; channelKey?: ChannelKey }>({ 
-    isOpen: false 
-  });
-  
-  const { channels, toggleChannel, getActiveChannelsCount } = useChannelControl();
 
   React.useEffect(() => {
     const timer = setTimeout(() => setAnimateConnections(true), 500);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleChannelClick = (channelKey: ChannelKey) => {
-    console.log(`Channel clicked: ${channelKey}, status: ${channels[channelKey].status}`);
-    
-    if (channels[channelKey].status === 'connecting') {
-      console.log('Channel is connecting, ignoring click');
-      return;
-    }
-    
-    if (channelKey === 'whatsapp' && onWhatsAppClick) {
-      onWhatsAppClick();
-    }
-    
-    toggleChannel(channelKey);
+  const defaultChannels = {
+    whatsappAtivo: true,
+    telefoneAtivo: true,
+    emailAtivo: false,
+    portalAtivo: false,
+    instagramAtivo: false,
+    formulariosAtivo: false
   };
-
-  const handleConfigure = (channelKey: ChannelKey) => {
-    setConfigModal({ isOpen: true, channelKey });
-  };
-
-  const activeCount = getActiveChannelsCount();
+  
+  const channels = activeChannels || defaultChannels;
+  const activeCount = Object.values(channels).filter(Boolean).length;
 
   return (
     <div className="col-span-2 bg-white/50 rounded-xl p-8 relative overflow-hidden">
@@ -186,61 +137,50 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
           {/* Channel Nodes - arranged in circle */}
           <div className="absolute top-4 left-28">
             <ChannelNode 
-              icon={channels.whatsapp.icon} 
-              name={channels.whatsapp.name} 
-              status={channels.whatsapp.status}
-              onClick={() => handleChannelClick('whatsapp')}
-              onConfigure={() => handleConfigure('whatsapp')}
+              icon={MessageCircle} 
+              name="WhatsApp" 
+              isActive={channels.whatsappAtivo}
+              onClick={onWhatsAppClick}
             />
           </div>
           
           <div className="absolute top-4 right-28">
             <ChannelNode 
-              icon={channels.telefone.icon} 
-              name={channels.telefone.name} 
-              status={channels.telefone.status}
-              onClick={() => handleChannelClick('telefone')}
-              onConfigure={() => handleConfigure('telefone')}
+              icon={Phone} 
+              name="Telefone" 
+              isActive={channels.telefoneAtivo}
             />
           </div>
           
           <div className="absolute top-1/2 -translate-y-1/2 right-4">
             <ChannelNode 
-              icon={channels.instagram.icon} 
-              name={channels.instagram.name} 
-              status={channels.instagram.status}
-              onClick={() => handleChannelClick('instagram')}
-              onConfigure={() => handleConfigure('instagram')}
+              icon={Instagram} 
+              name="Instagram" 
+              isActive={channels.instagramAtivo}
             />
           </div>
           
           <div className="absolute bottom-4 right-28">
             <ChannelNode 
-              icon={channels.email.icon} 
-              name={channels.email.name} 
-              status={channels.email.status}
-              onClick={() => handleChannelClick('email')}
-              onConfigure={() => handleConfigure('email')}
+              icon={Mail} 
+              name="Email" 
+              isActive={channels.emailAtivo}
             />
           </div>
           
           <div className="absolute bottom-4 left-28">
             <ChannelNode 
-              icon={channels.formularios.icon} 
-              name={channels.formularios.name} 
-              status={channels.formularios.status}
-              onClick={() => handleChannelClick('formularios')}
-              onConfigure={() => handleConfigure('formularios')}
+              icon={FileText} 
+              name="Formulários" 
+              isActive={channels.formulariosAtivo}
             />
           </div>
           
           <div className="absolute top-1/2 -translate-y-1/2 left-4">
             <ChannelNode 
-              icon={channels.portal.icon} 
-              name={channels.portal.name} 
-              status={channels.portal.status}
-              onClick={() => handleChannelClick('portal')}
-              onConfigure={() => handleConfigure('portal')}
+              icon={Users} 
+              name="Portal" 
+              isActive={channels.portalAtivo}
             />
           </div>
         </div>
@@ -248,26 +188,15 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
         {/* Status Info */}
         <div className="flex justify-center gap-8 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-esmeralda rounded-full animate-pulse"></div>
-            <span className="text-grafite">{activeCount} Canais Ativos</span>
+            <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+            <span className="text-gray-600">{activeCount} Canais Ativos</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-dourado rounded-full"></div>
-            <span className="text-grafite">Processando 24/7</span>
+            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+            <span className="text-gray-600">Processando 24/7</span>
           </div>
         </div>
       </div>
-
-      {/* Configuration Modal */}
-      {configModal.isOpen && configModal.channelKey && (
-        <ChannelConfigModal
-          isOpen={configModal.isOpen}
-          onClose={() => setConfigModal({ isOpen: false })}
-          channelKey={configModal.channelKey}
-          channel={channels[configModal.channelKey]}
-          onConnect={toggleChannel}
-        />
-      )}
     </div>
   );
 };

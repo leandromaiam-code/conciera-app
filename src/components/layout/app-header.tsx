@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Bell, ChevronDown } from "lucide-react";
 import { CommandSearch } from "@/components/ui/command-search";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
-import { ChannelStatusIndicator } from "@/components/dashboard/channel-status-indicator";
 
 interface AppHeaderProps {
   pageTitle: string;
@@ -44,11 +43,8 @@ export const AppHeader = ({
           <Breadcrumbs items={getBreadcrumbItems()} onPageChange={onPageChange} />
         </div>
 
-        {/* Right Side - Channel Status and User Identity */}
+        {/* Right Side - Clinic Identity */}
         <div className="flex items-center gap-6">
-          {/* Channel Status Indicator */}
-          <ChannelStatusIndicator />
-          
           {/* Keyboard Shortcuts Hint */}
           <div className="hidden lg:block text-xs text-grafite">
             <kbd className="px-2 py-1 bg-marfim rounded text-grafite">Alt + 1-6</kbd> para navegar

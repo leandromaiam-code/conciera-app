@@ -33,27 +33,27 @@ export const KPICard = ({
       <div className={`kpi-card hover-elevate transition-elegant cursor-help ${className}`}>
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="text-gray-900 text-xl font-semibold font-playfair">{title}</h3>
+            <h3 className="text-onyx text-xl font-semibold font-playfair">{title}</h3>
             {sparklineData && (
               <Sparkline 
                 data={sparklineData} 
                 width={60} 
                 height={20}
-                color={trend?.isPositive ? "#16a34a" : "#dc2626"}
+                color={trend?.isPositive ? "hsl(var(--esmeralda))" : "hsl(var(--erro))"}
               />
             )}
           </div>
-          <p className="text-gray-600 text-sm">{subtitle}</p>
+          <p className="text-grafite text-sm">{subtitle}</p>
         </div>
         
         <div className="flex items-end justify-between">
-          <div className="text-4xl font-bold text-gray-900 font-playfair">
+          <div className="text-4xl font-bold text-onyx font-playfair">
             {value}
           </div>
           
           {trend && (
             <div className={`flex items-center gap-1 text-sm font-semibold ${
-              trend.isPositive ? 'text-green-600' : 'text-red-600'
+              trend.isPositive ? 'text-esmeralda' : 'text-erro'
             }`}>
               {trend.isPositive ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
               {trend.value}
