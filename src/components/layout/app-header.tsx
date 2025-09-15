@@ -1,29 +1,23 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Bell, ChevronDown } from "lucide-react";
-import { CommandSearch } from "@/components/ui/command-search";
 
 interface AppHeaderProps {
   pageTitle: string;
   clinicName?: string;
   userName?: string;
-  onPageChange: (page: string) => void;
 }
 
 export const AppHeader = ({ 
   pageTitle, 
   clinicName = "Clínica Exemplo",
-  userName = "Dr. Silva",
-  onPageChange
+  userName = "Dr. Silva" 
 }: AppHeaderProps) => {
   return (
     <header className="fixed top-0 left-20 right-0 h-20 bg-white border-b border-gray-300 z-30 flex items-center justify-between px-16">
-      {/* Left Side - Page Title and Search */}
-      <div className="flex items-center gap-6">
+      {/* Page Title */}
+      <div>
         <h1 className="text-gray-900 text-3xl font-bold font-serif">{pageTitle}</h1>
-        <div className="hidden md:block">
-          <CommandSearch onPageChange={onPageChange} />
-        </div>
       </div>
 
       {/* Right Side - Clinic Identity */}

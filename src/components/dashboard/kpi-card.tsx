@@ -13,7 +13,7 @@ interface KPICardProps {
 
 export const KPICard = ({ title, subtitle, value, trend, className = "" }: KPICardProps) => {
   return (
-    <div className={`kpi-card hover-elevate transition-elegant ${className}`}>
+    <div className={`bg-white p-6 rounded-xl shadow-lg ${className}`}>
       <div className="mb-4">
         <h3 className="text-gray-900 text-xl font-semibold font-serif mb-1">{title}</h3>
         <p className="text-gray-600 text-sm">{subtitle}</p>
