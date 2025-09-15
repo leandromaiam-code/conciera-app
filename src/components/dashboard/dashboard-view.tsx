@@ -9,13 +9,15 @@ interface DashboardViewProps {
 
 export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
   return (
-    <div className="animate-fade-in space-y-lg">
+    <div className="animate-fade-in space-y-md lg:space-y-lg">
       {/* Main Dashboard Grid - Revenue Focus */}
-      <div className="grid grid-cols-3 gap-lg">
-        {/* Revenue Performance Panel - Takes 2 columns */}
-        <RevenuePerformancePanel />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
+        {/* Revenue Performance Panel - Takes 2 columns on desktop, full width on mobile */}
+        <div className="lg:col-span-2">
+          <RevenuePerformancePanel />
+        </div>
 
-        {/* Opportunity Feed - Takes 1 column */}
+        {/* Opportunity Feed - Takes 1 column on desktop, full width on mobile */}
         <div className="space-y-md">
           <OpportunityFeed />
         </div>
@@ -25,7 +27,7 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
       <ConversionFunnelWidget />
 
       {/* Secondary KPI Row */}
-      <div className="grid grid-cols-4 gap-md">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
         <KPICard
           title="Mensagens Processadas"
           subtitle="Últimas 24h"
@@ -56,7 +58,7 @@ export const DashboardView = ({ onWhatsAppClick }: DashboardViewProps) => {
       </div>
 
       {/* Performance Insights */}
-      <div className="grid grid-cols-2 gap-lg">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-md lg:gap-lg">
         <div className="kpi-card">
           <h3 className="text-onyx mb-sm">Picos de Atividade</h3>
           <div className="space-y-sm">

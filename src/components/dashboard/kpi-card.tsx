@@ -15,20 +15,20 @@ export const KPICard = ({ title, subtitle, value, trend, className = "" }: KPICa
   return (
     <div className={`kpi-card ${className}`}>
       <div className="mb-sm">
-        <h3 className="text-onyx mb-xxs">{title}</h3>
-        <p className="text-secondary text-grafite">{subtitle}</p>
+        <h3 className="text-onyx mb-xxs text-sm md:text-base">{title}</h3>
+        <p className="text-secondary text-grafite text-xs md:text-sm">{subtitle}</p>
       </div>
       
       <div className="flex items-end justify-between">
-        <div className="text-5xl font-bold text-onyx font-playfair">
+        <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-onyx font-playfair">
           {value}
         </div>
         
         {trend && (
-          <div className={`flex items-center gap-xxs text-sm font-semibold ${
+          <div className={`flex items-center gap-xxs text-xs md:text-sm font-semibold ${
             trend.isPositive ? 'text-esmeralda' : 'text-erro'
           }`}>
-            {trend.isPositive ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+            {trend.isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
             {trend.value}
           </div>
         )}

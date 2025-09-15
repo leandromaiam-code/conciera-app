@@ -67,16 +67,16 @@ export const AgendaView = () => {
   const [selectedAgendamento, setSelectedAgendamento] = useState<Agendamento | null>(null);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-onyx">Controle de Agendamentos</h1>
-        <Button className="bg-dourado text-onyx hover:bg-dourado/90">
+    <div className="space-y-md lg:space-y-lg">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-onyx">Controle de Agendamentos</h1>
+        <Button className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto">
           <CalendarIcon className="w-4 h-4 mr-2" />
           Novo Agendamento
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
         {/* Calendar */}
         <Card>
           <CardHeader>
@@ -90,7 +90,7 @@ export const AgendaView = () => {
               mode="single"
               selected={selectedDate}
               onSelect={(date) => date && setSelectedDate(date)}
-              className="rounded-md border"
+              className="rounded-md border w-full"
             />
           </CardContent>
         </Card>

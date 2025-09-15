@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { AppSidebar } from "./app-sidebar";
 import { AppHeader } from "./app-header";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -23,13 +25,24 @@ const getPageTitle = (page: string): string => {
 
 export const AppLayout = ({ children, currentPage, onPageChange, onWhatsAppClick }: AppLayoutProps) => {
   const pageTitle = getPageTitle(currentPage);
+  const isMobile = useIsMobile();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar currentPage={currentPage} onPageChange={onPageChange} />
-      <AppHeader pageTitle={pageTitle} onWhatsAppClick={onWhatsAppClick} />
+      <AppSidebar 
+        currentPage={currentPage} 
+        onPageChange={onPageChange}
+        isOpen={isMobileMenuOpen}
+        onOpenChange={setIsMobileMenuOpen}
+      />
+      <AppHeader 
+        pageTitle={pageTitle} 
+        onWhatsAppClick={onWhatsAppClick}
+        onMenuClick={() => setIsMobileMenuOpen(true)}
+      />
       
-      <main className="ml-20 pt-20 p-xxl">
+      <main className={`${isMobile ? 'pt-16 p-md' : 'ml-20 pt-20 p-xxl'} mobile-safe-area`}>
         {children}
       </main>
     </div>

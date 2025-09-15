@@ -68,8 +68,8 @@ export const ConfiguracoesView = () => {
   const [notificacoesPush, setNotificacoesPush] = useState(true);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-onyx">Configurações do Sistema</h1>
+    <div className="space-y-md lg:space-y-lg">
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-onyx">Configurações do Sistema</h1>
 
       {/* Informações da Clínica */}
       <Card>
@@ -104,7 +104,7 @@ export const ConfiguracoesView = () => {
             </div>
           </div>
           
-          <Button className="bg-dourado text-onyx hover:bg-dourado/90">
+          <Button className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto">
             Salvar Informações
           </Button>
         </CardContent>
