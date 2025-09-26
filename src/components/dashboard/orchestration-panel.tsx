@@ -1,4 +1,4 @@
-import { MessageCircle, Phone, Mail, Users, panels-top-left } from "lucide-react";
+import { MessageCircle, Phone, Mail, Users, Bot } from "lucide-react";
 import { useState } from "react";
 import concieraLogo from "@/assets/conciera-logo.png";
 
@@ -93,7 +93,7 @@ export const OrchestrationPanel = ({ onWhatsAppClick }: OrchestrationPanelProps)
           
           <div className="absolute top-8 right-16">
             <ChannelNode 
-              icon={panels-top-left} 
+              icon={Bot} 
               name="Site" 
               isActive={activeChannels.includes('phone')}
             />

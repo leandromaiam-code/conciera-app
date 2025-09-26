@@ -162,7 +162,7 @@ export const ConversasView = () => {
                 <SelectItem value="instagram">Instagram</SelectItem>
                 <SelectItem value="whatsapp">WhatsApp</SelectItem>
                 <SelectItem value="email">Email</SelectItem>
-                <SelectItem value="telefone">Telefone</SelectItem>
+                <SelectItem value="site">Site</SelectItem>
               </SelectContent>
             </Select>
           </div>

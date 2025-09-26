@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign, panels-top-left } from "lucide-react";
+import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign, Bot } from "lucide-react";
 import { useState } from "react";
 
 interface ChannelConfig {
@@ -48,7 +48,7 @@ const channelsConfig: ChannelConfig[] = [
     tipo: "site",
     status: "conectado", 
     ativo: false,
-    icon: panels-top-left
+    icon: Bot
   }
 ];
 
