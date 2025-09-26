@@ -103,6 +103,7 @@ export const ConfiguracoesView = () => {
                 className="mt-1"
               />
             </div>
+         </div>
          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="specialist-name">Nome dos Profissionais</Label>
@@ -134,7 +135,6 @@ export const ConfiguracoesView = () => {
                 />
               </div>
               </div>
-          </div>
           </div>
           
           <Button className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto">
