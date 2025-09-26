@@ -3,13 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageSquare, Search, Filter, Instagram, Phone, Mail, Calendar } from "lucide-react";
+import { MessageSquare, Search, Filter, Instagram, Site, Mail, Calendar } from "lucide-react";
 import { useState } from "react";
 
 interface Conversa {
   id: string;
   paciente_nome: string;
-  canal: 'instagram' | 'whatsapp' | 'email' | 'telefone';
+  canal: 'instagram' | 'whatsapp' | 'email' | 'site';
   status: 'ativo' | 'agendado' | 'perdido' | 'nutrição';
   ultima_mensagem: string;
   data_inicio: string;
@@ -69,7 +69,7 @@ const getChannelIcon = (canal: string) => {
     case 'instagram': return Instagram;
     case 'whatsapp': return MessageSquare;
     case 'email': return Mail;
-    case 'telefone': return Phone;
+    case 'site': return Phone;
     default: return MessageSquare;
   }
 };

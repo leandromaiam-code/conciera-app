@@ -5,13 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign } from "lucide-react";
+import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign, panels-top-left } from "lucide-react";
 import { useState } from "react";
 
 interface ChannelConfig {
   id: string;
   nome: string;
-  tipo: 'instagram' | 'whatsapp' | 'email' | 'telefone';
+  tipo: 'instagram' | 'whatsapp' | 'email' | 'site';
   status: 'conectado' | 'desconectado' | 'erro';
   ativo: boolean;
   icon: any;
@@ -44,11 +44,11 @@ const channelsConfig: ChannelConfig[] = [
   },
   {
     id: "4",
-    nome: "Telefone (11) 99999-0000",
-    tipo: "telefone",
+    nome: "Site wwww.clinica.com.br",
+    tipo: "site",
     status: "conectado", 
     ativo: false,
-    icon: Phone
+    icon: panels-top-left
   }
 ];
 
