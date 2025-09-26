@@ -123,7 +123,6 @@ export const ConfiguracoesView = () => {
                 className="mt-1"
               />
                </div>
-            </div>
              </div>
             </div>
           </div>
