@@ -125,7 +125,6 @@ export const ConfiguracoesView = () => {
                 onChange={(e) => setSpecialistName(e.target.value)}
                 className="mt-1"
               />
-             </div>
              <div>
               <Label htmlFor="services">Procedimentos</Label>
               <div>
@@ -135,6 +134,7 @@ export const ConfiguracoesView = () => {
                 onChange={(e) => setServices(e.target.value)}
                 className="mt-1"
               />
+             </div>
              </div>
             </div>
             </div>
