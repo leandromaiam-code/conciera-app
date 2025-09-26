@@ -95,6 +95,7 @@ export const ConfiguracoesView = () => {
             </div>
             <div>
               <Label htmlFor="address">Endereço da Clínica</Label>
+              <div className="relative mt-1">
               <Input
                 id="address"
                 value={address}
@@ -121,6 +122,7 @@ export const ConfiguracoesView = () => {
                 onChange={(e) => setSpecialistName(e.target.value)}
                 className="mt-1"
               />
+               </div>
              </div>
             </div>
           </div>
