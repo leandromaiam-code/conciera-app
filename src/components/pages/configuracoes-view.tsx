@@ -69,7 +69,6 @@ export const ConfiguracoesView = () => {
 
   return (
     <div className="space-y-md lg:space-y-lg">
-      <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-onyx">Configurações do Sistema</h1>
 
       {/* Informações da Clínica */}
       <Card>
