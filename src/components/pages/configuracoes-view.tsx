@@ -115,14 +115,12 @@ export const ConfiguracoesView = () => {
              </div>
              <div>
               <Label htmlFor="services">Procedimentos</Label>
-              <div>
               <Input
                 id="services"
                 value={services}
                 onChange={(e) => setServices(e.target.value)}
                 className="mt-1"
               />
-            </div>
             </div>
           <div>
               <Label htmlFor="valor-medio">Valor Médio da Consulta</Label>
