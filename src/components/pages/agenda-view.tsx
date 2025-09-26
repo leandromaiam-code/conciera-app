@@ -67,9 +67,9 @@ export const AgendaView = () => {
   const [selectedAgendamento, setSelectedAgendamento] = useState<Agendamento | null>(null);
 
   return (
-    <div className="space-y-2 lg:space-y-lg">
+    <div className="space-y-md-2 lg:space-y-lg">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <Button className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto"></br>
+        <Button className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto">
           <CalendarIcon className="w-4 h-4 mr-2" />
           Novo Agendamento
         </Button>
