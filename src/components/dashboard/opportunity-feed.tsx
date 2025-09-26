@@ -110,7 +110,7 @@ export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
           onClick={() => onPageChange?.("agenda")}
           className="text-xs text-dourado hover:text-onyx transition-elegant font-medium"
         >
-          Ver todas as oportunidades na Agenda →
+          Ver todas →
         </button>
       </div>
     </div>
