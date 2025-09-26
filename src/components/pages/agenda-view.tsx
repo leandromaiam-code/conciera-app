@@ -69,7 +69,6 @@ export const AgendaView = () => {
   return (
     <div className="space-y-md lg:space-y-lg">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-onyx">Controle de Agendamentos</h1>
         <Button className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto">
           <CalendarIcon className="w-4 h-4 mr-2" />
           Novo Agendamento
