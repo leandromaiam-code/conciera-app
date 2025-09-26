@@ -54,7 +54,7 @@ export const AppHeader = ({
           >
             <MessageCircle size={16} />
             <div className="w-2 h-2 bg-esmeralda rounded-full animate-pulse"></div>
-            {!isMobile && <span className="text-xs font-medium">WhatsApp</span>}
+            {!isMobile && <span className="text-xs font-medium">Simular Conciera</span>}
           </Button>
         )}
 
