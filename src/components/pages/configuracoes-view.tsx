@@ -105,7 +105,7 @@ export const ConfiguracoesView = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="valor-medio">Valor Médio da Consulta</Label>
-              <div className="mt-1">
+              <div className="relative mt-1">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-grafite">R$</span>
                 <Input
                   id="valor-medio"
