@@ -104,6 +104,18 @@ export const ConfiguracoesView = () => {
             </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
+              <Label htmlFor="valor-medio">Valor Médio da Consulta</Label>
+              <div className="relative mt-1">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-grafite">R$</span>
+                <Input
+                  id="valor-medio"
+                  value={valorMedioConsulta}
+                  onChange={(e) => setValorMedioConsulta(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              </div>
+            <div>
               <Label htmlFor="specialist-name">Nome dos Profissionais</Label>
               <div>
               <Input
@@ -113,18 +125,6 @@ export const ConfiguracoesView = () => {
                 className="mt-1"
               />
              </div>
-              <div>
-              <Label htmlFor="valor-medio">Valor Médio da Consulta</Label>
-              <div className="relative mt-1">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-grafite">R$</span>
-                <Input
-                  id="valor-medio"
-                  value={valorMedioConsulta}
-                  onChange={(e) => setValorMedioConsulta(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              </div>
             </div>
           </div>
           </div>
