@@ -116,7 +116,7 @@ export const ConfiguracoesView = () => {
               </div>
             <div>
               <Label htmlFor="specialist-name">Nome dos Profissionais</Label>
-              <div className="relative mt-1">
+              <div className="relative mt-2">
               <Input
                 id="specialist-name"
                 value={specialistname}
