@@ -50,7 +50,7 @@ export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
   return (
     <div className="space-y-sm">
       <div className="flex items-center justify-between">
-        <h3 className="text-onyx">Próximas Oportunidades</h3>
+        <h3 className="text-onyx">Próximas Consultas</h3>
         <div className="flex items-center gap-xxs text-xs text-grafite">
           <TrendingUp size={12} />
           <span>Alto Valor</span>
