@@ -64,8 +64,11 @@ const getStatusColor = (status: string) => {
 
 export const ConfiguracoesView = () => {
   const [clinicName, setClinicName] = useState("Clínica Exemplo");
+  const [address, setAddress] = useState("Av. Principal da Cidade, nº 350 - Bairro Nobre");
   const [valorMedioConsulta, setValorMedioConsulta] = useState("350");
+  const [specialistname, setSpecialistName] = useState("Dr. Carlos Castro, Dra. Patrícia Prates");
   const [autoAgendamento, setAutoAgendamento] = useState(true);
+  const [autoPagamento, setAutoPagamento] = useState(false);
   const [notificacoesPush, setNotificacoesPush] = useState(true);
 
   return (
@@ -115,7 +118,7 @@ export const ConfiguracoesView = () => {
               <Input
                 id="specialist-name"
                 value={specialistname}
-                onChange={(e) => setSpecialistname(e.target.value)}
+                onChange={(e) => setSpecialistName(e.target.value)}
                 className="mt-1"
               />
              </div>
