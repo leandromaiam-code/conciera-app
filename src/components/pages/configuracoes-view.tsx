@@ -67,6 +67,7 @@ export const ConfiguracoesView = () => {
   const [address, setAddress] = useState("Av. Principal da Cidade, nº 350 - Bairro Nobre");
   const [valorMedioConsulta, setValorMedioConsulta] = useState("350");
   const [specialistname, setSpecialistName] = useState("Dr. Carlos Castro, Dra. Patrícia Prates");
+  const [services, setServices] = useState("Harmonização Facial, Botox, procedimentos e cirugiais faciais");
   const [autoAgendamento, setAutoAgendamento] = useState(true);
   const [autoPagamento, setAutoPagamento] = useState(false);
   const [notificacoesPush, setNotificacoesPush] = useState(true);
@@ -125,6 +126,17 @@ export const ConfiguracoesView = () => {
                 className="mt-1"
               />
              </div>
+             <div>
+              <Label htmlFor="services">Procedimentos</Label>
+              <div>
+              <Input
+                id="services"
+                value={services}
+                onChange={(e) => setServices(e.target.value)}
+                className="mt-1"
+              />
+             </div>
+            </div>
             </div>
           </div>
           </div>
