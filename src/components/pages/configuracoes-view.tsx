@@ -19,20 +19,21 @@ interface ChannelConfig {
 
 const channelsConfig: ChannelConfig[] = [
   {
-    id: "1",
-    nome: "Instagram @clinicaexemplo",
-    tipo: "instagram",
-    status: "conectado",
-    ativo: true,
-    icon: Instagram
-  },
-  {
-    id: "2", 
+ 
+    id: "1", 
     nome: "WhatsApp Business",
     tipo: "whatsapp",
     status: "conectado",
     ativo: true,
     icon: MessageSquare
+  },
+  { 
+    id: "2",
+    nome: "Instagram @clinicaexemplo",
+    tipo: "instagram",
+    status: "desconectado",
+    ativo: false,
+    icon: Instagram
   },
   {
     id: "3",
@@ -46,7 +47,7 @@ const channelsConfig: ChannelConfig[] = [
     id: "4",
     nome: "Site wwww.clinica.com.br",
     tipo: "site",
-    status: "conectado", 
+    status: "desconectado", 
     ativo: false,
     icon: Bot
   }
