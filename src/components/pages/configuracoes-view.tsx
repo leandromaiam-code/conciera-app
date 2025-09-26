@@ -91,6 +91,15 @@ export const ConfiguracoesView = () => {
               />
             </div>
             <div>
+              <Label htmlFor="address">Endereço da Clínica</Label>
+              <Input
+                id="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="mt-1"
+              />
+            </div>
+            <div>
               <Label htmlFor="valor-medio">Valor Médio da Consulta</Label>
               <div className="relative mt-1">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-grafite">R$</span>
@@ -101,6 +110,15 @@ export const ConfiguracoesView = () => {
                   className="pl-10"
                 />
               </div>
+            <div>
+              <Label htmlFor="specialist-name">Nome dos Profissionais</Label>
+              <Input
+                id="specialist-name"
+                value={specialistname}
+                onChange={(e) => setSpecialistname(e.target.value)}
+                className="mt-1"
+              />
+             </div>
             </div>
           </div>
           
@@ -180,6 +198,18 @@ export const ConfiguracoesView = () => {
 
             <div className="flex items-center justify-between">
               <div>
+                <Label className="text-base">Cobrança Automática</Label>
+                <p className="text-sm text-grafite">Permitir que a IA receba e confirme pagamentos</p>
+              </div>
+              <Switch
+                checked={autoPagamento}
+                onCheckedChange={setAutoPagamento}
+              />
+            </div>
+
+            <Separator />
+            <div className="flex items-center justify-between">
+              <div>
                 <Label className="text-base">Notificações Push</Label>
                 <p className="text-sm text-grafite">Receber notificações de novas conversas</p>
               </div>
@@ -218,15 +248,6 @@ export const ConfiguracoesView = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Button variant="outline">
               Alterar Senha
-            </Button>
-            <Button variant="outline">
-              Configurar 2FA
-            </Button>
-            <Button variant="outline">
-              Baixar Dados
-            </Button>
-            <Button variant="outline">
-              Logs de Auditoria
             </Button>
           </div>
         </CardContent>
