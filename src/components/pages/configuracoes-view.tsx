@@ -103,17 +103,15 @@ export const ConfiguracoesView = () => {
                 className="mt-1"
               />
             </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="specialist-name">Nome dos Profissionais</Label>
-              <div>
               <Input
                 id="specialist-name"
                 value={specialistname}
                 onChange={(e) => setSpecialistName(e.target.value)}
                 className="mt-1"
               />
-             </div>
              </div>
              <div>
               <Label htmlFor="services">Procedimentos</Label>
