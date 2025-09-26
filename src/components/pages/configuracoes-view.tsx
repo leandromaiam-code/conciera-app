@@ -116,14 +116,12 @@ export const ConfiguracoesView = () => {
               </div>
             <div>
               <Label htmlFor="specialist-name">Nome dos Profissionais</Label>
-              <div className="relative mt-2">
               <Input
                 id="specialist-name"
                 value={specialistname}
                 onChange={(e) => setSpecialistName(e.target.value)}
                 className="mt-1"
               />
-             </div>
              </div>
             </div>
           </div>
