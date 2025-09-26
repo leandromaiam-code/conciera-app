@@ -95,7 +95,6 @@ export const ConfiguracoesView = () => {
             </div>
             <div>
               <Label htmlFor="address">Endereço da Clínica</Label>
-              <div className="relative mt-1">
               <Input
                 id="address"
                 value={address}
@@ -103,8 +102,10 @@ export const ConfiguracoesView = () => {
                 className="mt-1"
               />
             </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="valor-medio">Valor Médio da Consulta</Label>
+              <div className="relative mt-1">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-grafite">R$</span>
                 <Input
                   id="valor-medio"
@@ -115,16 +116,15 @@ export const ConfiguracoesView = () => {
               </div>
             <div>
               <Label htmlFor="specialist-name">Nome dos Profissionais</Label>
-              <div className="relative mt-1">
               <Input
                 id="specialist-name"
                 value={specialistname}
                 onChange={(e) => setSpecialistName(e.target.value)}
                 className="mt-1"
               />
-               </div>
              </div>
             </div>
+          </div>
           </div>
           
           <Button className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto">
