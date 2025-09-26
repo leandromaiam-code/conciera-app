@@ -6,7 +6,6 @@ import { WhatsAppSimulation } from "@/components/dashboard/whatsapp-simulation";
 import { AgendaView } from "@/components/pages/agenda-view";
 import { AnalyticsView } from "@/components/pages/analytics-view";
 import { ConversasView } from "@/components/pages/conversas-view";
-import { PlaybooksView } from "@/components/pages/playbooks-view";
 import { ConfiguracoesView } from "@/components/pages/configuracoes-view";
 
 const Index = () => {
@@ -32,8 +31,6 @@ const Index = () => {
         return <AnalyticsView />;
       case "conversas":
         return <ConversasView />;
-      case "playbooks":
-        return <PlaybooksView />;
       case "configuracoes":
         return <ConfiguracoesView />;
       default:

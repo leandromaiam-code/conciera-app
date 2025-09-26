@@ -24,7 +24,6 @@ const navigationItems = [
   { id: "agenda", icon: Calendar, label: "Agendamentos" },
   { id: "analytics", icon: BarChart3, label: "Analytics" },
   { id: "conversas", icon: MessageSquare, label: "Conversas" },
-  { id: "playbooks", icon: BookOpen, label: "Playbooks" },
   { id: "configuracoes", icon: Settings, label: "Configurações" },
 ];
 
