@@ -10,16 +10,16 @@ interface DashboardViewProps {
 
 export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewProps) => {
   return (
-    <div className="animate-fade-in flex-1 space-y-4 p-4 md:p-8">
+    <div className="animate-fade-in space-y-sm lg:space-y-md">
       {/* Main Dashboard Grid - Revenue Focus */}
-      <div className="flex flex-col lg:flex-row gap-4 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
         {/* Revenue Performance Panel - Takes 2 columns on desktop, full width on mobile */}
-        <div className="lg:w-2/3">
+        <div className="lg:col-span-2">
           <RevenuePerformancePanel />
         </div>
 
         {/* Opportunity Feed - Takes 1 column on desktop, full width on mobile */}
-        <div className="lg:w-1/3">
+        <div>
           <OpportunityFeed onPageChange={onPageChange} />
         </div>
       </div>
