@@ -1364,6 +1364,24 @@ export type Database = {
         }
         Relationships: []
       }
+      memoria_clientes_historico_01: {
+        Row: {
+          id: number
+          message: Json
+          session_id: string
+        }
+        Insert: {
+          id?: number
+          message: Json
+          session_id: string
+        }
+        Update: {
+          id?: number
+          message?: Json
+          session_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       v_conversas_detalhadas: {
