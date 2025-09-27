@@ -685,6 +685,7 @@ export type Database = {
           perfil_paciente: Json | null
           pontos_de_dor: Json | null
           resumo_conversa: string | null
+          servico_desejado: string | null
           temperatura_lead: number | null
         }
         Insert: {
@@ -696,6 +697,7 @@ export type Database = {
           perfil_paciente?: Json | null
           pontos_de_dor?: Json | null
           resumo_conversa?: string | null
+          servico_desejado?: string | null
           temperatura_lead?: number | null
         }
         Update: {
@@ -707,6 +709,7 @@ export type Database = {
           perfil_paciente?: Json | null
           pontos_de_dor?: Json | null
           resumo_conversa?: string | null
+          servico_desejado?: string | null
           temperatura_lead?: number | null
         }
         Relationships: [
@@ -903,6 +906,7 @@ export type Database = {
       }
       core_users: {
         Row: {
+          auth_id: string | null
           cpf: string | null
           created_at: string
           data_cadastro: string
@@ -923,6 +927,7 @@ export type Database = {
           whatsapp: string | null
         }
         Insert: {
+          auth_id?: string | null
           cpf?: string | null
           created_at?: string
           data_cadastro?: string
@@ -943,6 +948,7 @@ export type Database = {
           whatsapp?: string | null
         }
         Update: {
+          auth_id?: string | null
           cpf?: string | null
           created_at?: string
           data_cadastro?: string
