@@ -1,116 +1,32 @@
-import { KPICard } from "./kpi-card";
+// src/components/dashboard/dashboard-view.tsx
+
 import { RevenuePerformancePanel } from "./revenue-performance-panel";
 import { ConversionFunnelWidget } from "./conversion-funnel-widget";
-import { OpportunityFeed } from "./opportunity-feed";
+import { OpportunityFeed } from './opportunity-feed';
 
-interface DashboardViewProps {
-  onWhatsAppClick: () => void;
-  onPageChange?: (page: string) => void;
-}
-
-export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewProps) => {
+export function DashboardView() {
   return (
-    <div className="animate-fade-in space-y-sm lg:space-y-md">
-      {/* Main Dashboard Grid - Revenue Focus */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
-        {/* Revenue Performance Panel - Takes 2 columns on desktop, full width on mobile */}
-        <div className="lg:col-span-2">
-          <RevenuePerformancePanel />
-        </div>
-
-        {/* Opportunity Feed - Takes 1 column on desktop, full width on mobile */}
-        <div>
-          <OpportunityFeed onPageChange={onPageChange} />
-        </div>
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Painel de Performance</h2>
       </div>
 
-      {/* Conversion Funnel Widget */}
-      <ConversionFunnelWidget />
+      {/* V--- ALTERAÇÃO PRINCIPAL AQUI ---V */}
+      {/* Adicionamos 'lg:grid-rows-[1fr]' para forçar as linhas do grid a terem a mesma altura */}
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3 lg:grid-rows-[1fr]">
+        
+        {/* O painel de performance agora ocupa 2 colunas */}
+        <RevenuePerformancePanel />
 
-      {/* Secondary KPI Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-md">
-        <KPICard
-          title="Mensagens Processadas"
-          subtitle="Últimas 24h"
-          value={156}
-          trend={{ value: "+18%", isPositive: true }}
-        />
+        {/* O feed de oportunidades ocupa 1 coluna */}
+        <OpportunityFeed /> 
         
-        <KPICard
-          title="Tempo Médio Resposta"
-          subtitle="Resolução automática"
-          value="2.3s"
-          trend={{ value: "-15%", isPositive: true }}
-        />
-        
-        <KPICard
-          title="Satisfação Cliente"
-          subtitle="Avaliação média"
-          value="4.8"
-          trend={{ value: "+0.2", isPositive: true }}
-        />
-        
-        <KPICard
-          title="Taxa de Comparecimento"
-          subtitle="Percentual este mês"
-          value="87%"
-          trend={{ value: "+5%", isPositive: true }}
-        />
+      </div>
+      
+      <div className="grid gap-4">
+         <ConversionFunnelWidget />
       </div>
 
-      {/* Performance Insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-md lg:gap-lg">
-        <div className="kpi-card">
-          <h3 className="text-onyx mb-sm">Picos de Atividade</h3>
-          <div className="space-y-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">08:00 - 10:00</span>
-              <span className="font-semibold text-onyx">42 mensagens</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">14:00 - 16:00</span>
-              <span className="font-semibold text-onyx">38 mensagens</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">18:00 - 20:00</span>
-              <span className="font-semibold text-onyx">29 mensagens</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="kpi-card">
-          <h3 className="text-onyx mb-sm">Tipos de Solicitação</h3>
-          <div className="space-y-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">Agendamentos</span>
-              <div className="flex items-center gap-xs">
-                <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
-                  <div className="h-full bg-esmeralda rounded-full" style={{ width: '65%' }}></div>
-                </div>
-                <span className="font-semibold text-onyx text-sm">65%</span>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">Informações</span>
-              <div className="flex items-center gap-xs">
-                <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
-                  <div className="h-full bg-dourado rounded-full" style={{ width: '25%' }}></div>
-                </div>
-                <span className="font-semibold text-onyx text-sm">25%</span>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">Reagendamentos</span>
-              <div className="flex items-center gap-xs">
-                <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
-                  <div className="h-full bg-grafite rounded-full" style={{ width: '10%' }}></div>
-                </div>
-                <span className="font-semibold text-onyx text-sm">10%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
-};
+}
