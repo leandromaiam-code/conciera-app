@@ -1,13 +1,15 @@
 // src/components/dashboard/revenue-performance-panel.tsx
 
 import { KPICard } from "./kpi-card";
-import { useRevenueData } from "@/hooks/use-revenue-data";
+import { useAnalyticsMetricasMensaisVendasReal } from "@/hooks/use-analytics-metricas-mensais-vendas-real"; // << Corrigido para o seu hook
 import { Skeleton } from "../ui/skeleton";
 
 export function RevenuePerformancePanel() {
-  const { data, loading } = useRevenueData();
+  // Usando o seu hook original para buscar os dados
+  const { metrics, isLoading } = useAnalyticsMetricasMensaisVendasReal();
 
-  if (loading) {
+  // O esqueleto de carregamento é exibido enquanto os dados não chegam
+  if (isLoading || !metrics) {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 h-full">
         <Skeleton className="h-full w-full min-h-[120px]" />
@@ -17,39 +19,42 @@ export function RevenuePerformancePanel() {
       </div>
     );
   }
-
-  if (!data) {
-    return <div className="text-center text-sm text-red-500">Não foi possível carregar os dados de performance.</div>;
-  }
+  
+  // Lógica de cálculo de tendência, adaptada do seu código original
+  const sparklineData = metrics.analytics_metricas_mensal_vendas_sparkline_30d || [];
+  const trendValue = sparklineData.length > 7 ? 
+    ((sparklineData[sparklineData.length - 1] - sparklineData[sparklineData.length - 7]) / sparklineData[sparklineData.length - 7]) * 100 : 0;
 
   return (
+    // A estrutura de grid e h-full é mantida para o alinhamento
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 h-full">
       <KPICard
         title="Receita Gerada (RPG)"
-        value={`R$ ${data.receitaGerada.toLocaleString('pt-BR')}`}
-        iconType="dollar"
-        chartData={data.revenueChartData}
+        subtitle="Performance do mês"
+        value={`R$ ${(metrics.analytics_metricas_mensal_vendas_rpg_mensal / 1000).toFixed(1)}k`}
+        trend={{
+          value: `${Math.abs(trendValue).toFixed(1)}%`,
+          isPositive: trendValue >= 0,
+        }}
         className="h-full"
       />
       <KPICard
         title="Taxa de Conversão"
-        value={`${data.taxaConversao}%`}
-        iconType="arrow"
-        chartData={data.conversionChartData}
+        subtitle="Leads → Agendamentos"
+        value={`${metrics.analytics_metricas_mensal_vendas_taxa_conversao}%`}
         className="h-full"
+        // Pode adicionar um 'trend' aqui se o hook fornecer os dados
       />
       <KPICard
         title="Agendamentos Hoje"
-        value={`+${data.agendamentosHoje}`}
-        iconType="calendar"
-        chartData={data.appointmentsChartData}
+        subtitle="Novas oportunidades"
+        value={`+${metrics.analytics_metricas_mensal_vendas_agendamentos_diario}`}
         className="h-full"
       />
       <KPICard
         title="Satisfação"
-        value={`${data.satisfacao}%`}
-        iconType="smile"
-        chartData={data.satisfactionChartData}
+        subtitle="Média das avaliações"
+        value={`${metrics.analytics_metricas_mensal_vendas_satisfacao_media}%`}
         className="h-full"
       />
     </div>
