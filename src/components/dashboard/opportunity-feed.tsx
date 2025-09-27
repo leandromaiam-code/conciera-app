@@ -51,7 +51,7 @@ export const OpportunityFeed = () => {
   return (
     <Card className="col-span-1 flex flex-col">
       <CardHeader>
-        <CardTitle>Próximos Agendamentos</CardTitle>
+        <CardTitle>Agendamentos</CardTitle>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
         <div className="flex-grow">
