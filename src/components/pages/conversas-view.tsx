@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageSquare, Search, Filter, Instagram, Site, Mail, Calendar } from "lucide-react";
+import { MessageSquare, Search, Filter, Instagram, Globe, Mail, Calendar } from "lucide-react";
 import { useState } from "react";
 
 interface Conversa {
@@ -69,7 +69,7 @@ const getChannelIcon = (canal: string) => {
     case 'instagram': return Instagram;
     case 'whatsapp': return MessageSquare;
     case 'email': return Mail;
-    case 'site': return Phone;
+    case 'site': return Globe;
     default: return MessageSquare;
   }
 };
