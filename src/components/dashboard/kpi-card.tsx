@@ -2,12 +2,18 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, ArrowUpRight, Calendar, Smile } from "lucide-react";
-import { SparklineChart } from './sparkline-chart'; // Supondo que você tenha este componente
 import { cn } from "@/lib/utils";
 
-// ... (definições de tipo e props)
+// Definindo o tipo das props para o KPICard
+type KPICardProps = {
+  title: string;
+  value: string;
+  iconType: 'dollar' | 'arrow' | 'calendar' | 'smile';
+  className?: string;
+  chartData?: any[]; // Mantemos a prop, mas não a usamos por agora
+};
 
-export function KPICard({ title, value, iconType, chartData, className }: KPICardProps) {
+export function KPICard({ title, value, iconType, className }: KPICardProps) {
   const Icon = {
     dollar: DollarSign,
     arrow: ArrowUpRight,
@@ -16,19 +22,15 @@ export function KPICard({ title, value, iconType, chartData, className }: KPICar
   }[iconType];
 
   return (
-    // AQUI A MUDANÇA: 'h-full' e 'flex flex-col' para o Card
+    // A estrutura flex para alinhamento vertical foi mantida
     <Card className={cn("h-full flex flex-col", className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         <Icon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
-      {/* AQUI A MUDANÇA: 'flex-grow' para o CardContent se expandir */}
-      <CardContent className="flex flex-col flex-grow justify-between">
+      <CardContent className="flex flex-col flex-grow justify-center"> {/* Alterado para centralizar o valor */}
         <div className="text-2xl font-bold">{value}</div>
-        {/* O gráfico agora tem mais espaço para respirar */}
-        <div className="h-16 pt-4"> 
-          <SparklineChart data={chartData} />
-        </div>
+        {/* A área do gráfico foi removida para corrigir o erro */}
       </CardContent>
     </Card>
   );
