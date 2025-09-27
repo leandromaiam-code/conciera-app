@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { LoginCard } from "@/components/ui/login-card";
 import { AppLayout } from "@/components/layout/app-layout";
 import { DashboardView } from "@/components/dashboard/dashboard-view";
 import { WhatsAppSimulation } from "@/components/dashboard/whatsapp-simulation";
@@ -9,13 +8,8 @@ import { ConversasView } from "@/components/pages/conversas-view";
 import { ConfiguracoesView } from "@/components/pages/configuracoes-view";
 
 const Index = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
-
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-  };
 
   const handleWhatsAppClick = () => {
     setIsWhatsAppOpen(true);
@@ -38,10 +32,6 @@ const Index = () => {
     }
   };
 
-  if (!isAuthenticated) {
-    return <LoginCard onLogin={handleLogin} />;
-  }
-
   return (
     <>
       <AppLayout 
@@ -52,11 +42,13 @@ const Index = () => {
       >
         {renderPageContent()}
       </AppLayout>
-      
-      <WhatsAppSimulation 
-        isOpen={isWhatsAppOpen} 
-        onClose={() => setIsWhatsAppOpen(false)} 
-      />
+
+      {isWhatsAppOpen && (
+        <WhatsAppSimulation 
+          isOpen={isWhatsAppOpen}
+          onClose={() => setIsWhatsAppOpen(false)}
+        />
+      )}
     </>
   );
 };
