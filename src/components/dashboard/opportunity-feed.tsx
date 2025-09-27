@@ -1,118 +1,81 @@
-import { Clock, TrendingUp } from "lucide-react";
-import { useCoreAgendamentos } from "@/hooks/use-core-agendamentos";
+// src/components/dashboard/opportunity-feed.tsx
 
-interface OpportunityFeedProps {
-  onPageChange?: (page: string) => void;
-}
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Calendar, User, Clock, Flame } from 'lucide-react';
+import { useOpportunityFeed, UpcomingAppointment } from '@/hooks/use-opportunity-feed';
+import { Skeleton } from '@/components/ui/skeleton';
+// Removido para simplificar, pode ser adicionado depois
+// import { BriefingModal } from './briefing-modal';
+// import { useState } from 'react';
 
-/**
- * Feed de Oportunidades de Alto Valor
- * Lista interativa dos próximos agendamentos com maior potencial de receita
- */
-export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
-  const { opportunities, isLoading } = useCoreAgendamentos();
+const OpportunityCard = ({ opportunity }: { opportunity: UpcomingAppointment }) => {
+  const appointmentDate = new Date(opportunity.data_hora);
+  const formattedDate = appointmentDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  const formattedTime = appointmentDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-sm">
-        <div className="h-6 bg-cinza-fundo-hover rounded animate-pulse mb-md"></div>
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-20 bg-cinza-fundo-hover rounded animate-pulse"></div>
-        ))}
-      </div>
-    );
-  }
-
-  const getTemperaturaColor = (temp: 1 | 2 | 3) => {
-    switch (temp) {
-      case 3: return "text-esmeralda";
-      case 2: return "text-dourado"; 
-      case 1: return "text-grafite";
-    }
-  };
-
-  const getTemperaturaPoints = (temp: 1 | 2 | 3) => {
-    return Array.from({ length: 3 }, (_, i) => (
-      <div
-        key={i}
-        className={`w-2 h-2 rounded-full ${
-          i < temp ? "bg-dourado" : "bg-cinza-borda"
-        }`}
-      />
-    ));
-  };
-
-  const handleOpportunityClick = (opportunity: any) => {
-    console.log("Open BriefingModal for:", opportunity.id);
-    // Future: Open BriefingModal with opportunity details
+  const getTemperatureColor = (temp: number | null) => {
+    if (temp === 3) return 'text-red-500';
+    if (temp === 2) return 'text-yellow-500';
+    return 'text-gray-400';
   };
 
   return (
-    <div className="space-y-sm">
+    <div
+      className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+    >
       <div className="flex items-center justify-between">
-        <h3 className="text-onyx">Próximas Consultas</h3>
-        <div className="flex items-center gap-xxs text-xs text-grafite">
-          <TrendingUp size={12} />
-          <span>Alto Valor</span>
+        <div className="flex items-center">
+          <User className="w-4 h-4 mr-2 text-gray-500" />
+          <p className="font-semibold text-sm">{opportunity.cliente_nome}</p>
+        </div>
+        <div className="flex items-center text-xs text-gray-500">
+          <Flame className={`w-4 h-4 mr-1 ${getTemperatureColor(opportunity.temperatura_lead)}`} />
         </div>
       </div>
-
-      <div className="space-y-xs">
-        {opportunities.map((opportunity) => (
-            <div
-              key={opportunity.core_agendamentos_id}
-              className="kpi-card py-sm px-md cursor-pointer transition-elegant hover-elevate hover:border-dourado/30 group"
-              onClick={() => handleOpportunityClick(opportunity)}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-sm mb-1">
-                    <h4 className="font-semibold text-onyx group-hover:text-dourado transition-elegant text-sm">
-                      {opportunity.core_clientes_nome_completo}
-                    </h4>
-                    <div className="flex items-center gap-xxs">
-                      {opportunity.ui_temperatura_lead && getTemperaturaPoints(opportunity.ui_temperatura_lead)}
-                    </div>
-                  </div>
-                  
-                  <p className="text-xs text-grafite mb-1">
-                    {opportunity.core_agendamentos_servico_interesse}
-                  </p>
-                  
-                  <div className="flex items-center gap-lg text-xs text-grafite">
-                    <div className="flex items-center gap-xxs">
-                      <Clock size={12} />
-                      <span>{opportunity.core_agendamentos_data_hora}</span>
-                    </div>
-                    <div className="font-semibold text-dourado">
-                      R$ {opportunity.core_agendamentos_valor_estimado.toLocaleString('pt-BR')}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-end gap-1">
-                  <div className={`text-xs font-medium ${opportunity.ui_temperatura_lead && getTemperaturaColor(opportunity.ui_temperatura_lead)}`}>
-                    {opportunity.ui_temperatura_lead === 3 ? 'Quente' : 
-                     opportunity.ui_temperatura_lead === 2 ? 'Morno' : 'Frio'}
-                  </div>
-                  <div className="opacity-0 group-hover:opacity-100 transition-elegant text-xs text-dourado">
-                    Ver briefing →
-                  </div>
-                </div>
-              </div>
-            </div>
-        ))}
-      </div>
-
-      {/* Footer CTA - sem separação visual */}
-      <div className="mt-xs">
-        <button 
-          onClick={() => onPageChange?.("agenda")}
-          className="text-xs text-dourado hover:text-onyx transition-elegant font-medium"
-        >
-          Ver todas →
-        </button>
+      <p className="text-xs text-gray-500 ml-6">{opportunity.servico_interesse}</p>
+      <div className="flex items-center text-xs text-gray-500 mt-2 ml-6">
+        <Calendar className="w-3 h-3 mr-1" /> {formattedDate}
+        <Clock className="w-3 h-3 mr-1 ml-3" /> {formattedTime}
       </div>
     </div>
+  );
+};
+
+export const OpportunityFeed = () => {
+  const { opportunities, loading, error } = useOpportunityFeed();
+
+  return (
+    <Card className="col-span-1">
+      <CardHeader>
+        <CardTitle>Próximas Oportunidades</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {loading && (
+          // Exibe um esqueleto de carregamento enquanto busca os dados
+          <div>
+            <Skeleton className="h-20 w-full mb-3" />
+            <Skeleton className="h-20 w-full mb-3" />
+            <Skeleton className="h-20 w-full" />
+          </div>
+        )}
+        
+        {!loading && error && (
+          // Exibe uma mensagem de erro se a busca falhar
+          <p className="text-sm text-red-500 text-center">{error}</p>
+        )}
+
+        {!loading && !error && opportunities.length === 0 && (
+          // Exibe a mensagem se não houver agendamentos
+          <p className="text-sm text-gray-500 text-center">Não há consultas agendadas.</p>
+        )}
+
+        {!loading && !error && opportunities.length > 0 && (
+          // Mapeia e exibe os agendamentos reais
+          opportunities.map(opp => (
+            <OpportunityCard key={opp.id} opportunity={opp} />
+          ))
+        )}
+      </CardContent>
+    </Card>
   );
 };
