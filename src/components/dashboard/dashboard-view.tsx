@@ -14,7 +14,7 @@ export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewPr
       {/* Main Dashboard Grid - Revenue Focus */}
       <div className="flex flex-col lg:flex-row gap-4 items-stretch">
         {/* Revenue Performance Panel - Takes 2 columns on desktop, full width on mobile */}
-        <div className="lg:col-span-2">
+        <div className="lg:w-2/3">
           <RevenuePerformancePanel />
         </div>
 
