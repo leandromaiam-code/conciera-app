@@ -6,7 +6,12 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign, Globe } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useCoreEmpresa } from "@/hooks/use-core-empresa";
+import { useConfigConfiguracaoCanais } from "@/hooks/use-config-configuracoes-canais";
+import { useConfigConfiguracoesSistema } from "@/hooks/use-config-configuracoes-sistema";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 interface ChannelConfig {
   id: string;
@@ -63,14 +68,122 @@ const getStatusColor = (status: string) => {
 };
 
 export const ConfiguracoesView = () => {
-  const [clinicName, setClinicName] = useState("Clínica Exemplo");
-  const [address, setAddress] = useState("Av. Principal da Cidade, nº 350 - Bairro Nobre");
-  const [valorMedioConsulta, setValorMedioConsulta] = useState("350");
-  const [specialistname, setSpecialistName] = useState("Dr. Carlos Castro, Dra. Patrícia Prates");
-  const [services, setServices] = useState("Harmonização Facial, Botox, procedimentos e cirugiais faciais");
+  const { toast } = useToast();
+  
+  // Database hooks
+  const { empresa, loading: empresaLoading, updateEmpresa, saving: empresaSaving } = useCoreEmpresa();
+  const { canais, loading: canaisLoading, updateCanal, saving: canaisSaving } = useConfigConfiguracaoCanais();
+  const { sistema, loading: sistemaLoading, updateSistema, saving: sistemaSaving } = useConfigConfiguracoesSistema();
+
+  // Local state for form inputs
+  const [clinicName, setClinicName] = useState("");
+  const [address, setAddress] = useState("");
+  const [valorMedioConsulta, setValorMedioConsulta] = useState("");
+  const [specialistname, setSpecialistName] = useState("");
+  const [services, setServices] = useState("");
   const [autoAgendamento, setAutoAgendamento] = useState(true);
   const [autoPagamento, setAutoPagamento] = useState(false);
   const [notificacoesPush, setNotificacoesPush] = useState(true);
+
+  // Update local state when database data loads
+  useEffect(() => {
+    if (empresa) {
+      setClinicName(empresa.core_empresa_nome || "");
+      setAddress(empresa.core_empresa_endereco_empresa || "");
+      setValorMedioConsulta(empresa.core_empresa_preco_consulta || "");
+      setSpecialistName(empresa.core_empresa_profissionais_empresa || "");
+      setServices(empresa.core_empresa_descricao || "");
+    }
+  }, [empresa]);
+
+  useEffect(() => {
+    if (sistema) {
+      setAutoAgendamento(sistema.ui_auto_agendamento);
+      setAutoPagamento(sistema.ui_auto_pagamento);
+      setNotificacoesPush(sistema.config_configuracoes_sistema_notificacoes_push);
+    }
+  }, [sistema]);
+
+  const handleSaveEmpresa = async () => {
+    if (!empresa) return;
+    
+    try {
+      await updateEmpresa({
+        core_empresa_nome: clinicName,
+        core_empresa_endereco_empresa: address,
+        core_empresa_preco_consulta: valorMedioConsulta,
+        core_empresa_profissionais_empresa: specialistname,
+        core_empresa_descricao: services
+      });
+      
+      toast({
+        title: "Sucesso",
+        description: "Informações da clínica atualizadas com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao salvar informações da clínica.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleToggleCanal = async (canalTipo: string, ativo: boolean) => {
+    try {
+      await updateCanal(canalTipo, ativo);
+      toast({
+        title: "Sucesso",
+        description: `Canal ${canalTipo} ${ativo ? 'ativado' : 'desativado'} com sucesso!`,
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: `Erro ao ${ativo ? 'ativar' : 'desativar'} canal.`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSaveSistema = async () => {
+    if (!sistema) return;
+    
+    try {
+      await updateSistema({
+        ui_auto_agendamento: autoAgendamento,
+        ui_auto_pagamento: autoPagamento,
+        config_configuracoes_sistema_notificacoes_push: notificacoesPush
+      });
+      
+      toast({
+        title: "Sucesso",
+        description: "Configurações da IA atualizadas com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao salvar configurações da IA.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (empresaLoading || canaisLoading || sistemaLoading) {
+    return (
+      <div className="space-y-md lg:space-y-lg">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-32" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-md lg:space-y-lg">
@@ -137,8 +250,12 @@ export const ConfiguracoesView = () => {
               </div>
           </div>
           
-          <Button className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto">
-            Salvar Informações
+          <Button 
+            className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto"
+            onClick={handleSaveEmpresa}
+            disabled={empresaSaving}
+          >
+            {empresaSaving ? "Salvando..." : "Salvar Informações"}
           </Button>
         </CardContent>
       </Card>
@@ -154,6 +271,7 @@ export const ConfiguracoesView = () => {
         <CardContent className="space-y-4">
           {channelsConfig.map((channel) => {
             const IconComponent = channel.icon;
+            const isChannelActive = canais ? canais[`config_configuracoes_canais_${channel.tipo}_ativo` as keyof typeof canais] : false;
             
             return (
               <div key={channel.id} className="flex items-center justify-between p-4 border border-cinza-borda rounded-lg">
@@ -171,8 +289,9 @@ export const ConfiguracoesView = () => {
 
                 <div className="flex items-center gap-3">
                   <Switch
-                    checked={channel.ativo}
-                    disabled={channel.status === 'desconectado'}
+                    checked={Boolean(isChannelActive)}
+                    disabled={channel.status === 'desconectado' || canaisSaving}
+                    onCheckedChange={(checked) => handleToggleCanal(channel.tipo, checked)}
                   />
                   <Button 
                     size="sm" 
@@ -245,8 +364,12 @@ export const ConfiguracoesView = () => {
             </div>
           </div>
 
-          <Button className="bg-dourado text-onyx hover:bg-dourado/90">
-            Salvar Configurações
+          <Button 
+            className="bg-dourado text-onyx hover:bg-dourado/90"
+            onClick={handleSaveSistema}
+            disabled={sistemaSaving}
+          >
+            {sistemaSaving ? "Salvando..." : "Salvar Configurações"}
           </Button>
         </CardContent>
       </Card>

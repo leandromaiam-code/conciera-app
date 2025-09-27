@@ -5,82 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MessageSquare, Search, Filter, Instagram, Globe, Mail, Calendar } from "lucide-react";
 import { useState } from "react";
-import { VConversasDetalhadas } from "@/types/briefing-types";
+import { useVConversasDetalhadas } from "@/hooks/use-v-conversas-detalhadas";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const conversas: VConversasDetalhadas[] = [
-  {
-    v_conversas_detalhadas_id: BigInt(1),
-    v_conversas_detalhadas_session_id: "conv-001",
-    v_conversas_detalhadas_cliente_id: BigInt(1),
-    v_conversas_detalhadas_funcionaria_id: 1,
-    v_conversas_detalhadas_canal: "instagram",
-    v_conversas_detalhadas_status: "novo",
-    v_conversas_detalhadas_ultima_mensagem_preview: "Perfeito! Confirmo o agendamento para amanhã às 14:30. Muito obrigada!",
-    v_conversas_detalhadas_timestamp_ultima_mensagem: "2024-01-15T14:30:00Z",
-    v_conversas_detalhadas_nome_completo: "Maria Silva",
-    v_conversas_detalhadas_cliente_telefone: "(11) 99999-1234",
-    v_conversas_detalhadas_funcionaria_nome: "Sofia",
-    v_conversas_detalhadas_empresa_nome: "Clínica Exemplo",
-    v_conversas_detalhadas_contagem_mensagens: 15,
-    v_conversas_detalhadas_created_at: "2024-01-15T14:30:00Z",
-    ui_temperatura_lead: 3,
-    ui_servico_desejado: "Harmonização Facial"
-  },
-  {
-    v_conversas_detalhadas_id: BigInt(2),
-    v_conversas_detalhadas_session_id: "conv-002",
-    v_conversas_detalhadas_cliente_id: BigInt(2),
-    v_conversas_detalhadas_funcionaria_id: 1,
-    v_conversas_detalhadas_canal: "whatsapp",
-    v_conversas_detalhadas_status: "em-andamento",
-    v_conversas_detalhadas_ultima_mensagem_preview: "Gostaria de saber mais sobre os valores do implante capilar...",
-    v_conversas_detalhadas_timestamp_ultima_mensagem: "2024-01-14T16:00:00Z",
-    v_conversas_detalhadas_nome_completo: "João Santos",
-    v_conversas_detalhadas_cliente_telefone: "(11) 99999-5678",
-    v_conversas_detalhadas_funcionaria_nome: "Sofia",
-    v_conversas_detalhadas_empresa_nome: "Clínica Exemplo",
-    v_conversas_detalhadas_contagem_mensagens: 8,
-    v_conversas_detalhadas_created_at: "2024-01-14T16:00:00Z",
-    ui_temperatura_lead: 2,
-    ui_servico_desejado: "Implante Capilar"
-  },
-  {
-    v_conversas_detalhadas_id: BigInt(3),
-    v_conversas_detalhadas_session_id: "conv-003",
-    v_conversas_detalhadas_cliente_id: BigInt(3),
-    v_conversas_detalhadas_funcionaria_id: 1,
-    v_conversas_detalhadas_canal: "email",
-    v_conversas_detalhadas_status: "aguardando",
-    v_conversas_detalhadas_ultima_mensagem_preview: "Ainda estou pensando... vocês têm desconto para pagamento à vista?",
-    v_conversas_detalhadas_timestamp_ultima_mensagem: "2024-01-12T10:30:00Z",
-    v_conversas_detalhadas_nome_completo: "Ana Costa",
-    v_conversas_detalhadas_cliente_telefone: "(11) 99999-9012",
-    v_conversas_detalhadas_funcionaria_nome: "Sofia",
-    v_conversas_detalhadas_empresa_nome: "Clínica Exemplo",
-    v_conversas_detalhadas_contagem_mensagens: 12,
-    v_conversas_detalhadas_created_at: "2024-01-12T10:30:00Z",
-    ui_temperatura_lead: 2,
-    ui_servico_desejado: "Rinoplastia"
-  },
-  {
-    v_conversas_detalhadas_id: BigInt(4),
-    v_conversas_detalhadas_session_id: "conv-004",
-    v_conversas_detalhadas_cliente_id: BigInt(4),
-    v_conversas_detalhadas_funcionaria_id: 1,
-    v_conversas_detalhadas_canal: "whatsapp",
-    v_conversas_detalhadas_status: "finalizada",
-    v_conversas_detalhadas_ultima_mensagem_preview: "Obrigado pelas informações. Vou pesquisar mais e retorno.",
-    v_conversas_detalhadas_timestamp_ultima_mensagem: "2024-01-10T14:15:00Z",
-    v_conversas_detalhadas_nome_completo: "Carlos Lima",
-    v_conversas_detalhadas_cliente_telefone: "(11) 99999-3456",
-    v_conversas_detalhadas_funcionaria_nome: "Sofia",
-    v_conversas_detalhadas_empresa_nome: "Clínica Exemplo",
-    v_conversas_detalhadas_contagem_mensagens: 5,
-    v_conversas_detalhadas_created_at: "2024-01-10T14:15:00Z",
-    ui_temperatura_lead: 1,
-    ui_servico_desejado: "Lipo HD"
-  }
-];
 
 const getChannelIcon = (canal: string) => {
   switch (canal) {
@@ -120,14 +47,65 @@ export const ConversasView = () => {
   const [filterStatus, setFilterStatus] = useState("todos");
   const [filterCanal, setFilterCanal] = useState("todos");
 
-  const filteredConversas = conversas.filter(conversa => {
-    const matchesSearch = conversa.v_conversas_detalhadas_nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         conversa.ui_servico_desejado?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === "todos" || conversa.v_conversas_detalhadas_status === filterStatus;
-    const matchesCanal = filterCanal === "todos" || conversa.v_conversas_detalhadas_canal === filterCanal;
-    
-    return matchesSearch && matchesStatus && matchesCanal;
-  });
+  // Use real database hook instead of mock data
+  const { conversas, loading, error, updateConversaStatus } = useVConversasDetalhadas(
+    searchTerm,
+    filterStatus,
+    filterCanal
+  );
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button className="bg-dourado text-onyx hover:bg-dourado/90">
+            <MessageSquare className="w-4 h-4 mr-2" />
+            Nova Conversa
+          </Button>
+        </div>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Filter className="w-5 h-5" />
+              Filtros
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <Skeleton className="h-10" />
+              <Skeleton className="h-10" />
+              <Skeleton className="h-10" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-6">
+                <Skeleton className="h-20" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className="text-center py-12">
+          <MessageSquare className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <p className="text-red-500 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>Tentar Novamente</Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const filteredConversas = conversas;
 
   return (
     <div className="space-y-6">
@@ -252,7 +230,7 @@ export const ConversasView = () => {
         })}
       </div>
 
-      {filteredConversas.length === 0 && (
+      {filteredConversas.length === 0 && !loading && (
         <Card>
           <CardContent className="text-center py-12">
             <MessageSquare className="w-12 h-12 text-cinza-claro mx-auto mb-4" />

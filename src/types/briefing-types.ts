@@ -21,14 +21,15 @@ export interface CoreBriefings {
 export interface CoreAgendamentos {
   core_agendamentos_id: string;
   core_agendamentos_cliente_id: bigint;
-  core_agendamentos_conversa_id: bigint;
+  core_agendamentos_conversa_id?: bigint;
   core_agendamentos_data_hora: string;
   core_agendamentos_servico_interesse: string;
-  core_agendamentos_valor_estimado: number;
+  core_agendamentos_valor_estimado?: number;
   core_agendamentos_status: string;
-  core_agendamentos_compareceu: boolean;
+  core_agendamentos_compareceu?: boolean;
   core_agendamentos_empresa_id: number;
-  core_agendamentos_created_at: string;
+  core_agendamentos_id_agenda?: string;
+  core_agendamentos_created_at?: string;
   // Related fields from other tables
   core_clientes_nome_completo: string;
   core_clientes_telefone: string;
@@ -97,13 +98,22 @@ export interface ConfigScriptVendas {
 export interface CoreEmpresa {
   core_empresa_id: number;
   core_empresa_nome: string;
-  core_empresa_endereco_empresa: string;
-  core_empresa_preco_consulta: string;
-  core_empresa_profissionais_empresa: string;
+  core_empresa_endereco_empresa?: string;
+  core_empresa_preco_consulta?: string;
+  core_empresa_profissionais_empresa?: string;
   core_empresa_descricao: string;
   core_empresa_segmento: string;
+  core_empresa_segmento_especifico?: string;
   core_empresa_tipo_produto: string;
   core_empresa_forma_venda: string;
+  core_empresa_telefone?: string;
+  core_empresa_email_contato?: string;
+  core_empresa_horario_atendimento?: string;
+  core_empresa_autoridade_empresa?: string;
+  core_empresa_beneficios_produto?: string;
+  core_empresa_dores_cliente?: string;
+  core_empresa_problema_cliente?: string;
+  core_empresa_cliente_ideal?: string;
   core_empresa_created_at: string;
   core_empresa_updated_at: string;
 }
