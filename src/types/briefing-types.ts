@@ -22,17 +22,18 @@ export interface CoreAgendamentos {
   core_agendamentos_id: string;
   core_agendamentos_cliente_id: bigint;
   core_agendamentos_conversa_id?: bigint;
+  core_agendamentos_empresa_id: number;
   core_agendamentos_data_hora: string;
   core_agendamentos_servico_interesse: string;
-  core_agendamentos_valor_estimado?: number;
   core_agendamentos_status: string;
+  core_agendamentos_valor_estimado?: number;
   core_agendamentos_compareceu?: boolean;
-  core_agendamentos_empresa_id: number;
   core_agendamentos_id_agenda?: string;
   core_agendamentos_created_at?: string;
-  // Related fields from other tables
+  // Related fields from JOIN tables
   core_clientes_nome_completo: string;
   core_clientes_telefone: string;
+  core_briefings_temperatura_lead?: number;
   // UI derived fields
   ui_temperatura_lead?: 1 | 2 | 3;
 }
