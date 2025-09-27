@@ -19,7 +19,7 @@ export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewPr
         </div>
 
         {/* Opportunity Feed - Takes 1 column on desktop, full width on mobile */}
-        <div>
+        <div className="lg:w-1/3">
           <OpportunityFeed onPageChange={onPageChange} />
         </div>
       </div>
