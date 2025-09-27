@@ -5,15 +5,17 @@ import { Calendar, User, Clock } from 'lucide-react';
 import { useOpportunityFeed, UpcomingAppointment } from '@/hooks/use-opportunity-feed';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom'; // <<< IMPORTAR O COMPONENTE LINK
 
-// NOVO Componente para o indicador de temperatura
+// Componente para o indicador de temperatura com a nova paleta de cores
 const TemperatureGauge = ({ level }: { level: number | null }) => {
   const levelSafe = level || 0;
   return (
     <div className="flex items-center space-x-1">
+      {/* As cores agora usam a paleta de dourados do seu tema */}
       <div className={cn("w-2 h-3 rounded-sm", levelSafe >= 1 ? 'bg-yellow-400' : 'bg-gray-300 dark:bg-gray-600')}></div>
-      <div className={cn("w-2 h-3 rounded-sm", levelSafe >= 2 ? 'bg-orange-500' : 'bg-gray-300 dark:bg-gray-600')}></div>
-      <div className={cn("w-2 h-3 rounded-sm", levelSafe >= 3 ? 'bg-red-600' : 'bg-gray-300 dark:bg-gray-600')}></div>
+      <div className={cn("w-2 h-3 rounded-sm", levelSafe >= 2 ? 'bg-yellow-500' : 'bg-gray-300 dark:bg-gray-600')}></div>
+      <div className={cn("w-2 h-3 rounded-sm", levelSafe >= 3 ? 'bg-yellow-600' : 'bg-gray-300 dark:bg-gray-600')}></div>
     </div>
   );
 };
@@ -43,36 +45,46 @@ const OpportunityCard = ({ opportunity }: { opportunity: UpcomingAppointment }) 
   );
 };
 
-// V---- ALTERAÇÃO APLICADA AQUI ----V
 export const OpportunityFeed = () => {
   const { opportunities, loading, error } = useOpportunityFeed();
 
   return (
-    <Card className="col-span-1">
+    <Card className="col-span-1 flex flex-col">
       <CardHeader>
-        <CardTitle>Próximos Agendamentos</CardTitle> 
+        <CardTitle>Próximos Agendamentos</CardTitle>
       </CardHeader>
-      <CardContent>
-        {loading && (
-          <div>
-            <Skeleton className="h-20 w-full mb-3" />
-            <Skeleton className="h-20 w-full mb-3" />
-            <Skeleton className="h-20 w-full" />
-          </div>
-        )}
+      <CardContent className="flex-grow flex flex-col">
+        <div className="flex-grow">
+          {loading && (
+            <div>
+              <Skeleton className="h-20 w-full mb-3" />
+              <Skeleton className="h-20 w-full mb-3" />
+              <Skeleton className="h-20 w-full" />
+            </div>
+          )}
+          
+          {!loading && error && (
+            <p className="text-sm text-red-500 text-center">{error}</p>
+          )}
+
+          {!loading && !error && opportunities.length === 0 && (
+            <p className="text-sm text-gray-500 text-center">Não há consultas agendadas.</p>
+          )}
+
+          {!loading && !error && opportunities.length > 0 && (
+            opportunities.map(opp => (
+              <OpportunityCard key={opp.id} opportunity={opp} />
+            ))
+          )}
+        </div>
         
-        {!loading && error && (
-          <p className="text-sm text-red-500 text-center">{error}</p>
-        )}
-
-        {!loading && !error && opportunities.length === 0 && (
-          <p className="text-sm text-gray-500 text-center">Não há consultas agendadas.</p>
-        )}
-
+        {/* Adiciona o link no final do card, apenas se houver agendamentos */}
         {!loading && !error && opportunities.length > 0 && (
-          opportunities.map(opp => (
-            <OpportunityCard key={opp.id} opportunity={opp} />
-          ))
+          <div className="mt-4 text-center">
+            <Link to="/agenda" className="text-sm font-medium text-yellow-600 hover:text-yellow-700 dark:text-yellow-500 dark:hover:text-yellow-400">
+              Ver todos agendamentos
+            </Link>
+          </div>
         )}
       </CardContent>
     </Card>
