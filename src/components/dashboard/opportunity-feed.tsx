@@ -1,59 +1,80 @@
-// src/hooks/use-opportunity-feed.ts
+// src/components/dashboard/opportunity-feed.tsx
 
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Calendar, User, Clock } from 'lucide-react';
+import { useOpportunityFeed, UpcomingAppointment } from '@/hooks/use-opportunity-feed';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
-export interface UpcomingAppointment {
-  id: number;
-  data_hora: string;
-  servico_interesse: string;
-  cliente_nome: string | null;
-  temperatura_lead: number | null;
-}
+// NOVO Componente para o indicador de temperatura
+const TemperatureGauge = ({ level }: { level: number | null }) => {
+  const levelSafe = level || 0;
+  return (
+    <div className="flex items-center space-x-1">
+      <div className={cn("w-2 h-3 rounded-sm", levelSafe >= 1 ? 'bg-yellow-400' : 'bg-gray-300 dark:bg-gray-600')}></div>
+      <div className={cn("w-2 h-3 rounded-sm", levelSafe >= 2 ? 'bg-orange-500' : 'bg-gray-300 dark:bg-gray-600')}></div>
+      <div className={cn("w-2 h-3 rounded-sm", levelSafe >= 3 ? 'bg-red-600' : 'bg-gray-300 dark:bg-gray-600')}></div>
+    </div>
+  );
+};
 
-export const useOpportunityFeed = () => {
-  const [opportunities, setOpportunities] = useState<UpcomingAppointment[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const OpportunityCard = ({ opportunity }: { opportunity: UpcomingAppointment }) => {
+  const appointmentDate = new Date(opportunity.data_hora);
+  const formattedDate = appointmentDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  const formattedTime = appointmentDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-  useEffect(() => {
-    const fetchUpcomingAppointments = async () => {
-      setLoading(true);
-      setError(null);
+  return (
+    <div
+      className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <User className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
+          <p className="font-semibold text-sm text-gray-800 dark:text-gray-100">{opportunity.cliente_nome}</p>
+        </div>
+        <TemperatureGauge level={opportunity.temperatura_lead} />
+      </div>
+      <p className="text-xs text-gray-500 dark:text-gray-400 ml-6">{opportunity.servico_interesse}</p>
+      <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-2 ml-6">
+        <Calendar className="w-3 h-3 mr-1" /> {formattedDate}
+        <Clock className="w-3 h-3 mr-1 ml-3" /> {formattedTime}
+      </div>
+    </div>
+  );
+};
 
-      const { data, error } = await supabase
-        .from('core_agendamentos')
-        .select(`
-          id,
-          data_hora,
-          servico_interesse,
-          core_clientes ( nome_completo ),
-          core_briefings ( temperatura_lead )
-        `)
-        .gte('data_hora', new Date().toISOString())
-        .order('data_hora', { ascending: true })
-        .limit(3); // <<< ALTERAÇÃO APLICADA AQUI
+// V---- ALTERAÇÃO APLICADA AQUI ----V
+export const OpportunityFeed = () => {
+  const { opportunities, loading, error } = useOpportunityFeed();
 
-      if (error) {
-        console.error('Erro ao buscar agendamentos:', error);
-        setError('Não foi possível carregar os próximos agendamentos.');
-        setOpportunities([]);
-      } else if (data) {
-        const formattedData = data.map((agendamento: any) => ({
-          id: agendamento.id,
-          data_hora: agendamento.data_hora,
-          servico_interesse: agendamento.servico_interesse,
-          cliente_nome: agendamento.core_clientes?.nome_completo || 'Cliente',
-          temperatura_lead: agendamento.core_briefings ? agendamento.core_briefings.temperatura_lead : null,
-        }));
-        setOpportunities(formattedData);
-      }
+  return (
+    <Card className="col-span-1">
+      <CardHeader>
+        <CardTitle>Próximos Agendamentos</CardTitle> 
+      </CardHeader>
+      <CardContent>
+        {loading && (
+          <div>
+            <Skeleton className="h-20 w-full mb-3" />
+            <Skeleton className="h-20 w-full mb-3" />
+            <Skeleton className="h-20 w-full" />
+          </div>
+        )}
+        
+        {!loading && error && (
+          <p className="text-sm text-red-500 text-center">{error}</p>
+        )}
 
-      setLoading(false);
-    };
+        {!loading && !error && opportunities.length === 0 && (
+          <p className="text-sm text-gray-500 text-center">Não há consultas agendadas.</p>
+        )}
 
-    fetchUpcomingAppointments();
-  }, []);
-
-  return { opportunities, loading, error };
+        {!loading && !error && opportunities.length > 0 && (
+          opportunities.map(opp => (
+            <OpportunityCard key={opp.id} opportunity={opp} />
+          ))
+        )}
+      </CardContent>
+    </Card>
+  );
 };
