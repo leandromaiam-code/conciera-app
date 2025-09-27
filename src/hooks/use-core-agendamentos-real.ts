@@ -32,18 +32,10 @@ export const useCoreAgendamentosReal = (
       
       console.log('Iniciando busca de agendamentos...');
       
+      // Build query for agendamentos
       let query = supabase
         .from('core_agendamentos')
-        .select(`
-          *,
-          core_clientes (
-            nome_completo,
-            telefone
-          ),
-          core_briefings (
-            temperatura_lead
-          )
-        `)
+        .select('*')
         .order('data_hora', { ascending: true });
 
       // Apply filters
@@ -62,7 +54,7 @@ export const useCoreAgendamentosReal = (
       }
 
       console.log('Executando query...');
-      const { data, error: queryError } = await query;
+      const { data: agendamentosData, error: queryError } = await query;
 
       if (queryError) {
         console.error('Erro na query:', queryError);
@@ -70,28 +62,65 @@ export const useCoreAgendamentosReal = (
         return;
       }
 
-      console.log('Dados recebidos:', data?.length || 0, 'agendamentos');
+      console.log('Dados recebidos:', agendamentosData?.length || 0, 'agendamentos');
+
+      if (!agendamentosData || agendamentosData.length === 0) {
+        setAgendamentos([]);
+        return;
+      }
+
+      // Get unique client IDs and agendamento IDs for batch queries
+      const clienteIds = [...new Set(agendamentosData.map(a => a.cliente_id))];
+      const agendamentoIds = agendamentosData.map(a => a.id);
+
+      // Fetch clientes data
+      const { data: clientesData } = await supabase
+        .from('core_clientes')
+        .select('id, nome_completo, telefone')
+        .in('id', clienteIds);
+
+      // Fetch briefings data  
+      const { data: briefingsData } = await supabase
+        .from('core_briefings')
+        .select('agendamento_id, temperatura_lead')
+        .in('agendamento_id', agendamentoIds);
+
+      // Create lookup maps for faster access
+      const clientesMap = new Map();
+      clientesData?.forEach(cliente => {
+        clientesMap.set(cliente.id, cliente);
+      });
+
+      const briefingsMap = new Map();
+      briefingsData?.forEach(briefing => {
+        briefingsMap.set(briefing.agendamento_id, briefing);
+      });
 
       // Transform database data to match expected format
-      const transformedAgendamentos: AgendamentoCompleto[] = (data || []).map(row => ({
-        core_agendamentos_id: row.id?.toString() || '',
-        core_agendamentos_conversa_id: row.conversa_id ? BigInt(row.conversa_id) : undefined,
-        core_agendamentos_cliente_id: BigInt(row.cliente_id),
-        core_agendamentos_empresa_id: row.empresa_id,
-        core_agendamentos_data_hora: row.data_hora,
-        core_agendamentos_servico_interesse: row.servico_interesse || '',
-        core_agendamentos_status: row.status || 'pendente',
-        core_agendamentos_valor_estimado: row.valor_estimado,
-        core_agendamentos_compareceu: row.compareceu,
-        core_agendamentos_id_agenda: row.id_agenda,
-        core_agendamentos_created_at: row.created_at,
-        // Joined data with safer access
-        core_clientes_nome_completo: Array.isArray(row.core_clientes) ? row.core_clientes[0]?.nome_completo : row.core_clientes?.nome_completo || 'Cliente não informado',
-        core_clientes_telefone: Array.isArray(row.core_clientes) ? row.core_clientes[0]?.telefone : row.core_clientes?.telefone || '',
-        cliente_nome: Array.isArray(row.core_clientes) ? row.core_clientes[0]?.nome_completo : row.core_clientes?.nome_completo || 'Cliente não informado',
-        cliente_telefone: Array.isArray(row.core_clientes) ? row.core_clientes[0]?.telefone : row.core_clientes?.telefone || '',
-        briefing_temperatura_lead: Array.isArray(row.core_briefings) ? row.core_briefings[0]?.temperatura_lead : row.core_briefings?.temperatura_lead || 2
-      }));
+      const transformedAgendamentos: AgendamentoCompleto[] = agendamentosData.map(row => {
+        const cliente = clientesMap.get(row.cliente_id);
+        const briefing = briefingsMap.get(row.id);
+        
+        return {
+          core_agendamentos_id: row.id?.toString() || '',
+          core_agendamentos_conversa_id: row.conversa_id ? BigInt(row.conversa_id) : undefined,
+          core_agendamentos_cliente_id: BigInt(row.cliente_id),
+          core_agendamentos_empresa_id: row.empresa_id,
+          core_agendamentos_data_hora: row.data_hora,
+          core_agendamentos_servico_interesse: row.servico_interesse || '',
+          core_agendamentos_status: row.status || 'pendente',
+          core_agendamentos_valor_estimado: row.valor_estimado,
+          core_agendamentos_compareceu: row.compareceu,
+          core_agendamentos_id_agenda: row.id_agenda,
+          core_agendamentos_created_at: row.created_at,
+          // Client data from lookup
+          core_clientes_nome_completo: cliente?.nome_completo || 'Cliente não informado',
+          core_clientes_telefone: cliente?.telefone || '',
+          cliente_nome: cliente?.nome_completo || 'Cliente não informado',
+          cliente_telefone: cliente?.telefone || '',
+          briefing_temperatura_lead: briefing?.temperatura_lead || 2
+        };
+      });
 
       setAgendamentos(transformedAgendamentos);
     } catch (err) {
