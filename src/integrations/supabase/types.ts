@@ -14,8 +14,112 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_conversas_diarias: {
+        Row: {
+          agendamentos_gerados_hoje: number | null
+          conversas_novas_hoje: number | null
+          created_at: string | null
+          data_referencia: string
+          empresa_id: number
+          funcionaria_id: number
+          id: number
+          tempo_medio_resposta_hoje: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          agendamentos_gerados_hoje?: number | null
+          conversas_novas_hoje?: number | null
+          created_at?: string | null
+          data_referencia: string
+          empresa_id: number
+          funcionaria_id: number
+          id?: number
+          tempo_medio_resposta_hoje?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          agendamentos_gerados_hoje?: number | null
+          conversas_novas_hoje?: number | null
+          created_at?: string | null
+          data_referencia?: string
+          empresa_id?: number
+          funcionaria_id?: number
+          id?: number
+          tempo_medio_resposta_hoje?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      analytics_conversas_metricas: {
+        Row: {
+          ano_mes: string
+          conversas_com_agendamento: number | null
+          conversas_email: number | null
+          conversas_finalizadas: number | null
+          conversas_iniciadas: number | null
+          conversas_instagram: number | null
+          conversas_telefone: number | null
+          conversas_whatsapp: number | null
+          created_at: string | null
+          empresa_id: number
+          funcionaria_id: number
+          id: number
+          satisfacao_media: number | null
+          taxa_conversao_agendamento: number | null
+          taxa_resposta_rapida: number | null
+          tempo_medio_primeira_resposta_segundos: number | null
+          tempo_medio_resolucao_minutos: number | null
+          total_conversas: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          ano_mes: string
+          conversas_com_agendamento?: number | null
+          conversas_email?: number | null
+          conversas_finalizadas?: number | null
+          conversas_iniciadas?: number | null
+          conversas_instagram?: number | null
+          conversas_telefone?: number | null
+          conversas_whatsapp?: number | null
+          created_at?: string | null
+          empresa_id: number
+          funcionaria_id: number
+          id?: number
+          satisfacao_media?: number | null
+          taxa_conversao_agendamento?: number | null
+          taxa_resposta_rapida?: number | null
+          tempo_medio_primeira_resposta_segundos?: number | null
+          tempo_medio_resolucao_minutos?: number | null
+          total_conversas?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          ano_mes?: string
+          conversas_com_agendamento?: number | null
+          conversas_email?: number | null
+          conversas_finalizadas?: number | null
+          conversas_iniciadas?: number | null
+          conversas_instagram?: number | null
+          conversas_telefone?: number | null
+          conversas_whatsapp?: number | null
+          created_at?: string | null
+          empresa_id?: number
+          funcionaria_id?: number
+          id?: number
+          satisfacao_media?: number | null
+          taxa_conversao_agendamento?: number | null
+          taxa_resposta_rapida?: number | null
+          tempo_medio_primeira_resposta_segundos?: number | null
+          tempo_medio_resolucao_minutos?: number | null
+          total_conversas?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       analytics_metricas_mensais_vendas: {
         Row: {
+          agendamentos_hoje: number | null
+          agendamentos_trend: number | null
           ano_mes: string
           clientes_diferentes: number | null
           clientes_novos: number | null
@@ -29,18 +133,31 @@ export type Database = {
           hora_pico_fim: string | null
           hora_pico_inicio: string | null
           id: number
+          leads_indicacao: number | null
+          leads_instagram: number | null
+          leads_outros: number | null
+          leads_trend: number | null
+          leads_whatsapp: number | null
           media_qtde_msg_por_cliente: number | null
           mensagens_ai: number | null
           mensagens_clientes: number | null
+          novos_leads_hoje: number | null
           primeira_mensagem_mes: string | null
+          rpg_diario: number | null
+          rpg_mensal: number | null
+          sparkline_30d: Json | null
+          taxa_conversao: number | null
           taxa_resposta_rapida: number | null
           tempo_medio_atendimento_minutos: number | null
           tempo_medio_resposta_segundos: number | null
           total_mensagens: number | null
           ultima_mensagem_mes: string | null
           updated_at: string | null
+          valor_medio_consulta: number | null
         }
         Insert: {
+          agendamentos_hoje?: number | null
+          agendamentos_trend?: number | null
           ano_mes: string
           clientes_diferentes?: number | null
           clientes_novos?: number | null
@@ -54,18 +171,31 @@ export type Database = {
           hora_pico_fim?: string | null
           hora_pico_inicio?: string | null
           id?: number
+          leads_indicacao?: number | null
+          leads_instagram?: number | null
+          leads_outros?: number | null
+          leads_trend?: number | null
+          leads_whatsapp?: number | null
           media_qtde_msg_por_cliente?: number | null
           mensagens_ai?: number | null
           mensagens_clientes?: number | null
+          novos_leads_hoje?: number | null
           primeira_mensagem_mes?: string | null
+          rpg_diario?: number | null
+          rpg_mensal?: number | null
+          sparkline_30d?: Json | null
+          taxa_conversao?: number | null
           taxa_resposta_rapida?: number | null
           tempo_medio_atendimento_minutos?: number | null
           tempo_medio_resposta_segundos?: number | null
           total_mensagens?: number | null
           ultima_mensagem_mes?: string | null
           updated_at?: string | null
+          valor_medio_consulta?: number | null
         }
         Update: {
+          agendamentos_hoje?: number | null
+          agendamentos_trend?: number | null
           ano_mes?: string
           clientes_diferentes?: number | null
           clientes_novos?: number | null
@@ -79,16 +209,27 @@ export type Database = {
           hora_pico_fim?: string | null
           hora_pico_inicio?: string | null
           id?: number
+          leads_indicacao?: number | null
+          leads_instagram?: number | null
+          leads_outros?: number | null
+          leads_trend?: number | null
+          leads_whatsapp?: number | null
           media_qtde_msg_por_cliente?: number | null
           mensagens_ai?: number | null
           mensagens_clientes?: number | null
+          novos_leads_hoje?: number | null
           primeira_mensagem_mes?: string | null
+          rpg_diario?: number | null
+          rpg_mensal?: number | null
+          sparkline_30d?: Json | null
+          taxa_conversao?: number | null
           taxa_resposta_rapida?: number | null
           tempo_medio_atendimento_minutos?: number | null
           tempo_medio_resposta_segundos?: number | null
           total_mensagens?: number | null
           ultima_mensagem_mes?: string | null
           updated_at?: string | null
+          valor_medio_consulta?: number | null
         }
         Relationships: [
           {
@@ -99,6 +240,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      analytics_procedimentos_vendas: {
+        Row: {
+          ano_mes: string
+          created_at: string | null
+          empresa_id: number
+          id: number
+          procedimento: string
+          quantidade: number | null
+          receita_total: number | null
+          ticket_medio: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          ano_mes: string
+          created_at?: string | null
+          empresa_id: number
+          id?: number
+          procedimento: string
+          quantidade?: number | null
+          receita_total?: number | null
+          ticket_medio?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          ano_mes?: string
+          created_at?: string | null
+          empresa_id?: number
+          id?: number
+          procedimento?: string
+          quantidade?: number | null
+          receita_total?: number | null
+          ticket_medio?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       config_audios: {
         Row: {
@@ -566,6 +743,7 @@ export type Database = {
           empresa_id: number
           id: number
           id_agenda: string | null
+          origem_lead: string | null
           servico_interesse: string
           status: string
           valor_estimado: number | null
@@ -579,6 +757,7 @@ export type Database = {
           empresa_id: number
           id?: number
           id_agenda?: string | null
+          origem_lead?: string | null
           servico_interesse: string
           status?: string
           valor_estimado?: number | null
@@ -592,6 +771,7 @@ export type Database = {
           empresa_id?: number
           id?: number
           id_agenda?: string | null
+          origem_lead?: string | null
           servico_interesse?: string
           status?: string
           valor_estimado?: number | null
@@ -854,6 +1034,7 @@ export type Database = {
           profissionais_empresa: string | null
           segmento: string
           segmento_especifico: string | null
+          servicos: string | null
           telefone: string | null
           tipo_produto: string
           updated_at: string
@@ -876,6 +1057,7 @@ export type Database = {
           profissionais_empresa?: string | null
           segmento: string
           segmento_especifico?: string | null
+          servicos?: string | null
           telefone?: string | null
           tipo_produto: string
           updated_at?: string
@@ -898,6 +1080,7 @@ export type Database = {
           profissionais_empresa?: string | null
           segmento?: string
           segmento_especifico?: string | null
+          servicos?: string | null
           telefone?: string | null
           tipo_produto?: string
           updated_at?: string
