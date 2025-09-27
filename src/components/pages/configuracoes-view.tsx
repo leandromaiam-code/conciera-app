@@ -92,7 +92,7 @@ export const ConfiguracoesView = () => {
       setAddress(empresa.core_empresa_endereco_empresa || "");
       setValorMedioConsulta(empresa.core_empresa_preco_consulta || "");
       setSpecialistName(empresa.core_empresa_profissionais_empresa || "");
-      setServices(empresa.core_empresa_descricao || "");
+      setServices(empresa.core_empresa_servicos || "");
     }
   }, [empresa]);
 
@@ -113,7 +113,7 @@ export const ConfiguracoesView = () => {
         core_empresa_endereco_empresa: address,
         core_empresa_preco_consulta: valorMedioConsulta,
         core_empresa_profissionais_empresa: specialistname,
-        core_empresa_descricao: services
+        core_empresa_servicos: services
       });
       
       toast({
