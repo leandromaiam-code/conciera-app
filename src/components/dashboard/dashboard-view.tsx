@@ -11,14 +11,18 @@ export function DashboardView() {
         <h2 className="text-3xl font-bold tracking-tight">Painel de Performance</h2>
       </div>
 
-      {/* V--- ALTERAÇÃO PRINCIPAL AQUI ---V */}
-      {/* Adicionamos 'lg:grid-rows-[1fr]' para forçar as linhas do grid a terem a mesma altura */}
-      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3 lg:grid-rows-[1fr]">
+      {/* V--- CORREÇÃO APLICADA AQUI ---V */}
+      {/* A classe 'grid' por si só não força o alinhamento.
+        'lg:items-stretch' instrui explicitamente todos os itens do grid
+        a se esticarem verticalmente para preencher a altura da célula,
+        garantindo que todos na mesma linha tenham a mesma altura.
+      */}
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3 lg:items-stretch">
         
-        {/* O painel de performance agora ocupa 2 colunas */}
+        {/* O seu painel de performance original, sem alterações */}
         <RevenuePerformancePanel />
 
-        {/* O feed de oportunidades ocupa 1 coluna */}
+        {/* O seu feed de oportunidades original, sem alterações */}
         <OpportunityFeed /> 
         
       </div>
