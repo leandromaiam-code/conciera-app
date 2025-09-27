@@ -1418,6 +1418,18 @@ export type Database = {
       }
     }
     Functions: {
+      calcular_metricas_conversas: {
+        Args: {
+          ano_mes_param: string
+          empresa_id_param: number
+          funcionaria_id_param: number
+        }
+        Returns: undefined
+      }
+      calcular_rpg_mensal: {
+        Args: { ano_mes_param: string; empresa_id_param: number }
+        Returns: number
+      }
       fix_conversas_cliente_zero: {
         Args: Record<PropertyKey, never>
         Returns: number
