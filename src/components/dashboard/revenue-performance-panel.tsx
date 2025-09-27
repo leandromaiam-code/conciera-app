@@ -7,9 +7,7 @@ import { Skeleton } from "../ui/skeleton";
 export function RevenuePerformancePanel() {
   const { data, loading } = useRevenueData();
 
-  // O esqueleto de carregamento continua a ser a primeira verificação.
   if (loading) {
-    // Retorna um grid de esqueletos para manter o layout consistente durante o carregamento.
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 h-full">
         <Skeleton className="h-full w-full min-h-[120px]" />
@@ -20,11 +18,7 @@ export function RevenuePerformancePanel() {
     );
   }
 
-  // <<< CORREÇÃO APLICADA AQUI
-  // Adicionamos uma verificação para garantir que 'data' não é nulo ou indefinido
-  // antes de tentar aceder às suas propriedades.
   if (!data) {
-    // Retorna nulo ou uma mensagem de erro, impedindo que o código abaixo seja executado.
     return <div className="text-center text-sm text-red-500">Não foi possível carregar os dados de performance.</div>;
   }
 
