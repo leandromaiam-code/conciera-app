@@ -29,7 +29,7 @@ const procedureData = [
 
 export const AnalyticsView = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-full">
 
       {/* KPIs Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
