@@ -8,26 +8,26 @@ export const useOpportunityFeed = () => {
   const [opportunities, setOpportunities] = useState<OpportunityItem[]>([
     {
       id: "opp-001",
-      paciente_nome: "Maria Silva",
+      nome_completo: "Maria Silva",
       procedimento: "Harmonização Facial",
       horario: "14:30",
-      temperatura: 3,
+      temperatura_lead: 3,
       valor_estimado: 2800
     },
     {
       id: "opp-002", 
-      paciente_nome: "João Santos",
+      nome_completo: "João Santos",
       procedimento: "Implante Capilar",
       horario: "16:00",
-      temperatura: 2,
+      temperatura_lead: 2,
       valor_estimado: 8500
     },
     {
       id: "opp-003",
-      paciente_nome: "Ana Costa",
+      nome_completo: "Ana Costa",
       procedimento: "Rinoplastia",
       horario: "09:15",
-      temperatura: 3,
+      temperatura_lead: 3,
       valor_estimado: 12000
     }
   ]);

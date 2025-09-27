@@ -52,11 +52,11 @@ export const BriefingModal = ({ isOpen, onClose, briefing }: BriefingModalProps)
               <User size={24} className="text-onyx" />
             </div>
             <div>
-              <h3 className="font-semibold text-onyx">{briefing.paciente_nome}</h3>
-              <p className="text-sm text-grafite">{briefing.procedimento_interesse}</p>
+              <h3 className="font-semibold text-onyx">{briefing.nome_completo}</h3>
+              <p className="text-sm text-grafite">{briefing.servico_desejado}</p>
               <div className="flex items-center gap-xxs text-xs text-grafite mt-xxs">
                 <Clock size={12} />
-                <span>{new Date(briefing.agendamento_datetime).toLocaleString('pt-BR')}</span>
+                <span>{new Date(briefing.data_hora).toLocaleString('pt-BR')}</span>
               </div>
             </div>
             <div className="ml-auto text-right">

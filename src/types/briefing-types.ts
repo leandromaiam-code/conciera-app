@@ -12,9 +12,9 @@ export interface OpportunityBriefing {
   abordagem_recomendada: string;
   temperatura_lead: 1 | 2 | 3; // 1=Frio, 2=Morno, 3=Quente
   valor_estimado: number;
-  procedimento_interesse: string;
-  paciente_nome: string;
-  agendamento_datetime: string;
+  servico_desejado: string;
+  nome_completo: string;
+  data_hora: string;
 }
 
 export interface RevenueMetrics {
@@ -34,10 +34,10 @@ export interface ConversionFunnel {
 
 export interface OpportunityItem {
   id: string;
-  paciente_nome: string;
+  nome_completo: string;
   procedimento: string;
   horario: string;
-  temperatura: 1 | 2 | 3;
+  temperatura_lead: 1 | 2 | 3;
   valor_estimado: number;
   briefing?: OpportunityBriefing;
 }

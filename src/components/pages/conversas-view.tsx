@@ -8,59 +8,59 @@ import { useState } from "react";
 
 interface Conversa {
   id: string;
-  paciente_nome: string;
+  nome_completo: string;
   canal: 'instagram' | 'whatsapp' | 'email' | 'site';
   status: 'ativo' | 'agendado' | 'perdido' | 'nutrição';
-  ultima_mensagem: string;
-  data_inicio: string;
-  temperatura: 1 | 2 | 3;
-  procedimento_interesse?: string;
+  ultima_mensagem_preview: string;
+  created_at: string;
+  temperatura_lead: 1 | 2 | 3;
+  servico_desejado?: string;
   valor_estimado?: number;
 }
 
 const conversas: Conversa[] = [
   {
     id: "1",
-    paciente_nome: "Maria Silva",
+    nome_completo: "Maria Silva",
     canal: "instagram",
     status: "agendado",
-    ultima_mensagem: "Perfeito! Confirmo o agendamento para amanhã às 14:30. Muito obrigada!",
-    data_inicio: "2024-01-15",
-    temperatura: 3,
-    procedimento_interesse: "Harmonização Facial",
+    ultima_mensagem_preview: "Perfeito! Confirmo o agendamento para amanhã às 14:30. Muito obrigada!",
+    created_at: "2024-01-15",
+    temperatura_lead: 3,
+    servico_desejado: "Harmonização Facial",
     valor_estimado: 2800
   },
   {
     id: "2", 
-    paciente_nome: "João Santos",
+    nome_completo: "João Santos",
     canal: "whatsapp",
     status: "ativo",
-    ultima_mensagem: "Gostaria de saber mais sobre os valores do implante capilar...",
-    data_inicio: "2024-01-14",
-    temperatura: 2,
-    procedimento_interesse: "Implante Capilar",
+    ultima_mensagem_preview: "Gostaria de saber mais sobre os valores do implante capilar...",
+    created_at: "2024-01-14",
+    temperatura_lead: 2,
+    servico_desejado: "Implante Capilar",
     valor_estimado: 8500
   },
   {
     id: "3",
-    paciente_nome: "Ana Costa", 
+    nome_completo: "Ana Costa", 
     canal: "instagram",
     status: "nutrição",
-    ultima_mensagem: "Ainda estou pensando... vocês têm desconto para pagamento à vista?",
-    data_inicio: "2024-01-12",
-    temperatura: 2,
-    procedimento_interesse: "Rinoplastia",
+    ultima_mensagem_preview: "Ainda estou pensando... vocês têm desconto para pagamento à vista?",
+    created_at: "2024-01-12",
+    temperatura_lead: 2,
+    servico_desejado: "Rinoplastia",
     valor_estimado: 12000
   },
   {
     id: "4",
-    paciente_nome: "Carlos Lima",
+    nome_completo: "Carlos Lima",
     canal: "whatsapp", 
     status: "perdido",
-    ultima_mensagem: "Obrigado pelas informações. Vou pesquisar mais e retorno.",
-    data_inicio: "2024-01-10",
-    temperatura: 1,
-    procedimento_interesse: "Lipo HD"
+    ultima_mensagem_preview: "Obrigado pelas informações. Vou pesquisar mais e retorno.",
+    created_at: "2024-01-10",
+    temperatura_lead: 1,
+    servico_desejado: "Lipo HD"
   }
 ];
 
@@ -103,8 +103,8 @@ export const ConversasView = () => {
   const [filterCanal, setFilterCanal] = useState("todos");
 
   const filteredConversas = conversas.filter(conversa => {
-    const matchesSearch = conversa.paciente_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         conversa.procedimento_interesse?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = conversa.nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         conversa.servico_desejado?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === "todos" || conversa.status === filterStatus;
     const matchesCanal = filterCanal === "todos" || conversa.canal === filterCanal;
     
@@ -187,29 +187,29 @@ export const ConversasView = () => {
                     {/* Conversation Info */}
                     <div className="space-y-2 flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                        <h3 className="font-semibold text-onyx text-sm sm:text-base">{conversa.paciente_nome}</h3>
+                        <h3 className="font-semibold text-onyx text-sm sm:text-base">{conversa.nome_completo}</h3>
                         <div className="flex items-center gap-2">
-                          <TemperatureIndicator temperatura={conversa.temperatura} />
+                          <TemperatureIndicator temperatura={conversa.temperatura_lead} />
                           <Badge className={`${getStatusColor(conversa.status)} text-xs`}>
                             {conversa.status.charAt(0).toUpperCase() + conversa.status.slice(1)}
                           </Badge>
                         </div>
                       </div>
 
-                      {conversa.procedimento_interesse && (
+                      {conversa.servico_desejado && (
                         <p className="text-dourado font-medium text-xs sm:text-sm">
-                          Interesse: {conversa.procedimento_interesse}
+                          Interesse: {conversa.servico_desejado}
                         </p>
                       )}
 
                       <p className="text-grafite text-xs sm:text-sm line-clamp-2">
-                        {conversa.ultima_mensagem}
+                        {conversa.ultima_mensagem_preview}
                       </p>
 
                       <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-grafite">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {new Date(conversa.data_inicio).toLocaleDateString('pt-BR')}
+                          {new Date(conversa.created_at).toLocaleDateString('pt-BR')}
                         </div>
                         <div className="capitalize">
                           via {conversa.canal}

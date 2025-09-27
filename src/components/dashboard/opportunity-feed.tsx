@@ -68,10 +68,10 @@ export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
                 <div className="flex-1">
                   <div className="flex items-center gap-sm mb-1">
                     <h4 className="font-semibold text-onyx group-hover:text-dourado transition-elegant text-sm">
-                      {opportunity.paciente_nome}
+                      {opportunity.nome_completo}
                     </h4>
                     <div className="flex items-center gap-xxs">
-                      {getTemperaturaPoints(opportunity.temperatura)}
+                      {getTemperaturaPoints(opportunity.temperatura_lead)}
                     </div>
                   </div>
                   
@@ -91,9 +91,9 @@ export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
                 </div>
 
                 <div className="flex flex-col items-end gap-1">
-                  <div className={`text-xs font-medium ${getTemperaturaColor(opportunity.temperatura)}`}>
-                    {opportunity.temperatura === 3 ? 'Quente' : 
-                     opportunity.temperatura === 2 ? 'Morno' : 'Frio'}
+                  <div className={`text-xs font-medium ${getTemperaturaColor(opportunity.temperatura_lead)}`}>
+                    {opportunity.temperatura_lead === 3 ? 'Quente' : 
+                     opportunity.temperatura_lead === 2 ? 'Morno' : 'Frio'}
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 transition-elegant text-xs text-dourado">
                     Ver briefing →
