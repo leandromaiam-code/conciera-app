@@ -12,6 +12,7 @@ import { useConfigConfiguracaoCanais } from "@/hooks/use-config-configuracoes-ca
 import { useConfigConfiguracoesSistema } from "@/hooks/use-config-configuracoes-sistema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ChannelConfig {
   id: string;
@@ -69,6 +70,7 @@ const getStatusColor = (status: string) => {
 
 export const ConfiguracoesView = () => {
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   // Database hooks
   const { empresa, loading: empresaLoading, updateEmpresa, saving: empresaSaving } = useCoreEmpresa();
@@ -274,10 +276,11 @@ export const ConfiguracoesView = () => {
             const isChannelActive = canais ? canais[`config_configuracoes_canais_${channel.tipo}_ativo` as keyof typeof canais] : false;
             
             return (
-              <div key={channel.id} className="flex items-center justify-between p-4 border border-cinza-borda rounded-lg">
+              <div key={channel.id} className={`p-4 border border-cinza-borda rounded-lg ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                {/* First line: Icon + Name + Status Badge */}
                 <div className="flex items-center gap-4">
                   <IconComponent className="w-6 h-6 text-grafite" />
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium text-onyx">{channel.nome}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <Badge className={getStatusColor(channel.status)}>
@@ -287,7 +290,8 @@ export const ConfiguracoesView = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                {/* Second line (mobile) or right side (desktop): Controls in Box */}
+                <div className={`${isMobile ? 'bg-marfim/30 border border-cinza-borda/50 rounded-lg p-3' : ''} flex items-center gap-3 ${isMobile ? 'justify-center' : ''}`}>
                   <Switch
                     checked={Boolean(isChannelActive)}
                     disabled={channel.status === 'desconectado' || canaisSaving}
