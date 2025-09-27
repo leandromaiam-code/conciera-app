@@ -2,12 +2,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User, Heart, Target, Lightbulb, Clock } from "lucide-react";
-import { OpportunityBriefing } from "@/types/briefing-types";
+import { CoreBriefings } from "@/types/briefing-types";
 
 interface BriefingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  briefing?: OpportunityBriefing;
+  briefing?: CoreBriefings;
 }
 
 /**
@@ -39,8 +39,8 @@ export const BriefingModal = ({ isOpen, onClose, briefing }: BriefingModalProps)
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Briefing de Oportunidade</span>
-            <Badge className={getTemperaturaColor(briefing.temperatura_lead)}>
-              {getTemperaturaLabel(briefing.temperatura_lead)}
+            <Badge className={getTemperaturaColor(briefing.core_briefings_temperatura_lead)}>
+              {getTemperaturaLabel(briefing.core_briefings_temperatura_lead)}
             </Badge>
           </DialogTitle>
         </DialogHeader>
@@ -52,17 +52,17 @@ export const BriefingModal = ({ isOpen, onClose, briefing }: BriefingModalProps)
               <User size={24} className="text-onyx" />
             </div>
             <div>
-              <h3 className="font-semibold text-onyx">{briefing.nome_completo}</h3>
-              <p className="text-sm text-grafite">{briefing.servico_desejado}</p>
+              <h3 className="font-semibold text-onyx">{briefing.core_briefings_servico_desejado}</h3>
+              <p className="text-sm text-grafite">{briefing.core_briefings_servico_desejado}</p>
               <div className="flex items-center gap-xxs text-xs text-grafite mt-xxs">
                 <Clock size={12} />
-                <span>{new Date(briefing.data_hora).toLocaleString('pt-BR')}</span>
+                <span>{new Date(briefing.core_briefings_created_at).toLocaleString('pt-BR')}</span>
               </div>
             </div>
             <div className="ml-auto text-right">
               <p className="text-sm text-grafite">Valor Estimado</p>
               <p className="text-xl font-bold text-dourado font-playfair">
-                R$ {briefing.valor_estimado.toLocaleString('pt-BR')}
+                R$ 2.800
               </p>
             </div>
           </div>
@@ -74,7 +74,7 @@ export const BriefingModal = ({ isOpen, onClose, briefing }: BriefingModalProps)
               <h3 className="font-semibold text-onyx">Abordagem Recomendada</h3>
             </div>
             <div className="text-onyx leading-relaxed bg-branco-puro p-sm rounded border">
-              {briefing.abordagem_recomendada}
+              {briefing.core_briefings_abordagem_recomendada}
             </div>
           </div>
 
@@ -85,7 +85,7 @@ export const BriefingModal = ({ isOpen, onClose, briefing }: BriefingModalProps)
               Resumo da Conversa
             </h3>
             <p className="text-grafite leading-relaxed bg-cinza-fundo-hover p-sm rounded">
-              {briefing.resumo_conversa}
+              {briefing.core_briefings_resumo_conversa}
             </p>
           </div>
 
@@ -97,7 +97,7 @@ export const BriefingModal = ({ isOpen, onClose, briefing }: BriefingModalProps)
                 Perfil do Paciente
               </h3>
               <div className="space-y-xxs">
-                {briefing.perfil_paciente.map((tag, index) => (
+                {briefing.core_briefings_perfil_paciente.map((tag, index) => (
                   <Badge key={index} variant="outline" className="mr-xxs">
                     {tag}
                   </Badge>
@@ -112,7 +112,7 @@ export const BriefingModal = ({ isOpen, onClose, briefing }: BriefingModalProps)
                 Pontos de Dor
               </h3>
               <ul className="space-y-xxs">
-                {briefing.pontos_de_dor.map((ponto, index) => (
+                {briefing.core_briefings_pontos_de_dor.map((ponto, index) => (
                   <li key={index} className="text-sm text-grafite flex items-start gap-xxs">
                     <span className="text-erro mt-1">•</span>
                     <span>{ponto}</span>
@@ -127,7 +127,7 @@ export const BriefingModal = ({ isOpen, onClose, briefing }: BriefingModalProps)
             <h3 className="font-semibold text-onyx mb-sm">Desejos e Referências</h3>
             <div className="bg-esmeralda/5 p-sm rounded border border-esmeralda/20">
               <ul className="space-y-xxs">
-                {briefing.desejos_e_referencias.map((desejo, index) => (
+                {briefing.core_briefings_desejos_e_referencias.map((desejo, index) => (
                   <li key={index} className="text-sm text-grafite flex items-start gap-xxs">
                     <span className="text-esmeralda mt-1">✓</span>
                     <span>{desejo}</span>

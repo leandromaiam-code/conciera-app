@@ -5,62 +5,80 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MessageSquare, Search, Filter, Instagram, Globe, Mail, Calendar } from "lucide-react";
 import { useState } from "react";
+import { VConversasDetalhadas } from "@/types/briefing-types";
 
-interface Conversa {
-  id: string;
-  nome_completo: string;
-  canal: 'instagram' | 'whatsapp' | 'email' | 'site';
-  status: 'ativo' | 'agendado' | 'perdido' | 'nutrição';
-  ultima_mensagem_preview: string;
-  created_at: string;
-  temperatura_lead: 1 | 2 | 3;
-  servico_desejado?: string;
-  valor_estimado?: number;
-}
-
-const conversas: Conversa[] = [
+const conversas: VConversasDetalhadas[] = [
   {
-    id: "1",
-    nome_completo: "Maria Silva",
-    canal: "instagram",
-    status: "agendado",
-    ultima_mensagem_preview: "Perfeito! Confirmo o agendamento para amanhã às 14:30. Muito obrigada!",
-    created_at: "2024-01-15",
-    temperatura_lead: 3,
-    servico_desejado: "Harmonização Facial",
-    valor_estimado: 2800
+    v_conversas_detalhadas_id: BigInt(1),
+    v_conversas_detalhadas_session_id: "conv-001",
+    v_conversas_detalhadas_cliente_id: BigInt(1),
+    v_conversas_detalhadas_funcionaria_id: 1,
+    v_conversas_detalhadas_canal: "instagram",
+    v_conversas_detalhadas_status: "novo",
+    v_conversas_detalhadas_ultima_mensagem_preview: "Perfeito! Confirmo o agendamento para amanhã às 14:30. Muito obrigada!",
+    v_conversas_detalhadas_timestamp_ultima_mensagem: "2024-01-15T14:30:00Z",
+    v_conversas_detalhadas_nome_completo: "Maria Silva",
+    v_conversas_detalhadas_cliente_telefone: "(11) 99999-1234",
+    v_conversas_detalhadas_funcionaria_nome: "Sofia",
+    v_conversas_detalhadas_empresa_nome: "Clínica Exemplo",
+    v_conversas_detalhadas_contagem_mensagens: 15,
+    v_conversas_detalhadas_created_at: "2024-01-15T14:30:00Z",
+    ui_temperatura_lead: 3,
+    ui_servico_desejado: "Harmonização Facial"
   },
   {
-    id: "2", 
-    nome_completo: "João Santos",
-    canal: "whatsapp",
-    status: "ativo",
-    ultima_mensagem_preview: "Gostaria de saber mais sobre os valores do implante capilar...",
-    created_at: "2024-01-14",
-    temperatura_lead: 2,
-    servico_desejado: "Implante Capilar",
-    valor_estimado: 8500
+    v_conversas_detalhadas_id: BigInt(2),
+    v_conversas_detalhadas_session_id: "conv-002",
+    v_conversas_detalhadas_cliente_id: BigInt(2),
+    v_conversas_detalhadas_funcionaria_id: 1,
+    v_conversas_detalhadas_canal: "whatsapp",
+    v_conversas_detalhadas_status: "em-andamento",
+    v_conversas_detalhadas_ultima_mensagem_preview: "Gostaria de saber mais sobre os valores do implante capilar...",
+    v_conversas_detalhadas_timestamp_ultima_mensagem: "2024-01-14T16:00:00Z",
+    v_conversas_detalhadas_nome_completo: "João Santos",
+    v_conversas_detalhadas_cliente_telefone: "(11) 99999-5678",
+    v_conversas_detalhadas_funcionaria_nome: "Sofia",
+    v_conversas_detalhadas_empresa_nome: "Clínica Exemplo",
+    v_conversas_detalhadas_contagem_mensagens: 8,
+    v_conversas_detalhadas_created_at: "2024-01-14T16:00:00Z",
+    ui_temperatura_lead: 2,
+    ui_servico_desejado: "Implante Capilar"
   },
   {
-    id: "3",
-    nome_completo: "Ana Costa", 
-    canal: "instagram",
-    status: "nutrição",
-    ultima_mensagem_preview: "Ainda estou pensando... vocês têm desconto para pagamento à vista?",
-    created_at: "2024-01-12",
-    temperatura_lead: 2,
-    servico_desejado: "Rinoplastia",
-    valor_estimado: 12000
+    v_conversas_detalhadas_id: BigInt(3),
+    v_conversas_detalhadas_session_id: "conv-003",
+    v_conversas_detalhadas_cliente_id: BigInt(3),
+    v_conversas_detalhadas_funcionaria_id: 1,
+    v_conversas_detalhadas_canal: "email",
+    v_conversas_detalhadas_status: "aguardando",
+    v_conversas_detalhadas_ultima_mensagem_preview: "Ainda estou pensando... vocês têm desconto para pagamento à vista?",
+    v_conversas_detalhadas_timestamp_ultima_mensagem: "2024-01-12T10:30:00Z",
+    v_conversas_detalhadas_nome_completo: "Ana Costa",
+    v_conversas_detalhadas_cliente_telefone: "(11) 99999-9012",
+    v_conversas_detalhadas_funcionaria_nome: "Sofia",
+    v_conversas_detalhadas_empresa_nome: "Clínica Exemplo",
+    v_conversas_detalhadas_contagem_mensagens: 12,
+    v_conversas_detalhadas_created_at: "2024-01-12T10:30:00Z",
+    ui_temperatura_lead: 2,
+    ui_servico_desejado: "Rinoplastia"
   },
   {
-    id: "4",
-    nome_completo: "Carlos Lima",
-    canal: "whatsapp", 
-    status: "perdido",
-    ultima_mensagem_preview: "Obrigado pelas informações. Vou pesquisar mais e retorno.",
-    created_at: "2024-01-10",
-    temperatura_lead: 1,
-    servico_desejado: "Lipo HD"
+    v_conversas_detalhadas_id: BigInt(4),
+    v_conversas_detalhadas_session_id: "conv-004",
+    v_conversas_detalhadas_cliente_id: BigInt(4),
+    v_conversas_detalhadas_funcionaria_id: 1,
+    v_conversas_detalhadas_canal: "whatsapp",
+    v_conversas_detalhadas_status: "finalizada",
+    v_conversas_detalhadas_ultima_mensagem_preview: "Obrigado pelas informações. Vou pesquisar mais e retorno.",
+    v_conversas_detalhadas_timestamp_ultima_mensagem: "2024-01-10T14:15:00Z",
+    v_conversas_detalhadas_nome_completo: "Carlos Lima",
+    v_conversas_detalhadas_cliente_telefone: "(11) 99999-3456",
+    v_conversas_detalhadas_funcionaria_nome: "Sofia",
+    v_conversas_detalhadas_empresa_nome: "Clínica Exemplo",
+    v_conversas_detalhadas_contagem_mensagens: 5,
+    v_conversas_detalhadas_created_at: "2024-01-10T14:15:00Z",
+    ui_temperatura_lead: 1,
+    ui_servico_desejado: "Lipo HD"
   }
 ];
 
@@ -76,21 +94,21 @@ const getChannelIcon = (canal: string) => {
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'ativo': return 'bg-esmeralda text-white';
-    case 'agendado': return 'bg-dourado text-onyx';
-    case 'nutrição': return 'bg-blue-500 text-white';
-    case 'perdido': return 'bg-red-500 text-white';
+    case 'novo': return 'bg-esmeralda text-white';
+    case 'em-andamento': return 'bg-dourado text-onyx';
+    case 'aguardando': return 'bg-blue-500 text-white';
+    case 'finalizada': return 'bg-red-500 text-white';
     default: return 'bg-gray-500 text-white';
   }
 };
 
-const TemperatureIndicator = ({ temperatura }: { temperatura: 1 | 2 | 3 }) => (
+const TemperatureIndicator = ({ ui_temperatura_lead }: { ui_temperatura_lead: 1 | 2 | 3 }) => (
   <div className="flex gap-1">
     {[1, 2, 3].map(level => (
       <div
         key={level}
         className={`w-2 h-2 rounded-full ${
-          level <= temperatura ? 'bg-dourado' : 'bg-cinza-claro'
+          level <= ui_temperatura_lead ? 'bg-dourado' : 'bg-cinza-claro'
         }`}
       />
     ))}
@@ -103,10 +121,10 @@ export const ConversasView = () => {
   const [filterCanal, setFilterCanal] = useState("todos");
 
   const filteredConversas = conversas.filter(conversa => {
-    const matchesSearch = conversa.nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         conversa.servico_desejado?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === "todos" || conversa.status === filterStatus;
-    const matchesCanal = filterCanal === "todos" || conversa.canal === filterCanal;
+    const matchesSearch = conversa.v_conversas_detalhadas_nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         conversa.ui_servico_desejado?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = filterStatus === "todos" || conversa.v_conversas_detalhadas_status === filterStatus;
+    const matchesCanal = filterCanal === "todos" || conversa.v_conversas_detalhadas_canal === filterCanal;
     
     return matchesSearch && matchesStatus && matchesCanal;
   });
@@ -133,6 +151,7 @@ export const ConversasView = () => {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-grafite" />
               <Input
+                id="v-conversas-detalhadas-search"
                 placeholder="Buscar por nome ou procedimento..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -141,20 +160,20 @@ export const ConversasView = () => {
             </div>
             
             <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger>
+              <SelectTrigger id="v-conversas-detalhadas-status-filter">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="todos">Todos os Status</SelectItem>
-                <SelectItem value="ativo">Ativo</SelectItem>
-                <SelectItem value="agendado">Agendado</SelectItem>
-                <SelectItem value="nutrição">Nutrição</SelectItem>
-                <SelectItem value="perdido">Perdido</SelectItem>
+                <SelectItem value="novo">Novo</SelectItem>
+                <SelectItem value="em-andamento">Em Andamento</SelectItem>
+                <SelectItem value="aguardando">Aguardando</SelectItem>
+                <SelectItem value="finalizada">Finalizada</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={filterCanal} onValueChange={setFilterCanal}>
-              <SelectTrigger>
+              <SelectTrigger id="v-conversas-detalhadas-canal-filter">
                 <SelectValue placeholder="Canal" />
               </SelectTrigger>
               <SelectContent>
@@ -172,10 +191,10 @@ export const ConversasView = () => {
       {/* Conversations List */}
       <div className="space-y-4">
         {filteredConversas.map((conversa) => {
-          const ChannelIcon = getChannelIcon(conversa.canal);
+          const ChannelIcon = getChannelIcon(conversa.v_conversas_detalhadas_canal);
           
           return (
-            <Card key={conversa.id} className="cursor-pointer hover:shadow-md transition-all">
+            <Card key={conversa.v_conversas_detalhadas_id.toString()} className="cursor-pointer hover:shadow-md transition-all">
               <CardContent className="p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                   <div className="flex items-start gap-3 flex-1">
@@ -187,45 +206,41 @@ export const ConversasView = () => {
                     {/* Conversation Info */}
                     <div className="space-y-2 flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                        <h3 className="font-semibold text-onyx text-sm sm:text-base">{conversa.nome_completo}</h3>
+                        <h3 className="font-semibold text-onyx text-sm sm:text-base">{conversa.v_conversas_detalhadas_nome_completo}</h3>
                         <div className="flex items-center gap-2">
-                          <TemperatureIndicator temperatura={conversa.temperatura_lead} />
-                          <Badge className={`${getStatusColor(conversa.status)} text-xs`}>
-                            {conversa.status.charAt(0).toUpperCase() + conversa.status.slice(1)}
+                          {conversa.ui_temperatura_lead && (
+                            <TemperatureIndicator ui_temperatura_lead={conversa.ui_temperatura_lead} />
+                          )}
+                          <Badge className={`${getStatusColor(conversa.v_conversas_detalhadas_status)} text-xs`}>
+                            {conversa.v_conversas_detalhadas_status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                           </Badge>
                         </div>
                       </div>
 
-                      {conversa.servico_desejado && (
+                      {conversa.ui_servico_desejado && (
                         <p className="text-dourado font-medium text-xs sm:text-sm">
-                          Interesse: {conversa.servico_desejado}
+                          Interesse: {conversa.ui_servico_desejado}
                         </p>
                       )}
 
                       <p className="text-grafite text-xs sm:text-sm line-clamp-2">
-                        {conversa.ultima_mensagem_preview}
+                        {conversa.v_conversas_detalhadas_ultima_mensagem_preview}
                       </p>
 
                       <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-grafite">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {new Date(conversa.created_at).toLocaleDateString('pt-BR')}
+                          {new Date(conversa.v_conversas_detalhadas_created_at).toLocaleDateString('pt-BR')}
                         </div>
                         <div className="capitalize">
-                          via {conversa.canal}
+                          via {conversa.v_conversas_detalhadas_canal}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Value and Actions */}
+                  {/* Actions */}
                   <div className="flex flex-row sm:flex-col justify-between sm:items-end gap-2 sm:gap-2 flex-shrink-0">
-                    {conversa.valor_estimado && (
-                      <p className="text-dourado font-semibold text-xs sm:text-sm">
-                        R$ {conversa.valor_estimado.toLocaleString()}
-                      </p>
-                    )}
-                    
                     <Button size="sm" variant="outline" className="text-xs">
                       Ver Conversa
                     </Button>

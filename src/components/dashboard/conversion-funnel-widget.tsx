@@ -1,12 +1,12 @@
 import { MessageSquare, Calendar, TrendingUp } from "lucide-react";
-import { useOpportunityFeed } from "@/hooks/use-opportunity-feed";
+import { useCoreAgendamentos } from "@/hooks/use-core-agendamentos";
 
 /**
  * Widget de Funil de Conversão
  * Exibe métricas de conversão em tempo real com navegação para detalhes
  */
 export const ConversionFunnelWidget = () => {
-  const { funnelData, isLoading } = useOpportunityFeed();
+  const { funnelData, isLoading } = useCoreAgendamentos();
 
   if (isLoading) {
     return (
@@ -24,8 +24,8 @@ export const ConversionFunnelWidget = () => {
     {
       title: "Novos Leads",
       subtitle: "Hoje",
-      value: funnelData.novos_leads_hoje,
-      trend: funnelData.leads_trend,
+      value: funnelData.ui_novos_leads_hoje,
+      trend: funnelData.ui_leads_trend,
       icon: MessageSquare,
       color: "text-dourado",
       bgColor: "bg-dourado/10",
@@ -34,8 +34,8 @@ export const ConversionFunnelWidget = () => {
     {
       title: "Agendamentos", 
       subtitle: "Convertidos hoje",
-      value: funnelData.agendamentos_hoje,
-      trend: funnelData.agendamentos_trend,
+      value: funnelData.ui_agendamentos_hoje,
+      trend: funnelData.ui_agendamentos_trend,
       icon: Calendar,
       color: "text-esmeralda",
       bgColor: "bg-esmeralda/10",
@@ -44,7 +44,7 @@ export const ConversionFunnelWidget = () => {
     {
       title: "Taxa de Conversão",
       subtitle: "Lead → Agendamento",
-      value: `${funnelData.taxa_conversao}%`,
+      value: `${funnelData.ui_taxa_conversao}%`,
       trend: 5, // Mock positive trend for conversion rate
       icon: TrendingUp,
       color: "text-onyx",

@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { AnalyticsMetricasMensaisVendas } from "@/types/briefing-types";
 
 /**
- * Hook for revenue performance data from analytics_metricas_mensais_vendas table
+ * Hook for analytics metrics from analytics_metricas_mensais_vendas table
  * Simulates real-time revenue metrics with realistic growth patterns
  */
-export const useRevenueData = () => {
+export const useAnalyticsMetricasMensaisVendas = () => {
   const [metrics, setMetrics] = useState<AnalyticsMetricasMensaisVendas>({
     analytics_metricas_mensal_vendas_rpg_mensal: 42800,
     analytics_metricas_mensal_vendas_rpg_diario: 1850,

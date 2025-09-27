@@ -1,5 +1,5 @@
 import { Clock, TrendingUp } from "lucide-react";
-import { useOpportunityFeed } from "@/hooks/use-opportunity-feed";
+import { useCoreAgendamentos } from "@/hooks/use-core-agendamentos";
 
 interface OpportunityFeedProps {
   onPageChange?: (page: string) => void;
@@ -10,7 +10,7 @@ interface OpportunityFeedProps {
  * Lista interativa dos próximos agendamentos com maior potencial de receita
  */
 export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
-  const { opportunities, isLoading } = useOpportunityFeed();
+  const { opportunities, isLoading } = useCoreAgendamentos();
 
   if (isLoading) {
     return (
@@ -60,7 +60,7 @@ export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
       <div className="space-y-xs">
         {opportunities.map((opportunity) => (
             <div
-              key={opportunity.id}
+              key={opportunity.core_agendamentos_id}
               className="kpi-card py-sm px-md cursor-pointer transition-elegant hover-elevate hover:border-dourado/30 group"
               onClick={() => handleOpportunityClick(opportunity)}
             >
@@ -68,32 +68,32 @@ export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
                 <div className="flex-1">
                   <div className="flex items-center gap-sm mb-1">
                     <h4 className="font-semibold text-onyx group-hover:text-dourado transition-elegant text-sm">
-                      {opportunity.nome_completo}
+                      {opportunity.core_clientes_nome_completo}
                     </h4>
                     <div className="flex items-center gap-xxs">
-                      {getTemperaturaPoints(opportunity.temperatura_lead)}
+                      {opportunity.ui_temperatura_lead && getTemperaturaPoints(opportunity.ui_temperatura_lead)}
                     </div>
                   </div>
                   
                   <p className="text-xs text-grafite mb-1">
-                    {opportunity.procedimento}
+                    {opportunity.core_agendamentos_servico_interesse}
                   </p>
                   
                   <div className="flex items-center gap-lg text-xs text-grafite">
                     <div className="flex items-center gap-xxs">
                       <Clock size={12} />
-                      <span>{opportunity.horario}</span>
+                      <span>{opportunity.core_agendamentos_data_hora}</span>
                     </div>
                     <div className="font-semibold text-dourado">
-                      R$ {opportunity.valor_estimado.toLocaleString('pt-BR')}
+                      R$ {opportunity.core_agendamentos_valor_estimado.toLocaleString('pt-BR')}
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-end gap-1">
-                  <div className={`text-xs font-medium ${getTemperaturaColor(opportunity.temperatura_lead)}`}>
-                    {opportunity.temperatura_lead === 3 ? 'Quente' : 
-                     opportunity.temperatura_lead === 2 ? 'Morno' : 'Frio'}
+                  <div className={`text-xs font-medium ${opportunity.ui_temperatura_lead && getTemperaturaColor(opportunity.ui_temperatura_lead)}`}>
+                    {opportunity.ui_temperatura_lead === 3 ? 'Quente' : 
+                     opportunity.ui_temperatura_lead === 2 ? 'Morno' : 'Frio'}
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 transition-elegant text-xs text-dourado">
                     Ver briefing →
