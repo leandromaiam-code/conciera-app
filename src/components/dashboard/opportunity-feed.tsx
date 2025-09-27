@@ -1,5 +1,5 @@
-import { Clock, TrendingUp } from "lucide-react";
-import { useCoreAgendamentos } from "@/hooks/use-core-agendamentos";
+import { Clock, TrendingUp, Calendar } from "lucide-react";
+import { useProximasConsultas } from "@/hooks/use-proximas-consultas";
 
 interface OpportunityFeedProps {
   onPageChange?: (page: string) => void;
@@ -10,7 +10,7 @@ interface OpportunityFeedProps {
  * Lista interativa dos próximos agendamentos com maior potencial de receita
  */
 export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
-  const { opportunities, isLoading } = useCoreAgendamentos();
+  const { opportunities, isLoading } = useProximasConsultas();
 
   if (isLoading) {
     return (
@@ -58,7 +58,13 @@ export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
       </div>
 
       <div className="space-y-xs">
-        {opportunities.map((opportunity) => (
+        {opportunities.length === 0 ? (
+          <div className="text-center py-lg">
+            <Calendar className="w-12 h-12 text-grafite/50 mx-auto mb-sm" />
+            <p className="text-grafite text-sm">Não há consultas agendadas</p>
+          </div>
+        ) : (
+          opportunities.map((opportunity) => (
             <div
               key={opportunity.core_agendamentos_id}
               className="kpi-card py-sm px-md cursor-pointer transition-elegant hover-elevate hover:border-dourado/30 group"
@@ -85,7 +91,7 @@ export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
                       <span>{opportunity.core_agendamentos_data_hora}</span>
                     </div>
                     <div className="font-semibold text-dourado">
-                      R$ {opportunity.core_agendamentos_valor_estimado.toLocaleString('pt-BR')}
+                      R$ {opportunity.core_agendamentos_valor_estimado?.toLocaleString('pt-BR') || '0'}
                     </div>
                   </div>
                 </div>
@@ -101,7 +107,8 @@ export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
                 </div>
               </div>
             </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Footer CTA - sem separação visual */}
