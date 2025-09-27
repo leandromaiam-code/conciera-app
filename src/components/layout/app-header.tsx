@@ -6,19 +6,17 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useUserProfile } from "@/hooks/use-user-profile";
+import { useCoreEmpresa } from "@/hooks/use-core-empresa";
 
 interface AppHeaderProps {
   pageTitle: string;
-  clinicName?: string;
-  userName?: string;
   onWhatsAppClick?: () => void;
   onMenuClick?: () => void;
 }
 
 export const AppHeader = ({ 
   pageTitle, 
-  clinicName = "Clínica Exemplo",
-  userName = "Dr. Silva",
   onWhatsAppClick,
   onMenuClick
 }: AppHeaderProps) => {
@@ -26,6 +24,8 @@ export const AppHeader = ({
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { profile } = useUserProfile();
+  const { empresa } = useCoreEmpresa(profile?.empresa_id || undefined);
 
   const handleSignOut = async () => {
     try {
@@ -45,7 +45,8 @@ export const AppHeader = ({
     }
   };
 
-  const displayName = user?.user_metadata?.nome || user?.email?.split('@')[0] || userName;
+  const displayName = profile?.nome || user?.user_metadata?.nome || user?.email?.split('@')[0] || "Usuário";
+  const clinicName = empresa?.core_empresa_nome || "Clínica";
   const userInitials = displayName.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
 
   return (
