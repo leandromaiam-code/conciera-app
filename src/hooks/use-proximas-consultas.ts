@@ -79,14 +79,20 @@ export const useProximasConsultas = () => {
       .slice(0, 3)
       // Formatar dados para o componente
       .map(agendamento => ({
+        // Manter todos os campos originais
         ...agendamento,
-        // Formatar data para o padrão brasileiro
+        // Formatar data para o padrão brasileiro  
         core_agendamentos_data_hora: format(
           new Date(agendamento.core_agendamentos_data_hora), 
           "dd/MM/yyyy 'às' HH:mm"
         ),
         // Mapear temperatura do briefing para UI (1-3 scale)
-        ui_temperatura_lead: Math.min(Math.max(agendamento.briefing_temperatura_lead || 1, 1), 3) as 1 | 2 | 3
+        ui_temperatura_lead: Math.min(Math.max(agendamento.briefing_temperatura_lead || 1, 1), 3) as 1 | 2 | 3,
+        // Garantir que todos os campos esperados pelo componente existam
+        core_agendamentos_id: agendamento.core_agendamentos_id || '',
+        core_clientes_nome_completo: agendamento.core_clientes_nome_completo || 'Cliente não informado',
+        core_agendamentos_servico_interesse: agendamento.core_agendamentos_servico_interesse || 'Serviço não especificado',
+        core_agendamentos_valor_estimado: agendamento.core_agendamentos_valor_estimado || 0
       }));
 
     console.log('Próximas consultas finais:', filteredAndSorted.length);
