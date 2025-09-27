@@ -1,12 +1,12 @@
 import { TrendingUp } from "lucide-react";
-import { useRevenueData } from "@/hooks/use-revenue-data";
+import { useAnalyticsMetricasMensaisVendas } from "@/hooks/use-analytics-metricas-mensais-vendas";
 
 /**
  * Painel Principal: Receita de Pipeline Gerado (RPG)
  * Component central do dashboard focado em performance financeira
  */
 export const RevenuePerformancePanel = () => {
-  const { metrics, isLoading } = useRevenueData();
+  const { metrics, isLoading } = useAnalyticsMetricasMensaisVendas();
 
   if (isLoading) {
     return (
@@ -20,7 +20,7 @@ export const RevenuePerformancePanel = () => {
   }
 
   // Simple sparkline calculation for trend direction
-  const sparklineData = metrics.sparkline_30d;
+  const sparklineData = metrics.analytics_metricas_mensal_vendas_sparkline_30d;
   const isPositiveTrend = sparklineData[sparklineData.length - 1] > sparklineData[sparklineData.length - 7];
   const trendPercentage = Math.abs(
     ((sparklineData[sparklineData.length - 1] - sparklineData[sparklineData.length - 7]) / 
@@ -52,13 +52,13 @@ export const RevenuePerformancePanel = () => {
           {/* RPG Principal */}
           <div>
             <div className="text-6xl font-bold text-transparent bg-gradient-to-r from-dourado to-yellow-600 bg-clip-text font-playfair mb-xs">
-              R$ {(metrics.rpg_mensal / 1000).toFixed(1)}k
+              R$ {(metrics.analytics_metricas_mensal_vendas_rpg_mensal / 1000).toFixed(1)}k
             </div>
             <div className="text-sm text-grafite mb-sm">
-              <span className="font-semibold text-dourado">Hoje:</span> R$ {metrics.rpg_diario.toLocaleString('pt-BR')}
+              <span className="font-semibold text-dourado">Hoje:</span> R$ {metrics.analytics_metricas_mensal_vendas_rpg_diario.toLocaleString('pt-BR')}
             </div>
             <div className="text-xs text-grafite">
-              Valor médio por consulta: R$ {metrics.valor_medio_consulta}
+              Valor médio por consulta: R$ {metrics.analytics_metricas_mensal_vendas_valor_medio_consulta}
             </div>
           </div>
 
