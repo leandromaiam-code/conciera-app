@@ -10,7 +10,7 @@ export const RevenuePerformancePanel = () => {
 
   if (isLoading) {
     return (
-      <div className="col-span-2 kpi-card">
+        <div className="col-span-2 relative overflow-hidden h-full"> 
         <div className="animate-pulse">
           <div className="h-8 bg-cinza-fundo-hover rounded mb-sm"></div>
           <div className="h-32 bg-cinza-fundo-hover rounded"></div>
