@@ -1,38 +1,35 @@
-import { TrendingUp, TrendingDown } from "lucide-react";
+// src/components/dashboard/kpi-card.tsx
 
-interface KPICardProps {
-  title: string;
-  subtitle: string;
-  value: string | number;
-  trend?: {
-    value: string;
-    isPositive: boolean;
-  };
-  className?: string;
-}
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DollarSign, ArrowUpRight, Calendar, Smile } from "lucide-react";
+import { SparklineChart } from './sparkline-chart'; // Supondo que você tenha este componente
+import { cn } from "@/lib/utils";
 
-export const KPICard = ({ title, subtitle, value, trend, className = "" }: KPICardProps) => {
+// ... (definições de tipo e props)
+
+export function KPICard({ title, value, iconType, chartData, className }: KPICardProps) {
+  const Icon = {
+    dollar: DollarSign,
+    arrow: ArrowUpRight,
+    calendar: Calendar,
+    smile: Smile,
+  }[iconType];
+
   return (
-    <div className={`kpi-card ${className}`}>
-      <div className="mb-sm">
-        <h3 className="text-onyx mb-xxs text-sm md:text-base">{title}</h3>
-        <p className="text-secondary text-grafite text-xs md:text-sm">{subtitle}</p>
-      </div>
-      
-      <div className="flex items-end justify-between">
-        <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-onyx font-playfair">
-          {value}
+    // AQUI A MUDANÇA: 'h-full' e 'flex flex-col' para o Card
+    <Card className={cn("h-full flex flex-col", className)}>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      {/* AQUI A MUDANÇA: 'flex-grow' para o CardContent se expandir */}
+      <CardContent className="flex flex-col flex-grow justify-between">
+        <div className="text-2xl font-bold">{value}</div>
+        {/* O gráfico agora tem mais espaço para respirar */}
+        <div className="h-16 pt-4"> 
+          <SparklineChart data={chartData} />
         </div>
-        
-        {trend && (
-          <div className={`flex items-center gap-xxs text-xs md:text-sm font-semibold ${
-            trend.isPositive ? 'text-esmeralda' : 'text-erro'
-          }`}>
-            {trend.isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-            {trend.value}
-          </div>
-        )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
-};
+}
