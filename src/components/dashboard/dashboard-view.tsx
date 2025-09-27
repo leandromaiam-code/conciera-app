@@ -2,6 +2,7 @@ import { KPICard } from "./kpi-card";
 import { RevenuePerformancePanel } from "./revenue-performance-panel";
 import { ConversionFunnelWidget } from "./conversion-funnel-widget";
 import { OpportunityFeed } from "./opportunity-feed";
+import { ConnectivityDebug } from "../debug/connectivity-debug";
 
 interface DashboardViewProps {
   onWhatsAppClick: () => void;
@@ -11,6 +12,9 @@ interface DashboardViewProps {
 export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewProps) => {
   return (
     <div className="animate-fade-in space-y-sm lg:space-y-md">
+      {/* Debug Panel - TODO: Remove in production */}
+      <ConnectivityDebug />
+      
       {/* Main Dashboard Grid - Revenue Focus */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
         {/* Revenue Performance Panel - Takes 2 columns on desktop, full width on mobile */}
