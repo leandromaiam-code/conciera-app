@@ -1,43 +1,116 @@
-// src/components/dashboard/dashboard-view.tsx
-
+import { KPICard } from "./kpi-card";
 import { RevenuePerformancePanel } from "./revenue-performance-panel";
 import { ConversionFunnelWidget } from "./conversion-funnel-widget";
-import { OpportunityFeed } from './opportunity-feed';
+import { OpportunityFeed } from "./opportunity-feed";
 
-export function DashboardView() {
+interface DashboardViewProps {
+  onWhatsAppClick: () => void;
+  onPageChange?: (page: string) => void;
+}
+
+export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewProps) => {
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      {/* O cabeçalho da página (AppHeader) já contém o título da rota atual.
-        Remover este H2 elimina a redundância visual.
-      */}
-      {/* <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Painel de Performance</h2>
-      </div>
-      */}
-
-      {/* V--- CORREÇÃO PRINCIPAL APLICADA AQUI ---V */}
-      {/* Trocamos 'grid' por 'flex' para um controle de alinhamento mais robusto.
-          'lg:flex-row' no desktop, 'flex-col' no mobile.
-          'items-stretch' garante que todos os filhos diretos tenham a mesma altura.
-      */}
-      <div className="flex flex-col lg:flex-row gap-4 items-stretch">
-        
-        {/* O painel de performance ocupa 2/3 da largura em telas grandes */}
-        <div className="lg:w-2/3">
+    <div className="animate-fade-in space-y-sm lg:space-y-md">
+      {/* Main Dashboard Grid - Revenue Focus */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
+        {/* Revenue Performance Panel - Takes 2 columns on desktop, full width on mobile */}
+        <div className="lg:col-span-2">
           <RevenuePerformancePanel />
         </div>
 
-        {/* O feed de oportunidades ocupa 1/3 da largura em telas grandes */}
-        <div className="lg:w-1/3">
-          <OpportunityFeed /> 
+        {/* Opportunity Feed - Takes 1 column on desktop, full width on mobile */}
+        <div>
+          <OpportunityFeed onPageChange={onPageChange} />
         </div>
-        
-      </div>
-      
-      <div className="grid gap-4">
-         <ConversionFunnelWidget />
       </div>
 
+      {/* Conversion Funnel Widget */}
+      <ConversionFunnelWidget />
+
+      {/* Secondary KPI Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-md">
+        <KPICard
+          title="Mensagens Processadas"
+          subtitle="Últimas 24h"
+          value={156}
+          trend={{ value: "+18%", isPositive: true }}
+        />
+        
+        <KPICard
+          title="Tempo Médio Resposta"
+          subtitle="Resolução automática"
+          value="2.3s"
+          trend={{ value: "-15%", isPositive: true }}
+        />
+        
+        <KPICard
+          title="Satisfação Cliente"
+          subtitle="Avaliação média"
+          value="4.8"
+          trend={{ value: "+0.2", isPositive: true }}
+        />
+        
+        <KPICard
+          title="Taxa de Comparecimento"
+          subtitle="Percentual este mês"
+          value="87%"
+          trend={{ value: "+5%", isPositive: true }}
+        />
+      </div>
+
+      {/* Performance Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-md lg:gap-lg">
+        <div className="kpi-card">
+          <h3 className="text-onyx mb-sm">Picos de Atividade</h3>
+          <div className="space-y-sm">
+            <div className="flex justify-between items-center">
+              <span className="text-secondary text-grafite">08:00 - 10:00</span>
+              <span className="font-semibold text-onyx">42 mensagens</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-secondary text-grafite">14:00 - 16:00</span>
+              <span className="font-semibold text-onyx">38 mensagens</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-secondary text-grafite">18:00 - 20:00</span>
+              <span className="font-semibold text-onyx">29 mensagens</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="kpi-card">
+          <h3 className="text-onyx mb-sm">Tipos de Solicitação</h3>
+          <div className="space-y-sm">
+            <div className="flex justify-between items-center">
+              <span className="text-secondary text-grafite">Agendamentos</span>
+              <div className="flex items-center gap-xs">
+                <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
+                  <div className="h-full bg-esmeralda rounded-full" style={{ width: '65%' }}></div>
+                </div>
+                <span className="font-semibold text-onyx text-sm">65%</span>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-secondary text-grafite">Informações</span>
+              <div className="flex items-center gap-xs">
+                <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
+                  <div className="h-full bg-dourado rounded-full" style={{ width: '25%' }}></div>
+                </div>
+                <span className="font-semibold text-onyx text-sm">25%</span>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-secondary text-grafite">Reagendamentos</span>
+              <div className="flex items-center gap-xs">
+                <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
+                  <div className="h-full bg-grafite rounded-full" style={{ width: '10%' }}></div>
+                </div>
+                <span className="font-semibold text-onyx text-sm">10%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};

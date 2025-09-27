@@ -32,7 +32,7 @@ export const AnalyticsView = () => {
     <div className="space-y-6">
 
       {/* KPIs Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <KPICard
           title="Leads Totais"
           subtitle="Leads captados no mês"

@@ -49,7 +49,7 @@ export const OpportunityFeed = () => {
   const { opportunities, loading, error } = useOpportunityFeed();
 
   return (
-    <Card className="col-span-1 flex flex-col h-full">
+    <Card className="col-span-1 flex flex-col">
       <CardHeader>
         <CardTitle>Agendamentos</CardTitle>
       </CardHeader>
