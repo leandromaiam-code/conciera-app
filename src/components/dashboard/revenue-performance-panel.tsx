@@ -1,12 +1,12 @@
 import { TrendingUp } from "lucide-react";
-import { useAnalyticsMetricasMensaisVendas } from "@/hooks/use-analytics-metricas-mensais-vendas";
+import { useAnalyticsMetricasMensaisVendasReal } from "@/hooks/use-analytics-metricas-mensais-vendas";
 
 /**
  * Painel Principal: Receita de Pipeline Gerado (RPG)
  * Component central do dashboard focado em performance financeira
  */
 export const RevenuePerformancePanel = () => {
-  const { metrics, isLoading } = useAnalyticsMetricasMensaisVendas();
+  const { metrics, isLoading } = useAnalyticsMetricasMensaisVendasReal();
 
   if (isLoading) {
     return (
