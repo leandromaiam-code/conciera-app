@@ -30,6 +30,8 @@ export const useCoreAgendamentosReal = (
       setLoading(true);
       setError(null);
       
+      console.log('Iniciando busca de agendamentos...');
+      
       let query = supabase
         .from('core_agendamentos')
         .select(`
@@ -50,20 +52,25 @@ export const useCoreAgendamentosReal = (
       }
 
       if (dataInicio) {
+        console.log('Filtrando por data início:', dataInicio.toISOString());
         query = query.gte('data_hora', dataInicio.toISOString());
       }
 
       if (dataFim) {
+        console.log('Filtrando por data fim:', dataFim.toISOString());
         query = query.lte('data_hora', dataFim.toISOString());
       }
 
+      console.log('Executando query...');
       const { data, error: queryError } = await query;
 
       if (queryError) {
-        console.error('Erro ao buscar agendamentos:', queryError);
-        setError('Erro ao carregar agendamentos');
+        console.error('Erro na query:', queryError);
+        setError(`Erro ao carregar agendamentos: ${queryError.message}`);
         return;
       }
+
+      console.log('Dados recebidos:', data?.length || 0, 'agendamentos');
 
       // Transform database data to match expected format
       const transformedAgendamentos: AgendamentoCompleto[] = (data || []).map(row => ({
@@ -88,9 +95,10 @@ export const useCoreAgendamentosReal = (
 
       setAgendamentos(transformedAgendamentos);
     } catch (err) {
-      console.error('Erro inesperado:', err);
-      setError('Erro inesperado ao carregar agendamentos');
+      console.error('Erro inesperado ao buscar agendamentos:', err);
+      setError(`Erro inesperado: ${err instanceof Error ? err.message : 'Erro desconhecido'}`);
     } finally {
+      console.log('Finalizando busca, setting loading = false');
       setLoading(false);
     }
   };
