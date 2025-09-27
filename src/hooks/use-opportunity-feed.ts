@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-// Definimos a estrutura dos dados que vamos buscar e usar no componente
 export interface UpcomingAppointment {
   id: number;
   data_hora: string;
@@ -31,13 +30,13 @@ export const useOpportunityFeed = () => {
           core_clientes ( nome_completo ),
           core_briefings ( temperatura_lead )
         `)
-        .gte('data_hora', new Date().toISOString()) // Filtra apenas agendamentos a partir de agora
-        .order('data_hora', { ascending: true })   // Ordena pelos mais próximos
-        .limit(4);                                  // Limita o resultado (ex: 4)
+        .gte('data_hora', new Date().toISOString())
+        .order('data_hora', { ascending: true })
+        .limit(3); // <<< ALTERAÇÃO APLICADA AQUI
 
       if (error) {
         console.error('Erro ao buscar agendamentos:', error);
-        setError('Não foi possível carregar as próximas consultas.');
+        setError('Não foi possível carregar os próximos agendamentos.');
         setOpportunities([]);
       } else if (data) {
         const formattedData = data.map((agendamento: any) => ({
