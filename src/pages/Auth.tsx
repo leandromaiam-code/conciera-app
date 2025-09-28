@@ -144,7 +144,7 @@ export const Auth = () => {
     // --- 2. APLICAR A IMAGEM DE FUNDO E ESTILOS AO CONTAINER PRINCIPAL ---
     <div 
       className="min-h-screen w-full flex items-center justify-center p-4 bg-cover bg-center"
-      style={{ backgroundImage: `url('/src/assets/login-background.jpg')` }} // Caminho para a imagem
+      style={{ backgroundImage: `url('/src/assets/Fundo_App.png')` }} // Caminho para a imagem
     >
       {/* Adicionado um overlay para melhorar a legibilidade do card */}
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
