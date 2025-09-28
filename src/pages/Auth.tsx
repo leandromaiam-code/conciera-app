@@ -31,124 +31,122 @@ export const Auth = () => {
   });
   const [errors, setErrors] = useState<string[]>([]);
 
-  // ... (Toda a sua lógica de validateForm, handleLogin, handleSignup, handleSubmit permanece EXATAMENTE A MESMA) ...
   const validateForm = () => {
-    try {
-      const dataToValidate = isLogin 
-        ? { email: formData.email, password: formData.password }
-        : formData;
-      
-      authSchema.parse(dataToValidate);
-      setErrors([]);
-      return true;
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        setErrors(error.errors.map(err => err.message));
-      }
-      return false;
-    }
-  };
+    try {
+      const dataToValidate = isLogin 
+        ? { email: formData.email, password: formData.password }
+        : formData;
+      
+      authSchema.parse(dataToValidate);
+      setErrors([]);
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setErrors(error.errors.map(err => err.message));
+      }
+      return false;
+    }
+  };
 
-  const handleLogin = async () => {
-    if (!validateForm()) return;
+  const handleLogin = async () => {
+    if (!validateForm()) return;
 
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: formData.email.trim(),
-        password: formData.password,
-      });
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: formData.email.trim(),
+        password: formData.password,
+      });
 
-      if (error) {
-        if (error.message.includes('Invalid login credentials')) {
-          setErrors(['Email ou senha incorretos']);
-        } else if (error.message.includes('Email not confirmed')) {
-          setErrors(['Por favor, confirme seu email antes de fazer login']);
-        } else {
-          setErrors([error.message]);
-        }
-        return;
-      }
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          setErrors(['Email ou senha incorretos']);
+        } else if (error.message.includes('Email not confirmed')) {
+          setErrors(['Por favor, confirme seu email antes de fazer login']);
+        } else {
+          setErrors([error.message]);
+        }
+        return;
+      }
 
-      toast({
-        title: "Login realizado com sucesso",
-        description: "Bem-vindo ao CONCIERA Suite™️",
-      });
-      
-      navigate('/');
-    } catch (error) {
-      console.error('Erro no login:', error);
-      setErrors(['Erro inesperado ao fazer login']);
-    } finally {
-      setLoading(false);
-    }
-  };
+      toast({
+        title: "Login realizado com sucesso",
+        description: "Bem-vindo ao CONCIERA Suite™️",
+      });
+      
+      navigate('/');
+    } catch (error) {
+      console.error('Erro no login:', error);
+      setErrors(['Erro inesperado ao fazer login']);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleSignup = async () => {
-    if (!validateForm()) return;
+  const handleSignup = async () => {
+    if (!validateForm()) return;
 
-    setLoading(true);
-    try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { error } = await supabase.auth.signUp({
-        email: formData.email.trim(),
-        password: formData.password,
-        options: {
-          emailRedirectTo: redirectUrl,
-          data: {
-            nome: formData.nome.trim()
-          }
-        }
-      });
+    setLoading(true);
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { error } = await supabase.auth.signUp({
+        email: formData.email.trim(),
+        password: formData.password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            nome: formData.nome.trim()
+          }
+        }
+      });
 
-      if (error) {
-        if (error.message.includes('User already registered')) {
-          setErrors(['Este email já está cadastrado. Tente fazer login ou usar outro email.']);
-        } else if (error.message.includes('Password should be at least 6 characters')) {
-          setErrors(['A senha deve ter pelo menos 6 caracteres']);
-        } else {
-          setErrors([error.message]);
-        }
-        return;
-      }
+      if (error) {
+        if (error.message.includes('User already registered')) {
+          setErrors(['Este email já está cadastrado. Tente fazer login ou usar outro email.']);
+        } else if (error.message.includes('Password should be at least 6 characters')) {
+          setErrors(['A senha deve ter pelo menos 6 caracteres']);
+        } else {
+          setErrors([error.message]);
+        }
+        return;
+      }
 
-      toast({
-        title: "Cadastro realizado com sucesso",
-        description: "Verifique seu email para confirmar a conta e fazer login",
-      });
-      
-      // Switch to login after successful signup
-      setIsLogin(true);
-      setFormData({ email: formData.email, password: '', nome: '' });
-    } catch (error) {
-      console.error('Erro no cadastro:', error);
-      setErrors(['Erro inesperado ao criar conta']);
-    } finally {
-      setLoading(false);
-    }
-  };
+      toast({
+        title: "Cadastro realizado com sucesso",
+        description: "Verifique seu email para confirmar a conta e fazer login",
+      });
+      
+      setIsLogin(true);
+      setFormData({ email: formData.email, password: '', nome: '' });
+    } catch (error) {
+      console.error('Erro no cadastro:', error);
+      setErrors(['Erro inesperado ao criar conta']);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isLogin) {
-      handleLogin();
-    } else {
-      handleSignup();
-    }
-  };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isLogin) {
+      handleLogin();
+    } else {
+      handleSignup();
+    }
+  };
 
   return (
     <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
       
       {/* Coluna da Esquerda: A Imagem de Fundo com Overlay */}
-      <div className="relative hidden lg:block"> {/* Adicionado 'relative' para o overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${loginBackground})` }}
-        />
-        {/* --- NOVO: Overlay branco muito transparente --- */}
-        <div className="absolute inset-0 bg-white/10" /> {/* Ajuste 'bg-white/10' para a transparência desejada (ex: /5, /15, /20) */}
+      {/* --- ALTERAÇÃO APLICADA AQUI: O conteúdo da coluna da imagem é agora a própria imagem de fundo --- */}
+      <div 
+        className="hidden lg:block bg-cover bg-center relative" // Adicionado 'relative' para o overlay
+        style={{ backgroundImage: `url(${loginBackground})` }}
+      >
+        {/* Overlay branco muito transparente */}
+        <div className="absolute inset-0 bg-white/10" />
       </div>
 
       {/* Coluna da Direita: O Formulário de Login */}
@@ -185,7 +183,6 @@ export const Auth = () => {
                     onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                     disabled={loading}
                     required={!isLogin}
-                    // --- NOVO: Classe para placeholder ---
                     className="placeholder:text-gray-500" 
                   />
                 </div>
@@ -201,7 +198,6 @@ export const Auth = () => {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   disabled={loading}
                   required
-                  // --- NOVO: Classe para placeholder ---
                   className="placeholder:text-gray-500"
                 />
               </div>
@@ -216,7 +212,6 @@ export const Auth = () => {
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   disabled={loading}
                   required
-                  // --- NOVO: Classe para placeholder ---
                   className="placeholder:text-gray-500"
                 />
               </div>
