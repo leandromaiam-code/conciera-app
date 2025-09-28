@@ -10,9 +10,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
-
-// --- 1. IMPORTAR A IMAGEM DA LOGO ---
 import concieraLogo from '@/assets/Black-White-transparente.png';
+// Importe a sua imagem de fundo
+import loginBackground from '@/assets/Fundo_App.png'; 
 
 const authSchema = z.object({
   email: z.string().trim().email({ message: "Email inválido" }).max(255, { message: "Email deve ter menos de 255 caracteres" }),
@@ -139,42 +139,36 @@ export const Auth = () => {
     }
   };
 
-
   return (
-    // --- 2. APLICAR A IMAGEM DE FUNDO E ESTILOS AO CONTAINER PRINCIPAL ---
-    <div 
-      className="min-h-screen w-full flex items-center justify-center p-4 bg-cover bg-center"
-      style={{ backgroundImage: `url('/src/assets/Fundo_App.png')` }} // Caminho para a imagem
-    >
-      {/* Adicionado um overlay para melhorar a legibilidade do card */}
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
-
-      {/* Card precisa de z-index para ficar acima do overlay */}
-      <Card className="w-full max-w-md z-10"> 
-        <CardHeader className="space-y-1 items-center text-center">
-          
-          <div className="mb-4">
-            <img 
-              src={concieraLogo} 
-              alt="CONCIERA Logo" 
-              className="w-64 h-auto mx-auto" // Ajuste o tamanho conforme necessário
-            />
-          </div>
-
-          <CardTitle className="text-2xl">
-            {isLogin ? 'Bem-vindo(a) de volta' : 'Crie a sua Conta'}
-          </CardTitle>
-          <CardDescription>
-            {isLogin 
-              ? 'Aceda à sua suite de inteligência de receita'
-              : 'Comece a transformar atendimento em resultado'
-            }
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* ... (O resto do seu formulário e botões permanece EXATAMENTE O MESMO) ... */}
-             {!isLogin && (
+    // --- ALTERAÇÃO PRINCIPAL APLICADA AQUI ---
+    // Usamos 'grid' para criar um layout de tela dividida em desktops ('lg:grid-cols-2')
+    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
+      
+      {/* Coluna da Esquerda: O Formulário de Login */}
+      <div className="flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1 items-center text-center">
+            <div className="mb-4">
+              <img 
+                src={concieraLogo} 
+                alt="CONCIERA Logo" 
+                className="w-32 h-auto mx-auto"
+              />
+            </div>
+            <CardTitle className="text-2xl">
+              {isLogin ? 'Bem-vindo(a) de volta' : 'Crie a sua Conta'}
+            </CardTitle>
+            <CardDescription>
+              {isLogin 
+                ? 'Aceda à sua suite de inteligência de receita'
+                : 'Comece a transformar atendimento em resultado'
+              }
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* ... O resto do seu formulário e botões permanece EXATAMENTE O MESMO ... */}
+               {!isLogin && (
               <div className="space-y-2">
                 <Label htmlFor="nome">Nome Completo</Label>
                 <Input
@@ -234,27 +228,35 @@ export const Auth = () => {
             >
               {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Criar Conta')}
             </Button>
-          </form>
+            </form>
 
-          <div className="mt-6 text-center">
-            <Button
-              variant="link"
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setErrors([]);
-                setFormData({ email: '', password: '', nome: '' });
-              }}
-              disabled={loading}
-              className="text-grafite hover:text-onyx"
-            >
-              {isLogin 
-                ? 'Não tem uma conta? Criar conta'
-                : 'Já tem uma conta? Fazer login'
-              }
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="mt-6 text-center">
+              <Button
+                variant="link"
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setErrors([]);
+                  setFormData({ email: '', password: '', nome: '' });
+                }}
+                disabled={loading}
+                className="text-grafite hover:text-onyx"
+              >
+                {isLogin 
+                  ? 'Não tem uma conta? Criar conta'
+                  : 'Já tem uma conta? Fazer login'
+                }
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Coluna da Direita: A Imagem de Fundo (só aparece em telas grandes) */}
+      <div 
+        className="hidden lg:block bg-cover bg-center"
+        style={{ backgroundImage: `url(${loginBackground})` }}
+      />
+
     </div>
   );
 };
