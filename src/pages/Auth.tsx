@@ -153,12 +153,11 @@ export const Auth = () => {
       <Card className="w-full max-w-md z-10"> 
         <CardHeader className="space-y-1 items-center text-center">
           
-          {/* --- 3. SUBSTITUIR O TEXTO PELA IMAGEM DA LOGO --- */}
           <div className="mb-4">
             <img 
               src={concieraLogo} 
               alt="CONCIERA Logo" 
-              className="w-32 h-auto mx-auto" // Ajuste o tamanho conforme necessário
+              className="w-64 h-auto mx-auto" // Ajuste o tamanho conforme necessário
             />
           </div>
 
