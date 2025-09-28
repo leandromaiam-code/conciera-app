@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import concieraLogo from "@/assets/C-logo - White Black transparente.png";
+import concieraLogo from "@/assets/C-logo-White-Black-transparente.png";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AppSidebarProps {

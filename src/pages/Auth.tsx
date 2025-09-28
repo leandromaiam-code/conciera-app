@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 
 // --- 1. IMPORTAR A IMAGEM DA LOGO ---
-import concieraLogo from '@/assets/Black White transparente.png';
+import concieraLogo from '@/assets/Black-White-transparente.png';
 
 const authSchema = z.object({
   email: z.string().trim().email({ message: "Email inválido" }).max(255, { message: "Email deve ter menos de 255 caracteres" }),
