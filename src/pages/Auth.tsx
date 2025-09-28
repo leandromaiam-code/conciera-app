@@ -11,8 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import concieraLogo from '@/assets/Black-White-transparente.png';
-// Importe a sua imagem de fundo
-import loginBackground from '@/assets/Fundo_App.png'; 
+import loginBackground from '@/assets/Fundo_App.png';
 
 const authSchema = z.object({
   email: z.string().trim().email({ message: "Email inválido" }).max(255, { message: "Email deve ter menos de 255 caracteres" }),
@@ -140,11 +139,19 @@ export const Auth = () => {
   };
 
   return (
-    // --- ALTERAÇÃO PRINCIPAL APLICADA AQUI ---
-    // Usamos 'grid' para criar um layout de tela dividida em desktops ('lg:grid-cols-2')
     <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
       
-      {/* Coluna da Esquerda: O Formulário de Login */}
+      {/* Coluna da Esquerda: A Imagem de Fundo com Overlay */}
+      <div className="relative hidden lg:block"> {/* Adicionado 'relative' para o overlay */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${loginBackground})` }}
+        />
+        {/* --- NOVO: Overlay branco muito transparente --- */}
+        <div className="absolute inset-0 bg-white/10" /> {/* Ajuste 'bg-white/10' para a transparência desejada (ex: /5, /15, /20) */}
+      </div>
+
+      {/* Coluna da Direita: O Formulário de Login */}
       <div className="flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1 items-center text-center">
@@ -167,67 +174,72 @@ export const Auth = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* ... O resto do seu formulário e botões permanece EXATAMENTE O MESMO ... */}
-               {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="nome">Nome Completo</Label>
-                <Input
-                  id="nome"
-                  type="text"
-                  placeholder="Digite seu nome completo"
-                  value={formData.nome}
-                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                  disabled={loading}
-                  required={!isLogin}
-                />
-              </div>
-            )}
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Digite seu email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                disabled={loading}
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Digite sua senha"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                disabled={loading}
-                required
-              />
-            </div>
+              {!isLogin && (
+                <div className="space-y-2">
+                  <Label htmlFor="nome">Nome Completo</Label>
+                  <Input
+                    id="nome"
+                    type="text"
+                    placeholder="Digite seu nome completo"
+                    value={formData.nome}
+                    onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                    disabled={loading}
+                    required={!isLogin}
+                    // --- NOVO: Classe para placeholder ---
+                    className="placeholder:text-gray-500" 
+                  />
+                </div>
+              )}
+              
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Digite seu email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  disabled={loading}
+                  required
+                  // --- NOVO: Classe para placeholder ---
+                  className="placeholder:text-gray-500"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="password">Senha</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Digite sua senha"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  disabled={loading}
+                  required
+                  // --- NOVO: Classe para placeholder ---
+                  className="placeholder:text-gray-500"
+                />
+              </div>
 
-            {errors.length > 0 && (
-              <Alert variant="destructive">
-                <AlertDescription>
-                  <ul className="list-disc list-inside space-y-1">
-                    {errors.map((error, index) => (
-                      <li key={index}>{error}</li>
-                    ))}
-                  </ul>
-                </AlertDescription>
-              </Alert>
-            )}
+              {errors.length > 0 && (
+                <Alert variant="destructive">
+                  <AlertDescription>
+                    <ul className="list-disc list-inside space-y-1">
+                      {errors.map((error, index) => (
+                        <li key={index}>{error}</li>
+                      ))}
+                    </ul>
+                  </AlertDescription>
+                </Alert>
+              )}
 
-            <Button
-              type="submit"
-              className="w-full bg-dourado text-onyx hover:bg-dourado/90"
-              disabled={loading}
-            >
-              {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Criar Conta')}
-            </Button>
+              <Button
+                type="submit"
+                className="w-full bg-dourado text-onyx hover:bg-dourado/90"
+                disabled={loading}
+              >
+                {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Criar Conta')}
+              </Button>
             </form>
 
             <div className="mt-6 text-center">
@@ -250,13 +262,6 @@ export const Auth = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Coluna da Direita: A Imagem de Fundo (só aparece em telas grandes) */}
-      <div 
-        className="hidden lg:block bg-cover bg-center"
-        style={{ backgroundImage: `url(${loginBackground})` }}
-      />
-
     </div>
   );
 };
