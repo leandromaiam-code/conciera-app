@@ -1,6 +1,6 @@
 import { MessageCircle, Phone, Mail, Users, Bot } from "lucide-react";
 import { useState } from "react";
-import concieraLogo from "@/assets/conciera-logo.png";
+import concieraLogo from "@/assets/C-logo - White Black transparente.png";
 
 interface ChannelNodeProps {
   icon: React.ElementType;
