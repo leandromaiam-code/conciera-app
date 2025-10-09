@@ -222,27 +222,23 @@ export const ConfiguracoesView = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {canais && profile?.empresa_id && (
-            <>
-              <WhatsAppWebConnect
-                funcionariaId={canais.funcionaria_id}
-                empresaId={profile.empresa_id}
-                status={canais.whatsapp_web_status}
-                telefone={canais.whatsapp_web_telefone}
-                conectadoEm={canais.whatsapp_web_conectado_em}
-                ativo={canais.whatsapp_ativo}
-                onToggleAtivo={(ativo) => handleToggleCanal('whatsapp', ativo)}
-              />
+          <WhatsAppWebConnect
+            funcionariaId={canais?.funcionaria_id || 0}
+            empresaId={profile?.empresa_id || 0}
+            status={canais?.whatsapp_web_status || "desconectado"}
+            telefone={canais?.whatsapp_web_telefone || null}
+            conectadoEm={canais?.whatsapp_web_conectado_em || null}
+            ativo={canais?.whatsapp_ativo || false}
+            onToggleAtivo={(ativo) => handleToggleCanal('whatsapp', ativo)}
+          />
 
-              <WhatsAppBusinessConnect
-                status={canais.whatsapp_business_status}
-              />
+          <WhatsAppBusinessConnect
+            status={canais?.whatsapp_business_status || "desconectado"}
+          />
 
-              <InstagramConnect
-                status={canais.instagram_status}
-              />
-            </>
-          )}
+          <InstagramConnect
+            status={canais?.instagram_status || "desconectado"}
+          />
         </CardContent>
       </Card>
 
