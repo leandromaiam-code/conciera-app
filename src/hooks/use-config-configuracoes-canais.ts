@@ -1,30 +1,9 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-
-interface ConfiguracaoCanais {
-  id: number;
-  funcionaria_id: number;
-  whatsapp_ativo: boolean;
-  whatsapp_web_status: string;
-  whatsapp_web_telefone?: string;
-  whatsapp_web_session_id?: string;
-  whatsapp_web_conectado_em?: string;
-  whatsapp_business_status: string;
-  whatsapp_business_telefone?: string;
-  whatsapp_business_conectado_em?: string;
-  instagram_ativo: boolean;
-  instagram_status: string;
-  instagram_username?: string;
-  instagram_conectado_em?: string;
-  telefone_ativo: boolean;
-  email_ativo: boolean;
-  portal_ativo: boolean;
-  formularios_ativo: boolean;
-  updated_at?: string;
-}
+import { ConfigConfiguracaoCanais } from "@/types/briefing-types";
 
 interface UseConfigConfiguracaoCanaisResult {
-  canais: ConfiguracaoCanais | null;
+  canais: ConfigConfiguracaoCanais | null;
   loading: boolean;
   error: string | null;
   saving: boolean;
@@ -32,8 +11,8 @@ interface UseConfigConfiguracaoCanaisResult {
   refetch: () => Promise<void>;
 }
 
-export const useConfigConfiguracaoCanais = (funcionariaId?: number, empresaId?: number): UseConfigConfiguracaoCanaisResult => {
-  const [canais, setCanais] = useState<ConfiguracaoCanais | null>(null);
+export const useConfigConfiguracaoCanais = (funcionariaId?: number): UseConfigConfiguracaoCanaisResult => {
+  const [canais, setCanais] = useState<ConfigConfiguracaoCanais | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,36 +22,13 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number, empresaId?: 
       setLoading(true);
       setError(null);
 
-      let targetFuncionariaId = funcionariaId;
-
-      // If empresaId is provided but not funcionariaId, fetch funcionaria_id first
-      if (!targetFuncionariaId && empresaId) {
-        const { data: funcionariaData, error: funcionariaError } = await supabase
-          .from('config_funcionaria_virtual')
-          .select('id')
-          .eq('empresa_id', empresaId)
-          .eq('enable', true)
-          .limit(1)
-          .maybeSingle();
-
-        if (funcionariaError) {
-          console.error('Erro ao buscar funcionaria_id:', funcionariaError);
-          setError('Erro ao buscar configuração da empresa');
-          return;
-        }
-
-        if (funcionariaData) {
-          targetFuncionariaId = funcionariaData.id;
-        }
-      }
-
-      // If no funcionariaId found, get the first config (assuming single-tenant for now)
+      // If no funcionariaId provided, get the first config (assuming single-tenant for now)
       let query = supabase
         .from('config_configuracoes_canais')
         .select('*');
 
-      if (targetFuncionariaId) {
-        query = query.eq('funcionaria_id', targetFuncionariaId);
+      if (funcionariaId) {
+        query = query.eq('funcionaria_id', funcionariaId);
       }
 
       const { data, error: queryError } = await query.limit(1);
@@ -84,11 +40,31 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number, empresaId?: 
       }
 
       if (data && data.length > 0) {
-        setCanais(data[0] as ConfiguracaoCanais);
+        const row = data[0];
+        
+        // Transform database data to match expected format
+        const canaisData: ConfigConfiguracaoCanais = {
+          config_configuracoes_canais_id: row.id.toString(),
+          config_configuracoes_canais_funcionaria_id: row.funcionaria_id,
+          config_configuracoes_canais_whatsapp_ativo: row.whatsapp_ativo || false,
+          config_configuracoes_canais_instagram_ativo: row.instagram_ativo || false,
+          config_configuracoes_canais_email_ativo: row.email_ativo || false,
+          config_configuracoes_canais_telefone_ativo: row.telefone_ativo || false,
+          config_configuracoes_canais_portal_ativo: row.portal_ativo || false,
+          config_configuracoes_canais_formularios_ativo: row.formularios_ativo || false,
+          config_configuracoes_canais_updated_at: row.updated_at || new Date().toISOString(),
+          // UI fields - these would normally come from a separate mapping or calculation
+          ui_nome: 'Canal Principal',
+          ui_tipo: 'whatsapp',
+          ui_status: 'conectado',
+          ui_icon: null
+        };
+
+        setCanais(canaisData);
       } else {
         // Create default configuration if none exists
-        if (targetFuncionariaId) {
-          await createDefaultCanais(targetFuncionariaId);
+        if (funcionariaId) {
+          await createDefaultCanais(funcionariaId);
         }
       }
     } catch (err) {
@@ -104,10 +80,7 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number, empresaId?: 
       const defaultConfig = {
         funcionaria_id: funcionariaId,
         whatsapp_ativo: true,
-        whatsapp_web_status: 'desconectado',
-        whatsapp_business_status: 'desconectado',
         instagram_ativo: false,
-        instagram_status: 'desconectado',
         email_ativo: false,
         telefone_ativo: false,
         portal_ativo: false,
@@ -126,7 +99,23 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number, empresaId?: 
       }
 
       if (data) {
-        setCanais(data as ConfiguracaoCanais);
+        const canaisData: ConfigConfiguracaoCanais = {
+          config_configuracoes_canais_id: data.id.toString(),
+          config_configuracoes_canais_funcionaria_id: data.funcionaria_id,
+          config_configuracoes_canais_whatsapp_ativo: data.whatsapp_ativo,
+          config_configuracoes_canais_instagram_ativo: data.instagram_ativo,
+          config_configuracoes_canais_email_ativo: data.email_ativo,
+          config_configuracoes_canais_telefone_ativo: data.telefone_ativo,
+          config_configuracoes_canais_portal_ativo: data.portal_ativo,
+          config_configuracoes_canais_formularios_ativo: data.formularios_ativo,
+          config_configuracoes_canais_updated_at: data.updated_at,
+          // UI fields
+          ui_nome: 'Canal Principal',
+          ui_tipo: 'whatsapp',
+          ui_status: 'conectado',
+          ui_icon: null
+        };
+        setCanais(canaisData);
       }
     } catch (err) {
       console.error('Erro ao criar configuração padrão:', err);
@@ -145,7 +134,7 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number, empresaId?: 
       const { error: updateError } = await supabase
         .from('config_configuracoes_canais')
         .update({ [updateField]: ativo })
-        .eq('id', canais.id);
+        .eq('id', Number(canais.config_configuracoes_canais_id));
 
       if (updateError) {
         console.error('Erro ao atualizar canal:', updateError);
@@ -156,8 +145,8 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number, empresaId?: 
       // Update local state
       setCanais(prev => prev ? {
         ...prev,
-        [updateField]: ativo
-      } : null);
+        [`config_configuracoes_canais_${updateField}`]: ativo
+      } as ConfigConfiguracaoCanais : null);
 
       console.log(`Canal ${canal} ${ativo ? 'ativado' : 'desativado'} com sucesso`);
     } catch (err) {
@@ -171,7 +160,7 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number, empresaId?: 
 
   useEffect(() => {
     fetchCanais();
-  }, [funcionariaId, empresaId]);
+  }, [funcionariaId]);
 
   return {
     canais,

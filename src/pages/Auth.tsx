@@ -23,7 +23,6 @@ export const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLogin, setIsLogin] = useState(true);
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -128,46 +127,8 @@ export const Auth = () => {
     }
   };
 
-  const handlePasswordReset = async () => {
-    if (!formData.email.trim()) {
-      setErrors(['Por favor, digite seu email']);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(formData.email.trim(), {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
-
-      if (error) {
-        setErrors([error.message]);
-        return;
-      }
-
-      toast({
-        title: "Email enviado!",
-        description: "Verifique sua caixa de entrada para redefinir sua senha.",
-      });
-      
-      setIsForgotPassword(false);
-      setFormData({ email: '', password: '', nome: '' });
-    } catch (error) {
-      console.error('Erro ao enviar email:', error);
-      setErrors(['Erro ao enviar email de recuperação']);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (isForgotPassword) {
-      handlePasswordReset();
-      return;
-    }
-    
     if (isLogin) {
       handleLogin();
     } else {
@@ -200,20 +161,18 @@ export const Auth = () => {
               />
             </div>
             <CardTitle className="text-2xl">
-              {isForgotPassword ? 'Recuperar Senha' : isLogin ? 'Bem-vindo(a) de volta' : 'Crie a sua Conta'}
+              {isLogin ? 'Bem-vindo(a) de volta' : 'Crie a sua Conta'}
             </CardTitle>
             <CardDescription>
-              {isForgotPassword 
-                ? 'Digite seu email para receber o link de recuperação'
-                : isLogin 
-                  ? 'Aceda à sua suite de inteligência de receita'
-                  : 'Comece a transformar atendimento em resultado'
+              {isLogin 
+                ? 'Aceda à sua suite de inteligência de receita'
+                : 'Comece a transformar atendimento em resultado'
               }
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && !isForgotPassword && (
+              {!isLogin && (
                 <div className="space-y-2">
                   <Label htmlFor="nome">Nome Completo</Label>
                   <Input
@@ -243,35 +202,19 @@ export const Auth = () => {
                 />
               </div>
               
-              {!isForgotPassword && (
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <Label htmlFor="password">Senha</Label>
-                    {isLogin && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsForgotPassword(true);
-                          setErrors([]);
-                        }}
-                        className="text-xs text-grafite hover:text-onyx transition-colors"
-                      >
-                        Esqueci minha senha
-                      </button>
-                    )}
-                  </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Digite sua senha"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    disabled={loading}
-                    required
-                    className="placeholder:text-gray-500"
-                  />
-                </div>
-              )}
+              <div className="space-y-2">
+                <Label htmlFor="password">Senha</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Digite sua senha"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  disabled={loading}
+                  required
+                  className="placeholder:text-gray-500"
+                />
+              </div>
 
               {errors.length > 0 && (
                 <Alert variant="destructive">
@@ -290,40 +233,26 @@ export const Auth = () => {
                 className="w-full bg-dourado text-onyx hover:bg-dourado/90"
                 disabled={loading}
               >
-                {loading ? 'Processando...' : isForgotPassword ? 'Enviar Link' : (isLogin ? 'Entrar' : 'Criar Conta')}
+                {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Criar Conta')}
               </Button>
             </form>
 
             <div className="mt-6 text-center">
-              {isForgotPassword ? (
-                <Button
-                  variant="link"
-                  onClick={() => {
-                    setIsForgotPassword(false);
-                    setErrors([]);
-                  }}
-                  disabled={loading}
-                  className="text-grafite hover:text-onyx"
-                >
-                  Voltar para o login
-                </Button>
-              ) : (
-                <Button
-                  variant="link"
-                  onClick={() => {
-                    setIsLogin(!isLogin);
-                    setErrors([]);
-                    setFormData({ email: '', password: '', nome: '' });
-                  }}
-                  disabled={loading}
-                  className="text-grafite hover:text-onyx"
-                >
-                  {isLogin 
-                    ? 'Não tem uma conta? Criar conta'
-                    : 'Já tem uma conta? Fazer login'
-                  }
-                </Button>
-              )}
+              <Button
+                variant="link"
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setErrors([]);
+                  setFormData({ email: '', password: '', nome: '' });
+                }}
+                disabled={loading}
+                className="text-grafite hover:text-onyx"
+              >
+                {isLogin 
+                  ? 'Não tem uma conta? Criar conta'
+                  : 'Já tem uma conta? Fazer login'
+                }
+              </Button>
             </div>
           </CardContent>
         </Card>
