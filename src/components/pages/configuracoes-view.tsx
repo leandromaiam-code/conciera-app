@@ -13,6 +13,9 @@ import { useConfigConfiguracoesSistema } from "@/hooks/use-config-configuracoes-
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useUserProfile } from "@/hooks/use-user-profile";
+import { WhatsAppConnectDialog } from "@/components/channels/whatsapp-connect-dialog";
+import { InstagramConnectDialog } from "@/components/channels/instagram-connect-dialog";
 
 interface ChannelConfig {
   id: string;
@@ -71,6 +74,7 @@ const getStatusColor = (status: string) => {
 export const ConfiguracoesView = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const { profile } = useUserProfile();
   
   // Database hooks
   const { empresa, loading: empresaLoading, updateEmpresa, saving: empresaSaving } = useCoreEmpresa();
@@ -86,6 +90,10 @@ export const ConfiguracoesView = () => {
   const [autoAgendamento, setAutoAgendamento] = useState(true);
   const [autoPagamento, setAutoPagamento] = useState(false);
   const [notificacoesPush, setNotificacoesPush] = useState(true);
+
+  // Modal states
+  const [whatsappOpen, setWhatsappOpen] = useState(false);
+  const [instagramOpen, setInstagramOpen] = useState(false);
 
   // Update local state when database data loads
   useEffect(() => {
@@ -300,6 +308,10 @@ export const ConfiguracoesView = () => {
                   <Button 
                     size="sm" 
                     variant="outline"
+                    onClick={() => {
+                      if (channel.tipo === 'whatsapp') setWhatsappOpen(true);
+                      if (channel.tipo === 'instagram') setInstagramOpen(true);
+                    }}
                     className={channel.status === 'conectado' ? '' : 'bg-esmeralda text-white hover:bg-esmeralda/90'}
                   >
                     {channel.status === 'conectado' ? 'Configurar' : 'Conectar'}
@@ -425,6 +437,18 @@ export const ConfiguracoesView = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Connection Dialogs */}
+      <WhatsAppConnectDialog 
+        isOpen={whatsappOpen}
+        onClose={() => setWhatsappOpen(false)}
+        empresaId={profile?.empresa_id}
+      />
+
+      <InstagramConnectDialog
+        isOpen={instagramOpen}
+        onClose={() => setInstagramOpen(false)}
+      />
     </div>
   );
 };
