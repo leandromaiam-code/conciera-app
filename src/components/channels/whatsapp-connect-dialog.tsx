@@ -68,48 +68,51 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
     }
 
     setIsConnecting(true);
-
-    try {
-      const response = await fetch("https://n8n-n8n.ajpgd7.easypanel.host/webhook/conciera_ai_conexao", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          empresa_id: empresaId,
-          channel: "whatsapp-web",
-          telefone: phone,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Falha na conexão com o servidor");
-      }
-
-      const data = await response.json();
-
-      // V--- ALTERAÇÃO PRINCIPAL APLICADA AQUI ---V
-      // Agora, verificamos se a resposta contém o objeto 'body'
-      // e se 'body' contém a chave 'qrcode'.
-      if (data && typeof data.body === "object" && data.body.qrcode) {
-        setQrCode(data.body.qrcode); // Acessamos a propriedade aninhada
-        setTimeLeft(120);
+      
+      try {
+        const response = await fetch(
+          'https://n8n-n8n.ajpgd7.easypanel.host/webhook/conciera_ai_conexao',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              empresa_id: empresaId,
+              channel: 'whatsapp-web',
+              telefone: phone
+            })
+          }
+        );
+      
+        if (!response.ok) {
+          throw new Error('Falha na conexão com o servidor');
+        }
+      
+          const data = await response.json();
+          
+          // V--- ALTERAÇÃO PRINCIPAL APLICADA AQUI ---V
+          // Agora, verificamos se a resposta contém o objeto 'body'
+          // e se 'body' contém a chave 'qrcode'.
+          if (data && typeof data.body === 'object' && data.body.qrcode) {
+            setQrCode(data.body.qrcode); // Acessamos a propriedade aninhada
+            setTimeLeft(120);
+            toast({
+              title: "QR Code gerado",
+              description: "Escaneie o código com seu WhatsApp",
+            });
+          } else {
+            console.error('Formato recebido:', typeof data, data);
+            throw new Error('QR Code não recebido no formato esperado');
+          }
+      
+      } catch (error) {
         toast({
-          title: "QR Code gerado",
-          description: "Escaneie o código com seu WhatsApp",
+          title: "Erro",
+          description: error instanceof Error ? error.message : "Erro ao conectar ao WhatsApp",
+          variant: "destructive",
         });
-      } else {
-        console.error("Formato recebido:", typeof data, data);
-        throw new Error("QR Code não recebido no formato esperado");
+      } finally {
+        setIsConnecting(false);
       }
-    } catch (error) {
-      toast({
-        title: "Erro",
-        description: error instanceof Error ? error.message : "Erro ao conectar ao WhatsApp",
-        variant: "destructive",
-      });
-    } finally {
-      setIsConnecting(false);
-    }
-  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
