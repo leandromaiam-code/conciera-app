@@ -169,7 +169,7 @@ export const WhatsAppConnect<p className="text-sm text-gray-900 leading-relaxed 
           {qrCode && timeLeft > 0 && (
             <>
               <div className="text-center space-y-4">
-                <p className="text-sm text-gray-900">
+                <p className="text-sm text-muted-foreground">
                   Acesse o WhatsApp e vá em <strong>Configurações &gt; Dispositivos Conectados</strong> e aponte o
                   celular para o QR Code abaixo:
                 </p>
