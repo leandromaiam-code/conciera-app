@@ -32,7 +32,7 @@ interface UseConfigConfiguracaoCanaisResult {
   refetch: () => Promise<void>;
 }
 
-export const useConfigConfiguracaoCanais = (funcionariaId?: number): UseConfigConfiguracaoCanaisResult => {
+export const useConfigConfiguracaoCanais = (funcionariaId?: number, empresaId?: number): UseConfigConfiguracaoCanaisResult => {
   const [canais, setCanais] = useState<ConfiguracaoCanais | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -43,13 +43,36 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number): UseConfigCo
       setLoading(true);
       setError(null);
 
-      // If no funcionariaId provided, get the first config (assuming single-tenant for now)
+      let targetFuncionariaId = funcionariaId;
+
+      // If empresaId is provided but not funcionariaId, fetch funcionaria_id first
+      if (!targetFuncionariaId && empresaId) {
+        const { data: funcionariaData, error: funcionariaError } = await supabase
+          .from('config_funcionaria_virtual')
+          .select('id')
+          .eq('empresa_id', empresaId)
+          .eq('enable', true)
+          .limit(1)
+          .maybeSingle();
+
+        if (funcionariaError) {
+          console.error('Erro ao buscar funcionaria_id:', funcionariaError);
+          setError('Erro ao buscar configuração da empresa');
+          return;
+        }
+
+        if (funcionariaData) {
+          targetFuncionariaId = funcionariaData.id;
+        }
+      }
+
+      // If no funcionariaId found, get the first config (assuming single-tenant for now)
       let query = supabase
         .from('config_configuracoes_canais')
         .select('*');
 
-      if (funcionariaId) {
-        query = query.eq('funcionaria_id', funcionariaId);
+      if (targetFuncionariaId) {
+        query = query.eq('funcionaria_id', targetFuncionariaId);
       }
 
       const { data, error: queryError } = await query.limit(1);
@@ -64,8 +87,8 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number): UseConfigCo
         setCanais(data[0] as ConfiguracaoCanais);
       } else {
         // Create default configuration if none exists
-        if (funcionariaId) {
-          await createDefaultCanais(funcionariaId);
+        if (targetFuncionariaId) {
+          await createDefaultCanais(targetFuncionariaId);
         }
       }
     } catch (err) {
@@ -148,7 +171,7 @@ export const useConfigConfiguracaoCanais = (funcionariaId?: number): UseConfigCo
 
   useEffect(() => {
     fetchCanais();
-  }, [funcionariaId]);
+  }, [funcionariaId, empresaId]);
 
   return {
     canais,

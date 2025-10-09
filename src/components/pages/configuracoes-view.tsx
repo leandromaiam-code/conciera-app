@@ -25,7 +25,7 @@ export const ConfiguracoesView = () => {
   // Database hooks
   const { profile } = useUserProfile();
   const { empresa, loading: empresaLoading, updateEmpresa, saving: empresaSaving } = useCoreEmpresa();
-  const { canais, loading: canaisLoading, updateCanal, saving: canaisSaving, refetch: refetchCanais } = useConfigConfiguracaoCanais();
+  const { canais, loading: canaisLoading, updateCanal, saving: canaisSaving, refetch: refetchCanais } = useConfigConfiguracaoCanais(undefined, profile?.empresa_id);
   const { sistema, loading: sistemaLoading, updateSistema, saving: sistemaSaving } = useConfigConfiguracoesSistema();
 
   // Local state for form inputs
