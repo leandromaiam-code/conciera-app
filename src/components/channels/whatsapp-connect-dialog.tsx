@@ -12,7 +12,7 @@ interface WhatsAppConnectDialogProps {
   empresaId: number | undefined;
 }
 
-export const WhatsAppConnect<p className="text-sm text-gray-900 leading-relaxed font-medium">Dialog = ({ isOpen, onClose, empresaId }: WhatsAppConnectDialogProps) => {
+  export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppConnectDialogProps) => {
   const { toast } = useToast();
   const [phone, setPhone] = useState("");
   const [qrCode, setQrCode] = useState("");
@@ -169,7 +169,7 @@ export const WhatsAppConnect<p className="text-sm text-gray-900 leading-relaxed 
           {qrCode && timeLeft > 0 && (
             <>
               <div className="text-center space-y-4">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-gray-900">
                   Acesse o WhatsApp e vá em <strong>Configurações &gt; Dispositivos Conectados</strong> e aponte o
                   celular para o QR Code abaixo:
                 </p>
