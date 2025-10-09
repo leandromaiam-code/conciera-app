@@ -33,7 +33,7 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
   useEffect(() => {
     if (qrCode && timeLeft > 0) {
       const timer = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
+        setTimeLeft((prev) => prev - 1);
       }, 1000);
       return () => clearInterval(timer);
     }
@@ -70,36 +70,35 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
     setIsConnecting(true);
 
     try {
-      const response = await fetch(
-        'https://n8n-n8n.ajpgd7.easypanel.host/webhook/conciera_ai_conexao',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            empresa_id: empresaId,
-            channel: 'whatsapp-web',
-            telefone: phone
-          })
-        }
-      );
+      const response = await fetch("https://n8n-n8n.ajpgd7.easypanel.host/webhook/conciera_ai_conexao", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          empresa_id: empresaId,
+          channel: "whatsapp-web",
+          telefone: phone,
+        }),
+      });
 
       if (!response.ok) {
-        throw new Error('Falha na conexão com o servidor');
+        throw new Error("Falha na conexão com o servidor");
       }
 
+      // Substitua o bloco de validação de 'data' pelo código abaixo
+
       const data = await response.json();
-      
-      // Webhook retorna string base64 diretamente
-      if (typeof data === 'string' && data.length > 0) {
-        setQrCode(data);
+
+      // A resposta é um objeto JSON que contém a chave 'base64_qrcode'
+      if (data && typeof data === "string" && base64_qrcode) {
+        setQrCode(base64_qrcode); // <-- Acessamos a propriedade correta
         setTimeLeft(120);
         toast({
           title: "QR Code gerado",
           description: "Escaneie o código com seu WhatsApp",
         });
       } else {
-        console.error('Formato recebido:', typeof data, data);
-        throw new Error('QR Code não recebido no formato esperado');
+        console.error("Formato recebido:", typeof data, data);
+        throw new Error("QR Code não recebido no formato esperado");
       }
     } catch (error) {
       toast({
@@ -115,7 +114,7 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -123,27 +122,22 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
       <DialogContent className="max-w-md">
         <DialogHeader className="space-y-4">
           <div className="flex items-center gap-2">
-            <Button 
-              onClick={onClose} 
-              variant="ghost" 
-              size="sm"
-              className="p-0 h-auto hover:bg-transparent"
-            >
+            <Button onClick={onClose} variant="ghost" size="sm" className="p-0 h-auto hover:bg-transparent">
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <DialogTitle>Conectar WhatsApp</DialogTitle>
           </div>
         </DialogHeader>
-        
+
         <div className="space-y-4 py-4">
           {!qrCode && (
             <>
               <div className="space-y-2">
                 <Label htmlFor="phone">Telefone (formato: 553199885544)</Label>
-                <Input 
+                <Input
                   id="phone"
-                  value={phone} 
-                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
                   placeholder="553199885544"
                   maxLength={13}
                   disabled={isConnecting}
@@ -152,7 +146,7 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
                   Digite o número no formato: 55 + DDD + Número (13 dígitos)
                 </p>
               </div>
-              <Button 
+              <Button
                 onClick={handleConnect}
                 className="w-full bg-esmeralda text-white hover:bg-esmeralda/90"
                 disabled={isConnecting}
@@ -163,45 +157,34 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
                     Conectando...
                   </>
                 ) : (
-                  'Conectar'
+                  "Conectar"
                 )}
               </Button>
             </>
           )}
-          
+
           {qrCode && timeLeft > 0 && (
             <>
               <div className="text-center space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  Acesse o WhatsApp e vá em <strong>Configurações &gt; Dispositivos Conectados</strong> e aponte o celular para o QR Code abaixo:
+                  Acesse o WhatsApp e vá em <strong>Configurações &gt; Dispositivos Conectados</strong> e aponte o
+                  celular para o QR Code abaixo:
                 </p>
                 <div className="bg-white p-4 rounded-lg border-2 border-cinza-borda">
-                  <img 
-                    src={`data:image/png;base64,${qrCode}`} 
-                    alt="QR Code WhatsApp"
-                    className="w-full h-auto"
-                  />
+                  <img src={`data:image/png;base64,${qrCode}`} alt="QR Code WhatsApp" className="w-full h-auto" />
                 </div>
                 <div className="flex items-center justify-center gap-2">
-                  <div className="text-lg font-semibold text-esmeralda">
-                    {formatTime(timeLeft)}
-                  </div>
+                  <div className="text-lg font-semibold text-esmeralda">{formatTime(timeLeft)}</div>
                   <span className="text-sm text-muted-foreground">restantes</span>
                 </div>
               </div>
             </>
           )}
-          
+
           {qrCode && timeLeft === 0 && (
             <div className="text-center space-y-4">
-              <p className="text-sm text-muted-foreground">
-                O QR Code expirou. Tente novamente.
-              </p>
-              <Button 
-                onClick={onClose}
-                variant="outline"
-                className="w-full"
-              >
+              <p className="text-sm text-muted-foreground">O QR Code expirou. Tente novamente.</p>
+              <Button onClick={onClose} variant="outline" className="w-full">
                 Fechar
               </Button>
             </div>
