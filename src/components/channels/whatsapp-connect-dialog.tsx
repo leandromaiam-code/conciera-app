@@ -89,17 +89,16 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
 
       const data = await response.json();
       
-      // Webhook retorna array: [{"base64_qrcode": "..."}]
-      const qrData = Array.isArray(data) ? data[0] : data;
-      
-      if (qrData?.base64_qrcode) {
-        setQrCode(qrData.base64_qrcode);
+      // Webhook retorna string base64 diretamente
+      if (typeof data === 'string' && data.length > 0) {
+        setQrCode(data);
         setTimeLeft(120);
         toast({
           title: "QR Code gerado",
           description: "Escaneie o código com seu WhatsApp",
         });
       } else {
+        console.error('Formato recebido:', typeof data, data);
         throw new Error('QR Code não recebido no formato esperado');
       }
     } catch (error) {
