@@ -4,77 +4,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign, Globe } from "lucide-react";
+import { Settings, Brain, Shield, DollarSign, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCoreEmpresa } from "@/hooks/use-core-empresa";
 import { useConfigConfiguracaoCanais } from "@/hooks/use-config-configuracoes-canais";
 import { useConfigConfiguracoesSistema } from "@/hooks/use-config-configuracoes-sistema";
+import { useUserProfile } from "@/hooks/use-user-profile";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { WhatsAppWebConnect } from "./channels/WhatsAppWebConnect";
+import { WhatsAppBusinessConnect } from "./channels/WhatsAppBusinessConnect";
+import { InstagramConnect } from "./channels/InstagramConnect";
 
-interface ChannelConfig {
-  id: string;
-  nome: string;
-  tipo: 'instagram' | 'whatsapp' | 'email' | 'site';
-  status: 'conectado' | 'desconectado' | 'erro';
-  ativo: boolean;
-  icon: any;
-}
-
-const channelsConfig: ChannelConfig[] = [
-  {
- 
-    id: "1", 
-    nome: "WhatsApp Business",
-    tipo: "whatsapp",
-    status: "conectado",
-    ativo: true,
-    icon: MessageSquare
-  },
-  { 
-    id: "2",
-    nome: "Instagram @clinicaexemplo",
-    tipo: "instagram",
-    status: "desconectado",
-    ativo: false,
-    icon: Instagram
-  },
-  {
-    id: "3",
-    nome: "Email contato@clinica.com",
-    tipo: "email", 
-    status: "desconectado",
-    ativo: false,
-    icon: Mail
-  },
-  {
-    id: "4",
-    nome: "Site wwww.clinica.com.br",
-    tipo: "site",
-    status: "desconectado", 
-    ativo: false,
-    icon: Globe
-  }
-];
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'conectado': return 'bg-esmeralda text-white';
-    case 'desconectado': return 'bg-gray-500 text-white';
-    case 'erro': return 'bg-red-500 text-white';
-    default: return 'bg-gray-500 text-white';
-  }
-};
 
 export const ConfiguracoesView = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
   
   // Database hooks
+  const { profile } = useUserProfile();
   const { empresa, loading: empresaLoading, updateEmpresa, saving: empresaSaving } = useCoreEmpresa();
-  const { canais, loading: canaisLoading, updateCanal, saving: canaisSaving } = useConfigConfiguracaoCanais();
+  const { canais, loading: canaisLoading, updateCanal, saving: canaisSaving, refetch: refetchCanais } = useConfigConfiguracaoCanais();
   const { sistema, loading: sistemaLoading, updateSistema, saving: sistemaSaving } = useConfigConfiguracoesSistema();
 
   // Local state for form inputs
@@ -271,43 +222,27 @@ export const ConfiguracoesView = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {channelsConfig.map((channel) => {
-            const IconComponent = channel.icon;
-            const isChannelActive = canais ? canais[`config_configuracoes_canais_${channel.tipo}_ativo` as keyof typeof canais] : false;
-            
-            return (
-              <div key={channel.id} className={`p-4 border border-cinza-borda rounded-lg ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
-                {/* First line: Icon + Name + Status Badge */}
-                <div className="flex items-center gap-4">
-                  <IconComponent className="w-6 h-6 text-grafite" />
-                  <div className="flex-1">
-                    <p className="font-medium text-onyx">{channel.nome}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge className={getStatusColor(channel.status)}>
-                        {channel.status.charAt(0).toUpperCase() + channel.status.slice(1)}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
+          {canais && profile?.empresa_id && (
+            <>
+              <WhatsAppWebConnect
+                funcionariaId={canais.funcionaria_id}
+                empresaId={profile.empresa_id}
+                status={canais.whatsapp_web_status}
+                telefone={canais.whatsapp_web_telefone}
+                conectadoEm={canais.whatsapp_web_conectado_em}
+                ativo={canais.whatsapp_ativo}
+                onToggleAtivo={(ativo) => handleToggleCanal('whatsapp', ativo)}
+              />
 
-                {/* Second line (mobile) or right side (desktop): Controls in Box */}
-                <div className={`${isMobile ? 'bg-marfim/30 border border-cinza-borda/50 rounded-lg p-3' : ''} flex items-center gap-3 ${isMobile ? 'justify-center' : ''}`}>
-                  <Switch
-                    checked={Boolean(isChannelActive)}
-                    disabled={channel.status === 'desconectado' || canaisSaving}
-                    onCheckedChange={(checked) => handleToggleCanal(channel.tipo, checked)}
-                  />
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className={channel.status === 'conectado' ? '' : 'bg-esmeralda text-white hover:bg-esmeralda/90'}
-                  >
-                    {channel.status === 'conectado' ? 'Configurar' : 'Conectar'}
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
+              <WhatsAppBusinessConnect
+                status={canais.whatsapp_business_status}
+              />
+
+              <InstagramConnect
+                status={canais.instagram_status}
+              />
+            </>
+          )}
         </CardContent>
       </Card>
 
