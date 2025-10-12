@@ -1,33 +1,32 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { KPICard } from "@/components/dashboard/kpi-card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
-import { TrendingUp, Users, MessageSquare, Calendar, DollarSign, Target } from "lucide-react";
-
-const monthlyData = [
-  { month: 'Jan', leads: 45, agendamentos: 32, receita: 85000 },
-  { month: 'Fev', leads: 52, agendamentos: 38, receita: 92000 },
-  { month: 'Mar', leads: 48, agendamentos: 35, receita: 88000 },
-  { month: 'Abr', leads: 61, agendamentos: 44, receita: 105000 },
-  { month: 'Mai', leads: 55, agendamentos: 41, receita: 98000 },
-  { month: 'Jun', leads: 67, agendamentos: 48, receita: 118000 },
-];
-
-const channelData = [
-  { name: 'Instagram', value: 45, color: '#E1306C' },
-  { name: 'WhatsApp', value: 30, color: '#25D366' },
-  { name: 'Indicação', value: 20, color: '#FFD700' },
-  { name: 'Outros', value: 5, color: '#6B7280' },
-];
-
-const procedureData = [
-  { procedimento: 'Harmonização Facial', quantidade: 25, receita: 70000 },
-  { procedimento: 'Implante Capilar', quantidade: 12, receita: 102000 },
-  { procedimento: 'Rinoplastia', quantidade: 8, receita: 96000 },
-  { procedimento: 'Lipo HD', quantidade: 15, receita: 135000 },
-  { procedimento: 'Botox', quantidade: 35, receita: 52500 },
-];
+import { TrendingUp, MessageSquare, DollarSign } from "lucide-react";
+import { useAnalyticsOverview } from "@/hooks/use-analytics-overview";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const AnalyticsView = () => {
+  const { data: analytics, isLoading } = useAnalyticsOverview();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {[1, 2].map((i) => (
+            <Skeleton key={i} className="h-96" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!analytics) return null;
+
   return (
     <div className="space-y-6">
 
@@ -36,26 +35,38 @@ export const AnalyticsView = () => {
         <KPICard
           title="Leads Totais"
           subtitle="Leads captados no mês"
-          value="1.247"
-          trend={{ value: "15%", isPositive: true }}
+          value={analytics.leadsTotal.toString()}
+          trend={{ 
+            value: `${Math.abs(analytics.leadsGrowth)}%`, 
+            isPositive: analytics.leadsGrowth >= 0 
+          }}
         />
         <KPICard
           title="Taxa Conversão"
           subtitle="Leads para agendamentos"
-          value="72%"
-          trend={{ value: "5%", isPositive: true }}
+          value={`${analytics.taxaConversao}%`}
+          trend={{ 
+            value: `${Math.abs(analytics.taxaConversaoGrowth)}%`, 
+            isPositive: analytics.taxaConversaoGrowth >= 0 
+          }}
         />
         <KPICard
           title="Receita Total"
           subtitle="Faturamento do mês"
-          value="R$ 598K"
-          trend={{ value: "23%", isPositive: true }}
+          value={`R$ ${(analytics.receitaTotal / 1000).toFixed(0)}K`}
+          trend={{ 
+            value: `${Math.abs(analytics.receitaGrowth)}%`, 
+            isPositive: analytics.receitaGrowth >= 0 
+          }}
         />
         <KPICard
           title="Agendamentos"
           subtitle="Consultas marcadas"
-          value="896"
-          trend={{ value: "12%", isPositive: true }}
+          value={analytics.agendamentosTotal.toString()}
+          trend={{ 
+            value: `${Math.abs(analytics.agendamentosGrowth)}%`, 
+            isPositive: analytics.agendamentosGrowth >= 0 
+          }}
         />
       </div>
 
@@ -71,7 +82,7 @@ export const AnalyticsView = () => {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={monthlyData}>
+              <LineChart data={analytics.monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
@@ -107,7 +118,7 @@ export const AnalyticsView = () => {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={channelData}
+                  data={analytics.channelData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -116,7 +127,7 @@ export const AnalyticsView = () => {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {channelData.map((entry, index) => (
+                  {analytics.channelData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -136,7 +147,7 @@ export const AnalyticsView = () => {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={procedureData}>
+              <BarChart data={analytics.procedureData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="procedimento" />
                 <YAxis />
@@ -170,7 +181,7 @@ export const AnalyticsView = () => {
                 </tr>
               </thead>
               <tbody>
-                {procedureData.map((item, index) => (
+                {analytics.procedureData.map((item, index) => (
                   <tr key={index} className="border-b border-cinza-borda/50">
                     <td className="py-3 font-medium">{item.procedimento}</td>
                     <td className="text-center py-3">{item.quantidade}</td>

@@ -320,10 +320,20 @@ export type Database = {
           funcionaria_id: number
           id: number
           instagram_ativo: boolean
+          instagram_conectado_em: string | null
+          instagram_status: string | null
+          instagram_username: string | null
           portal_ativo: boolean
           telefone_ativo: boolean
           updated_at: string | null
           whatsapp_ativo: boolean
+          whatsapp_business_conectado_em: string | null
+          whatsapp_business_status: string | null
+          whatsapp_business_telefone: string | null
+          whatsapp_web_conectado_em: string | null
+          whatsapp_web_session_id: string | null
+          whatsapp_web_status: string | null
+          whatsapp_web_telefone: string | null
         }
         Insert: {
           email_ativo?: boolean
@@ -331,10 +341,20 @@ export type Database = {
           funcionaria_id: number
           id?: number
           instagram_ativo?: boolean
+          instagram_conectado_em?: string | null
+          instagram_status?: string | null
+          instagram_username?: string | null
           portal_ativo?: boolean
           telefone_ativo?: boolean
           updated_at?: string | null
           whatsapp_ativo?: boolean
+          whatsapp_business_conectado_em?: string | null
+          whatsapp_business_status?: string | null
+          whatsapp_business_telefone?: string | null
+          whatsapp_web_conectado_em?: string | null
+          whatsapp_web_session_id?: string | null
+          whatsapp_web_status?: string | null
+          whatsapp_web_telefone?: string | null
         }
         Update: {
           email_ativo?: boolean
@@ -342,10 +362,20 @@ export type Database = {
           funcionaria_id?: number
           id?: number
           instagram_ativo?: boolean
+          instagram_conectado_em?: string | null
+          instagram_status?: string | null
+          instagram_username?: string | null
           portal_ativo?: boolean
           telefone_ativo?: boolean
           updated_at?: string | null
           whatsapp_ativo?: boolean
+          whatsapp_business_conectado_em?: string | null
+          whatsapp_business_status?: string | null
+          whatsapp_business_telefone?: string | null
+          whatsapp_web_conectado_em?: string | null
+          whatsapp_web_session_id?: string | null
+          whatsapp_web_status?: string | null
+          whatsapp_web_telefone?: string | null
         }
         Relationships: [
           {
@@ -593,6 +623,7 @@ export type Database = {
         Row: {
           agendamento: string | null
           apresentacao_frase: string
+          categoria: string | null
           created_at: string
           data: string
           descricao: string | null
@@ -620,12 +651,14 @@ export type Database = {
           script_situacao: string | null
           script_situacao_conexao: string | null
           servico_produto: string
+          status: string | null
           tipo_fechamento: string | null
           updated_at: string
         }
         Insert: {
           agendamento?: string | null
           apresentacao_frase: string
+          categoria?: string | null
           created_at?: string
           data: string
           descricao?: string | null
@@ -653,12 +686,14 @@ export type Database = {
           script_situacao?: string | null
           script_situacao_conexao?: string | null
           servico_produto: string
+          status?: string | null
           tipo_fechamento?: string | null
           updated_at?: string
         }
         Update: {
           agendamento?: string | null
           apresentacao_frase?: string
+          categoria?: string | null
           created_at?: string
           data?: string
           descricao?: string | null
@@ -686,6 +721,7 @@ export type Database = {
           script_situacao?: string | null
           script_situacao_conexao?: string | null
           servico_produto?: string
+          status?: string | null
           tipo_fechamento?: string | null
           updated_at?: string
         }
@@ -1361,6 +1397,24 @@ export type Database = {
           evento?: string | null
           id?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      memoria_clientes_historico_01: {
+        Row: {
+          id: number
+          message: Json
+          session_id: string
+        }
+        Insert: {
+          id?: number
+          message: Json
+          session_id: string
+        }
+        Update: {
+          id?: number
+          message?: Json
+          session_id?: string
         }
         Relationships: []
       }

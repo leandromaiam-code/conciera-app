@@ -2,6 +2,9 @@ import { KPICard } from "./kpi-card";
 import { RevenuePerformancePanel } from "./revenue-performance-panel";
 import { ConversionFunnelWidget } from "./conversion-funnel-widget";
 import { OpportunityFeed } from "./opportunity-feed";
+import { MessageSquare, Clock, Star, CalendarCheck } from "lucide-react";
+import { useDashboardSecondaryKPIs } from "@/hooks/use-dashboard-secondary-kpis";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DashboardViewProps {
   onWhatsAppClick: () => void;
@@ -9,6 +12,8 @@ interface DashboardViewProps {
 }
 
 export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewProps) => {
+  const { data: secondaryKPIs, isLoading: isLoadingKPIs } = useDashboardSecondaryKPIs();
+
   return (
     <div className="animate-fade-in space-y-sm lg:space-y-md">
       {/* Main Dashboard Grid - Revenue Focus */}
@@ -29,33 +34,52 @@ export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewPr
 
       {/* Secondary KPI Row */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-md">
-        <KPICard
-          title="Mensagens Processadas"
-          subtitle="Últimas 24h"
-          value={156}
-          trend={{ value: "+18%", isPositive: true }}
-        />
-        
-        <KPICard
-          title="Tempo Médio Resposta"
-          subtitle="Resolução automática"
-          value="2.3s"
-          trend={{ value: "-15%", isPositive: true }}
-        />
-        
-        <KPICard
-          title="Satisfação Cliente"
-          subtitle="Avaliação média"
-          value="4.8"
-          trend={{ value: "+0.2", isPositive: true }}
-        />
-        
-        <KPICard
-          title="Taxa de Comparecimento"
-          subtitle="Percentual este mês"
-          value="87%"
-          trend={{ value: "+5%", isPositive: true }}
-        />
+        {isLoadingKPIs ? (
+          <>
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-32" />
+            ))}
+          </>
+        ) : secondaryKPIs ? (
+          <>
+            <KPICard
+              title="Mensagens Processadas"
+              subtitle="Total de mensagens"
+              value={secondaryKPIs.mensagensProcessadas.toString()}
+              trend={{ 
+                value: `${Math.abs(secondaryKPIs.mensagensGrowth)}%`, 
+                isPositive: secondaryKPIs.mensagensGrowth >= 0 
+              }}
+            />
+            <KPICard
+              title="Tempo Médio Resposta"
+              subtitle="Tempo de resposta"
+              value={`${secondaryKPIs.tempoMedioResposta}s`}
+              trend={{ 
+                value: `${Math.abs(secondaryKPIs.tempoRespostaGrowth)}%`, 
+                isPositive: secondaryKPIs.tempoRespostaGrowth <= 0 
+              }}
+            />
+            <KPICard
+              title="Satisfação Cliente"
+              subtitle="Avaliação média"
+              value={secondaryKPIs.satisfacaoCliente.toString()}
+              trend={{ 
+                value: Math.abs(secondaryKPIs.satisfacaoGrowth).toString(), 
+                isPositive: secondaryKPIs.satisfacaoGrowth >= 0 
+              }}
+            />
+            <KPICard
+              title="Taxa de Comparecimento"
+              subtitle="Pacientes compareceram"
+              value={`${secondaryKPIs.taxaComparecimento}%`}
+              trend={{ 
+                value: `${Math.abs(secondaryKPIs.comparecimentoGrowth)}%`, 
+                isPositive: secondaryKPIs.comparecimentoGrowth >= 0 
+              }}
+            />
+          </>
+        ) : null}
       </div>
 
       {/* Performance Insights */}

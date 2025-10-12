@@ -3,62 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Edit, Play, Copy, Plus, MessageSquare, Brain, Sparkles } from "lucide-react";
 import { useState } from "react";
-
-interface Playbook {
-  id: string;
-  nome: string;
-  descricao: string;
-  categoria: 'captacao' | 'qualificacao' | 'agendamento' | 'nutricao';
-  status: 'ativo' | 'inativo' | 'teste';
-  conversas_utilizadas: number;
-  taxa_sucesso: number;
-  criado_em: string;
-  prompt_personalizado?: string;
-}
-
-const playbooks: Playbook[] = [
-  {
-    id: "1",
-    nome: "Captação - Harmonização Facial",
-    descricao: "Playbook focado em captar interesse para procedimentos de harmonização facial, destacando resultados naturais e segurança.",
-    categoria: "captacao",
-    status: "ativo",
-    conversas_utilizadas: 124,
-    taxa_sucesso: 78,
-    criado_em: "2024-01-10",
-    prompt_personalizado: "Você é uma consultora especializada em harmonização facial. Foque em resultados naturais e seguros."
-  },
-  {
-    id: "2", 
-    nome: "Qualificação - Implante Capilar",
-    descricao: "Script para qualificar leads interessados em implante capilar, identificando candidatos ideais.",
-    categoria: "qualificacao", 
-    status: "ativo",
-    conversas_utilizadas: 67,
-    taxa_sucesso: 85,
-    criado_em: "2024-01-08"
-  },
-  {
-    id: "3",
-    nome: "Agendamento - Consulta Geral",
-    descricao: "Playbook otimizado para conversão de leads qualificados em agendamentos confirmados.",
-    categoria: "agendamento",
-    status: "teste",
-    conversas_utilizadas: 23,
-    taxa_sucesso: 92,
-    criado_em: "2024-01-15"
-  },
-  {
-    id: "4",
-    nome: "Nutrição - Reengajamento",
-    descricao: "Estratégia para reativar leads frios e manter o interesse ao longo do tempo.",
-    categoria: "nutricao",
-    status: "inativo",
-    conversas_utilizadas: 89,
-    taxa_sucesso: 45,
-    criado_em: "2024-01-05"
-  }
-];
+import { usePlaybooksReal, type Playbook } from "@/hooks/use-playbooks-real";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const getCategoriaColor = (categoria: string) => {
   switch (categoria) {
@@ -81,6 +27,26 @@ const getStatusColor = (status: string) => {
 
 export const PlaybooksView = () => {
   const [selectedPlaybook, setSelectedPlaybook] = useState<Playbook | null>(null);
+  const { data: playbooks, isLoading } = usePlaybooksReal();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-64" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!playbooks) return null;
 
   return (
     <div className="space-y-6">
@@ -151,7 +117,7 @@ export const PlaybooksView = () => {
 
       {/* Playbooks Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {playbooks.map((playbook) => (
+        {(playbooks || []).map((playbook) => (
           <Card 
             key={playbook.id} 
             className={`cursor-pointer hover:shadow-md transition-all ${
@@ -164,7 +130,7 @@ export const PlaybooksView = () => {
                 <div className="space-y-2">
                   <CardTitle className="flex items-center gap-2">
                     <BookOpen className="w-5 h-5" />
-                    {playbook.nome}
+                    {playbook.nome_agente}
                   </CardTitle>
                   <div className="flex gap-2">
                     <Badge className={getCategoriaColor(playbook.categoria)}>
@@ -224,7 +190,7 @@ export const PlaybooksView = () => {
       {selectedPlaybook && (
         <Card>
           <CardHeader>
-            <CardTitle>Detalhes do Playbook: {selectedPlaybook.nome}</CardTitle>
+            <CardTitle>Detalhes do Playbook: {selectedPlaybook.nome_agente}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
