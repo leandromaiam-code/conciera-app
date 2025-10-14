@@ -779,6 +779,7 @@ export type Database = {
           empresa_id: number
           id: number
           id_agenda: string | null
+          notas: string | null
           origem_lead: string | null
           servico_interesse: string
           status: string
@@ -793,6 +794,7 @@ export type Database = {
           empresa_id: number
           id?: number
           id_agenda?: string | null
+          notas?: string | null
           origem_lead?: string | null
           servico_interesse: string
           status?: string
@@ -807,6 +809,7 @@ export type Database = {
           empresa_id?: number
           id?: number
           id_agenda?: string | null
+          notas?: string | null
           origem_lead?: string | null
           servico_interesse?: string
           status?: string

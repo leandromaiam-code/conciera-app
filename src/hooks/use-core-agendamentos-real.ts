@@ -14,6 +14,8 @@ interface UseCoreAgendamentosResult {
   error: string | null;
   refetch: () => Promise<void>;
   updateAgendamento: (agendamentoId: bigint, data: Partial<CoreAgendamentos>) => Promise<void>;
+  deleteAgendamento: (agendamentoId: bigint) => Promise<void>;
+  marcarComparecimento: (agendamentoId: bigint, compareceu: boolean) => Promise<void>;
 }
 
 export const useCoreAgendamentosReal = (
@@ -131,6 +133,52 @@ export const useCoreAgendamentosReal = (
     }
   };
 
+  const deleteAgendamento = async (agendamentoId: bigint) => {
+    try {
+      setError(null);
+
+      const { error: deleteError } = await supabase
+        .from('core_agendamentos')
+        .delete()
+        .eq('id', Number(agendamentoId));
+
+      if (deleteError) {
+        console.error('Erro ao deletar agendamento:', deleteError);
+        setError('Erro ao deletar agendamento');
+        throw deleteError;
+      }
+
+      await fetchAgendamentos();
+    } catch (err) {
+      console.error('Erro ao deletar agendamento:', err);
+      setError('Erro inesperado ao deletar agendamento');
+      throw err;
+    }
+  };
+
+  const marcarComparecimento = async (agendamentoId: bigint, compareceu: boolean) => {
+    try {
+      setError(null);
+
+      const { error: updateError } = await supabase
+        .from('core_agendamentos')
+        .update({ compareceu })
+        .eq('id', Number(agendamentoId));
+
+      if (updateError) {
+        console.error('Erro ao marcar comparecimento:', updateError);
+        setError('Erro ao marcar comparecimento');
+        throw updateError;
+      }
+
+      await fetchAgendamentos();
+    } catch (err) {
+      console.error('Erro ao marcar comparecimento:', err);
+      setError('Erro inesperado ao marcar comparecimento');
+      throw err;
+    }
+  };
+
   // Setup real-time subscription
   useEffect(() => {
     const channel = supabase
@@ -160,6 +208,8 @@ export const useCoreAgendamentosReal = (
     loading,
     error,
     refetch: fetchAgendamentos,
-    updateAgendamento
+    updateAgendamento,
+    deleteAgendamento,
+    marcarComparecimento
   };
 };

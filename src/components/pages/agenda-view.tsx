@@ -4,11 +4,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Clock, Calendar as CalendarIcon, Phone, AlertCircle } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Clock, Calendar as CalendarIcon, Phone, AlertCircle, Edit, Trash2, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useCoreAgendamentosReal } from "@/hooks/use-core-agendamentos-real";
 import { useToast } from "@/hooks/use-toast";
 import { CoreAgendamentos } from "@/types/briefing-types";
+import { AgendamentoFormDialog } from "@/components/agenda/agendamento-form-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const TemperatureIndicator = ({ ui_temperatura_lead }: { ui_temperatura_lead: 1 | 2 | 3 }) => (
   <div className="flex gap-1">
@@ -60,6 +72,10 @@ export const AgendaView = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedAgendamento, setSelectedAgendamento] = useState<CoreAgendamentos | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('todos');
+  const [showFormDialog, setShowFormDialog] = useState(false);
+  const [editingAgendamentoId, setEditingAgendamentoId] = useState<bigint | undefined>(undefined);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [agendamentoToDelete, setAgendamentoToDelete] = useState<bigint | null>(null);
   
   // Calculate date range for today's appointments
   const startOfDay = new Date(selectedDate);
@@ -71,7 +87,9 @@ export const AgendaView = () => {
     agendamentos, 
     loading, 
     error, 
-    updateAgendamento, 
+    updateAgendamento,
+    deleteAgendamento,
+    marcarComparecimento, 
     refetch 
   } = useCoreAgendamentosReal(startOfDay, endOfDay, statusFilter);
 
@@ -94,6 +112,57 @@ export const AgendaView = () => {
     }
   };
 
+  const handleNovoAgendamento = () => {
+    setEditingAgendamentoId(undefined);
+    setShowFormDialog(true);
+  };
+
+  const handleEditarAgendamento = (id: bigint) => {
+    setEditingAgendamentoId(id);
+    setShowFormDialog(true);
+  };
+
+  const handleDeleteClick = (id: bigint) => {
+    setAgendamentoToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (agendamentoToDelete) {
+      try {
+        await deleteAgendamento(agendamentoToDelete);
+        toast({
+          title: "Sucesso",
+          description: "Agendamento excluído com sucesso",
+        });
+      } catch (error) {
+        toast({
+          title: "Erro",
+          description: "Não foi possível excluir o agendamento",
+          variant: "destructive"
+        });
+      }
+    }
+    setDeleteDialogOpen(false);
+    setAgendamentoToDelete(null);
+  };
+
+  const handleMarcarComparecimento = async (id: bigint, compareceu: boolean) => {
+    try {
+      await marcarComparecimento(id, compareceu);
+      toast({
+        title: "Sucesso",
+        description: `Comparecimento ${compareceu ? 'confirmado' : 'desmarcado'}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível atualizar o comparecimento",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Transform briefing temperature to UI temperature
   const getUITemperature = (briefingTemp?: number): 1 | 2 | 3 => {
     if (!briefingTemp) return 2;
@@ -104,7 +173,10 @@ export const AgendaView = () => {
     <div className="space-y-md lg:space-y-lg">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex flex-col sm:flex-row gap-4">
-          <Button className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto">
+          <Button 
+            className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto"
+            onClick={handleNovoAgendamento}
+          >
             <CalendarIcon className="w-4 h-4 mr-2" />
             Novo Agendamento
           </Button>
@@ -233,6 +305,43 @@ export const AgendaView = () => {
                             <SelectItem value="cancelado">Cancelado</SelectItem>
                           </SelectContent>
                         </Select>
+
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEditarAgendamento(BigInt(agendamento.core_agendamentos_id))}
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                          
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDeleteClick(BigInt(agendamento.core_agendamentos_id))}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+
+                        {agendamento.core_agendamentos_status === 'confirmado' && (
+                          <div className="flex gap-1">
+                            <Button
+                              size="sm"
+                              variant={agendamento.core_agendamentos_compareceu === true ? "default" : "outline"}
+                              onClick={() => handleMarcarComparecimento(BigInt(agendamento.core_agendamentos_id), true)}
+                            >
+                              <CheckCircle className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant={agendamento.core_agendamentos_compareceu === false ? "destructive" : "outline"}
+                              onClick={() => handleMarcarComparecimento(BigInt(agendamento.core_agendamentos_id), false)}
+                            >
+                              <XCircle className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -242,6 +351,31 @@ export const AgendaView = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Dialogs */}
+      <AgendamentoFormDialog
+        open={showFormDialog}
+        onOpenChange={setShowFormDialog}
+        agendamentoId={editingAgendamentoId}
+        onSuccess={refetch}
+      />
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este agendamento? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} className="bg-red-600 hover:bg-red-700">
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

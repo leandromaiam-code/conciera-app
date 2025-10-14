@@ -3,10 +3,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageSquare, Search, Filter, Instagram, Globe, Mail, Calendar } from "lucide-react";
+import { MessageSquare, Search, Filter, Instagram, Globe, Mail, Calendar, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useVConversasDetalhadas } from "@/hooks/use-v-conversas-detalhadas";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ConversaHistoryDialog } from "@/components/conversas/conversa-history-dialog";
+import { VincularClienteDialog } from "@/components/conversas/vincular-cliente-dialog";
 
 
 const getChannelIcon = (canal: string) => {
@@ -46,13 +48,26 @@ export const ConversasView = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("todos");
   const [filterCanal, setFilterCanal] = useState("todos");
+  const [selectedConversa, setSelectedConversa] = useState<any>(null);
+  const [showHistoryDialog, setShowHistoryDialog] = useState(false);
+  const [showVincularDialog, setShowVincularDialog] = useState(false);
 
   // Use real database hook instead of mock data
-  const { conversas, loading, error, updateConversaStatus } = useVConversasDetalhadas(
+  const { conversas, loading, error, updateConversaStatus, refetch } = useVConversasDetalhadas(
     searchTerm,
     filterStatus,
     filterCanal
   );
+
+  const handleVerConversa = (conversa: any) => {
+    setSelectedConversa(conversa);
+    setShowHistoryDialog(true);
+  };
+
+  const handleVincularCliente = (conversa: any) => {
+    setSelectedConversa(conversa);
+    setShowVincularDialog(true);
+  };
 
   if (loading) {
     return (
@@ -219,9 +234,25 @@ export const ConversasView = () => {
 
                   {/* Actions */}
                   <div className="flex flex-row sm:flex-col justify-between sm:items-end gap-2 sm:gap-2 flex-shrink-0">
-                    <Button size="sm" variant="outline" className="text-xs">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="text-xs"
+                      onClick={() => handleVerConversa(conversa)}
+                    >
                       Ver Conversa
                     </Button>
+                    {conversa.v_conversas_detalhadas_cliente_id === BigInt(0) && (
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="text-xs"
+                        onClick={() => handleVincularCliente(conversa)}
+                      >
+                        <UserPlus className="w-3 h-3 mr-1" />
+                        Vincular
+                      </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -237,6 +268,32 @@ export const ConversasView = () => {
             <p className="text-grafite">Nenhuma conversa encontrada com os filtros selecionados.</p>
           </CardContent>
         </Card>
+      )}
+
+      {/* Dialogs */}
+      {selectedConversa && (
+        <>
+          <ConversaHistoryDialog
+            open={showHistoryDialog}
+            onOpenChange={setShowHistoryDialog}
+            conversaId={selectedConversa.v_conversas_detalhadas_id}
+            sessionId={selectedConversa.v_conversas_detalhadas_session_id}
+            clienteNome={selectedConversa.v_conversas_detalhadas_nome_completo}
+            status={selectedConversa.v_conversas_detalhadas_status}
+            onStatusChange={(newStatus) => {
+              updateConversaStatus(selectedConversa.v_conversas_detalhadas_id, newStatus);
+            }}
+          />
+
+          <VincularClienteDialog
+            open={showVincularDialog}
+            onOpenChange={setShowVincularDialog}
+            conversaId={selectedConversa.v_conversas_detalhadas_id}
+            sessionId={selectedConversa.v_conversas_detalhadas_session_id}
+            telefoneConversa={selectedConversa.v_conversas_detalhadas_cliente_telefone}
+            onClienteVinculado={refetch}
+          />
+        </>
       )}
     </div>
   );
