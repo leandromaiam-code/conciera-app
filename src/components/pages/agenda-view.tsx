@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { Clock, Calendar as CalendarIcon, Phone, AlertCircle, Edit, Trash2, CheckCircle, XCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useCoreAgendamentosReal } from "@/hooks/use-core-agendamentos-real";
 import { useToast } from "@/hooks/use-toast";
 import { CoreAgendamentos } from "@/types/briefing-types";
@@ -77,11 +77,14 @@ export const AgendaView = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [agendamentoToDelete, setAgendamentoToDelete] = useState<bigint | null>(null);
   
-  // Calculate date range for today's appointments
-  const startOfDay = new Date(selectedDate);
-  startOfDay.setHours(0, 0, 0, 0);
-  const endOfDay = new Date(selectedDate);
-  endOfDay.setHours(23, 59, 59, 999);
+  // Memoize date calculations to prevent unnecessary re-renders
+  const { startOfDay, endOfDay } = useMemo(() => {
+    const start = new Date(selectedDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(selectedDate);
+    end.setHours(23, 59, 59, 999);
+    return { startOfDay: start, endOfDay: end };
+  }, [selectedDate.getTime()]);
 
   const { 
     agendamentos, 
