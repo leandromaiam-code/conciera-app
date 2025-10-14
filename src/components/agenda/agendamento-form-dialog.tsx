@@ -9,9 +9,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon, Clock, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { NovoClienteDialog } from "./novo-cliente-dialog";
 
 interface Cliente {
   id: number;
@@ -35,6 +36,7 @@ export const AgendamentoFormDialog = ({
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [novoClienteDialogOpen, setNovoClienteDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     cliente_id: "",
     empresa_id: 1,
@@ -185,8 +187,20 @@ export const AgendamentoFormDialog = ({
     }
   };
 
+  const handleClienteCriado = async (clienteId: number) => {
+    await fetchClientes();
+    setFormData({ ...formData, cliente_id: clienteId.toString() });
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <>
+      <NovoClienteDialog
+        open={novoClienteDialogOpen}
+        onOpenChange={setNovoClienteDialogOpen}
+        onClienteCriado={handleClienteCriado}
+      />
+      
+      <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
@@ -196,7 +210,19 @@ export const AgendamentoFormDialog = ({
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="cliente">Cliente *</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="cliente">Cliente *</Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setNovoClienteDialogOpen(true)}
+                className="h-8 gap-1 text-dourado hover:text-dourado/80"
+              >
+                <Plus className="h-4 w-4" />
+                Novo Cliente
+              </Button>
+            </div>
             <Select 
               value={formData.cliente_id} 
               onValueChange={(value) => setFormData({ ...formData, cliente_id: value })}
@@ -324,5 +350,6 @@ export const AgendamentoFormDialog = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </>
   );
 };
