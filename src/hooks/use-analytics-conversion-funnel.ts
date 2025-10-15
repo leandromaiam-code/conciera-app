@@ -83,34 +83,34 @@ export const useAnalyticsConversionFunnel = (funcionariaId?: number) => {
     if (!metrics && !conversas) return null;
 
     return {
-      newLeads: metrics?.novos_leads_hoje || 18,
-      scheduledAppointments: metrics?.agendamentos_hoje || 12,
-      conversionRate: conversas?.taxa_conversao_agendamento || metrics?.taxa_conversao || 67,
+      newLeads: metrics?.novos_leads_hoje || 0,
+      scheduledAppointments: metrics?.agendamentos_hoje || 0,
+      conversionRate: conversas?.taxa_conversao_agendamento || metrics?.taxa_conversao || 0,
       
       // Additional metrics
-      totalConversations: conversas?.total_conversas || 156,
-      averageResponseTime: conversas?.tempo_medio_primeira_resposta_segundos || 285,
-      fastResponseRate: conversas?.taxa_resposta_rapida || 78.5,
+      totalConversations: conversas?.total_conversas || 0,
+      averageResponseTime: conversas?.tempo_medio_primeira_resposta_segundos || 0,
+      fastResponseRate: conversas?.taxa_resposta_rapida || 0,
       
       // Channel breakdown
       channelBreakdown: {
-        whatsapp: metrics?.leads_whatsapp || 145,
-        instagram: metrics?.leads_instagram || 23,
-        referral: metrics?.leads_indicacao || 8,
+        whatsapp: metrics?.leads_whatsapp || 0,
+        instagram: metrics?.leads_instagram || 0,
+        referral: metrics?.leads_indicacao || 0,
       },
       
       // Trends
       trend: {
-        leads: metrics?.leads_trend || 12.5,
-        appointments: metrics?.agendamentos_trend || 8.3,
+        leads: metrics?.leads_trend || 0,
+        appointments: metrics?.agendamentos_trend || 0,
       },
       
       // Performance indicators
       performanceIndicators: {
-        conversionQuality: conversas?.taxa_conversao_agendamento > 25 ? 'excellent' : 
-                          conversas?.taxa_conversao_agendamento > 15 ? 'good' : 'needs_improvement',
-        responseTime: conversas?.tempo_medio_primeira_resposta_segundos < 300 ? 'fast' : 
-                     conversas?.tempo_medio_primeira_resposta_segundos < 600 ? 'good' : 'slow',
+        conversionQuality: (conversas?.taxa_conversao_agendamento || 0) > 25 ? 'excellent' : 
+                          (conversas?.taxa_conversao_agendamento || 0) > 15 ? 'good' : 'needs_improvement',
+        responseTime: (conversas?.tempo_medio_primeira_resposta_segundos || 0) < 300 ? 'fast' : 
+                     (conversas?.tempo_medio_primeira_resposta_segundos || 0) < 600 ? 'good' : 'slow',
       }
     };
   }, [metricsQuery.data, conversasQuery.data]);

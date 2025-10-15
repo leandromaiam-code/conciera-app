@@ -46,17 +46,24 @@ export const useAnalyticsMetricasMensaisVendasReal = (
       if (data && data.length > 0) {
         const row = data[0];
         
-        // Calculate sparkline data from available metrics or use fallback
-        const rpgMensal = row.total_mensagens * 50 || 42800; // Fallback calculation
-        const sparkline30d = Array.from({ length: 30 }, (_, i) => 
-          rpgMensal * (0.7 + Math.random() * 0.6) // Generate realistic variation
-        );
+        // Use real data from database
+        const rpgMensal = row.rpg_mensal || 0;
+        const rpgDiario = row.rpg_diario || 0;
+        const valorMedioConsulta = row.valor_medio_consulta || 0;
+        
+        // Parse sparkline from JSONB field or create empty array
+        let sparkline30d: number[] = [];
+        if (row.sparkline_30d && Array.isArray(row.sparkline_30d)) {
+          sparkline30d = row.sparkline_30d.map(val => typeof val === 'number' ? val : 0);
+        } else {
+          sparkline30d = Array(30).fill(0);
+        }
 
         // Transform database data to match expected format
         const metricsData: AnalyticsMetricasMensaisVendas = {
           analytics_metricas_mensal_vendas_rpg_mensal: rpgMensal,
-          analytics_metricas_mensal_vendas_rpg_diario: Math.floor(rpgMensal / 30),
-          analytics_metricas_mensal_vendas_valor_medio_consulta: 380, // Could come from core_empresa
+          analytics_metricas_mensal_vendas_rpg_diario: rpgDiario,
+          analytics_metricas_mensal_vendas_valor_medio_consulta: valorMedioConsulta,
           analytics_metricas_mensal_vendas_sparkline_30d: sparkline30d
         };
 
