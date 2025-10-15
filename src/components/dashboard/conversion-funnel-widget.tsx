@@ -1,14 +1,14 @@
 import { MessageSquare, Calendar, TrendingUp } from "lucide-react";
-import { useCoreAgendamentos } from "@/hooks/use-core-agendamentos";
+import { useAnalyticsConversionFunnel } from "@/hooks/use-analytics-conversion-funnel";
 
 /**
  * Widget de Funil de Conversão
  * Exibe métricas de conversão em tempo real com navegação para detalhes
  */
 export const ConversionFunnelWidget = () => {
-  const { funnelData, isLoading } = useCoreAgendamentos();
+  const { funnelData, isLoading } = useAnalyticsConversionFunnel();
 
-  if (isLoading) {
+  if (isLoading || !funnelData) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-sm">
         {[1, 2, 3].map((i) => (
@@ -24,8 +24,8 @@ export const ConversionFunnelWidget = () => {
     {
       title: "Novos Leads",
       subtitle: "Hoje",
-      value: funnelData.ui_novos_leads_hoje,
-      trend: funnelData.ui_leads_trend,
+      value: funnelData.newLeads,
+      trend: funnelData.trend.leads,
       icon: MessageSquare,
       color: "text-dourado",
       bgColor: "bg-dourado/10",
@@ -34,8 +34,8 @@ export const ConversionFunnelWidget = () => {
     {
       title: "Agendamentos", 
       subtitle: "Convertidos hoje",
-      value: funnelData.ui_agendamentos_hoje,
-      trend: funnelData.ui_agendamentos_trend,
+      value: funnelData.scheduledAppointments,
+      trend: funnelData.trend.appointments,
       icon: Calendar,
       color: "text-esmeralda",
       bgColor: "bg-esmeralda/10",
@@ -44,8 +44,8 @@ export const ConversionFunnelWidget = () => {
     {
       title: "Taxa de Conversão",
       subtitle: "Lead → Agendamento",
-      value: `${funnelData.ui_taxa_conversao}%`,
-      trend: 5, // Mock positive trend for conversion rate
+      value: `${funnelData.conversionRate.toFixed(1)}%`,
+      trend: Math.round((funnelData.trend.appointments + funnelData.trend.leads) / 2),
       icon: TrendingUp,
       color: "text-onyx",
       bgColor: "bg-onyx/10",
