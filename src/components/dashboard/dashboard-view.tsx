@@ -4,6 +4,7 @@ import { ConversionFunnelWidget } from "./conversion-funnel-widget";
 import { OpportunityFeed } from "./opportunity-feed";
 import { MessageSquare, Clock, Star, CalendarCheck } from "lucide-react";
 import { useDashboardSecondaryKPIs } from "@/hooks/use-dashboard-secondary-kpis";
+import { useDashboardInsights } from "@/hooks/use-dashboard-insights";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface DashboardViewProps {
@@ -13,6 +14,7 @@ interface DashboardViewProps {
 
 export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewProps) => {
   const { data: secondaryKPIs, isLoading: isLoadingKPIs } = useDashboardSecondaryKPIs();
+  const { data: insights, isLoading: isLoadingInsights } = useDashboardInsights();
 
   return (
     <div className="animate-fade-in space-y-sm lg:space-y-md">
@@ -86,53 +88,53 @@ export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewPr
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-md lg:gap-lg">
         <div className="kpi-card">
           <h3 className="text-onyx mb-sm">Picos de Atividade</h3>
-          <div className="space-y-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">08:00 - 10:00</span>
-              <span className="font-semibold text-onyx">42 mensagens</span>
+          {isLoadingInsights ? (
+            <div className="space-y-sm">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-6 w-full" />
+              ))}
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">14:00 - 16:00</span>
-              <span className="font-semibold text-onyx">38 mensagens</span>
+          ) : (
+            <div className="space-y-sm">
+              {insights?.activityPeaks.map((peak, index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <span className="text-secondary text-grafite">{peak.horario}</span>
+                  <span className="font-semibold text-onyx">{peak.quantidade} mensagens</span>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">18:00 - 20:00</span>
-              <span className="font-semibold text-onyx">29 mensagens</span>
-            </div>
-          </div>
+          )}
         </div>
 
         <div className="kpi-card">
           <h3 className="text-onyx mb-sm">Tipos de Solicitação</h3>
-          <div className="space-y-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">Agendamentos</span>
-              <div className="flex items-center gap-xs">
-                <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
-                  <div className="h-full bg-esmeralda rounded-full" style={{ width: '65%' }}></div>
-                </div>
-                <span className="font-semibold text-onyx text-sm">65%</span>
-              </div>
+          {isLoadingInsights ? (
+            <div className="space-y-sm">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-6 w-full" />
+              ))}
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">Informações</span>
-              <div className="flex items-center gap-xs">
-                <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
-                  <div className="h-full bg-dourado rounded-full" style={{ width: '25%' }}></div>
+          ) : (
+            <div className="space-y-sm">
+              {insights?.requestTypes.map((type, index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <span className="text-secondary text-grafite">{type.tipo}</span>
+                  <div className="flex items-center gap-xs">
+                    <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full rounded-full ${
+                          index === 0 ? 'bg-esmeralda' : 
+                          index === 1 ? 'bg-dourado' : 'bg-grafite'
+                        }`}
+                        style={{ width: `${type.percentual}%` }}
+                      ></div>
+                    </div>
+                    <span className="font-semibold text-onyx text-sm">{type.percentual}%</span>
+                  </div>
                 </div>
-                <span className="font-semibold text-onyx text-sm">25%</span>
-              </div>
+              ))}
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-secondary text-grafite">Reagendamentos</span>
-              <div className="flex items-center gap-xs">
-                <div className="w-16 h-2 bg-cinza-fundo-hover rounded-full overflow-hidden">
-                  <div className="h-full bg-grafite rounded-full" style={{ width: '10%' }}></div>
-                </div>
-                <span className="font-semibold text-onyx text-sm">10%</span>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

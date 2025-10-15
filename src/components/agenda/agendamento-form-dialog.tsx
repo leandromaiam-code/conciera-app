@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useUserProfile } from "@/hooks/use-user-profile";
 import { CalendarIcon, Clock, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -34,12 +35,13 @@ export const AgendamentoFormDialog = ({
   onSuccess
 }: AgendamentoFormDialogProps) => {
   const { toast } = useToast();
+  const { profile } = useUserProfile();
   const [loading, setLoading] = useState(false);
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [novoClienteDialogOpen, setNovoClienteDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     cliente_id: "",
-    empresa_id: 1,
+    empresa_id: profile?.empresa_id || 1,
     servico_interesse: "",
     data: new Date(),
     hora: "",
@@ -107,7 +109,7 @@ export const AgendamentoFormDialog = ({
   const resetForm = () => {
     setFormData({
       cliente_id: "",
-      empresa_id: 1,
+      empresa_id: profile?.empresa_id || 1,
       servico_interesse: "",
       data: new Date(),
       hora: "",
@@ -127,6 +129,15 @@ export const AgendamentoFormDialog = ({
       return;
     }
 
+    if (!profile?.empresa_id) {
+      toast({
+        title: "Erro",
+        description: "Empresa não identificada. Faça login novamente.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -137,7 +148,7 @@ export const AgendamentoFormDialog = ({
 
       const agendamentoData = {
         cliente_id: parseInt(formData.cliente_id),
-        empresa_id: formData.empresa_id,
+        empresa_id: profile.empresa_id,
         servico_interesse: formData.servico_interesse,
         data_hora: dataHora.toISOString(),
         valor_estimado: formData.valor_estimado ? parseFloat(formData.valor_estimado) : null,

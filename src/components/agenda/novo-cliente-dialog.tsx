@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useUserProfile } from "@/hooks/use-user-profile";
 
 interface NovoClienteDialogProps {
   open: boolean;
@@ -18,6 +19,7 @@ export const NovoClienteDialog = ({
   onClienteCriado
 }: NovoClienteDialogProps) => {
   const { toast } = useToast();
+  const { profile } = useUserProfile();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nome_completo: "",
@@ -45,6 +47,15 @@ export const NovoClienteDialog = ({
       return;
     }
 
+    if (!profile?.empresa_id) {
+      toast({
+        title: "Erro",
+        description: "Empresa não identificada. Faça login novamente.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -53,7 +64,7 @@ export const NovoClienteDialog = ({
         .insert({
           nome_completo: formData.nome_completo,
           telefone: formData.telefone,
-          empresa_id: 1
+          empresa_id: profile.empresa_id
         })
         .select('id')
         .single();
