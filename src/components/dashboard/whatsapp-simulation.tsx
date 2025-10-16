@@ -1,4 +1,4 @@
-import { X, Phone, MoreVertical, Mic, Image as ImageIcon, Loader2 } from "lucide-react";
+import { X, Phone, MoreVertical, Mic, Image as ImageIcon, Loader2, StopCircle } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,6 +39,9 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
   const [isSending, setIsSending] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -124,6 +127,50 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
     if (imageInputRef.current) imageInputRef.current.value = '';
   };
 
+  // Start audio recording
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks: Blob[] = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+        const audioFile = new File([audioBlob], `audio_${Date.now()}.webm`, { type: 'audio/webm' });
+        setSelectedFile(audioFile);
+        setFilePreview(null);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+      setAudioChunks(chunks);
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      toast({
+        title: "Erro ao acessar microfone",
+        description: "Não foi possível acessar o microfone. Verifique as permissões.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Stop audio recording
+  const stopRecording = () => {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+      setIsRecording(false);
+      setMediaRecorder(null);
+    }
+  };
+
   // Send message to webhook
   const handleSendMessage = async () => {
     if (!inputMessage.trim() && !selectedFile) return;
@@ -167,6 +214,7 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
             tipo: messageType,
             session_id: sessionIdRef.current,
             funcionaria_id: empresaId,
+            empresa_id: empresaId,
           }),
         }
       );
@@ -291,18 +339,18 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
 
       {/* Input Area - Functional */}
       <div className="p-sm border-t border-cinza-borda bg-white">
-        {/* File Preview */}
+        {/* File Preview - Fixed height to prevent covering send button */}
         {selectedFile && (
-          <div className="mb-xs p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between">
-            <div className="flex items-center gap-xs">
+          <div className="mb-xs p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between max-h-20">
+            <div className="flex items-center gap-xs flex-1 min-w-0">
               {filePreview && (
                 <img 
                   src={filePreview} 
                   alt="Preview" 
-                  className="w-12 h-12 rounded object-cover"
+                  className="w-12 h-12 rounded object-cover flex-shrink-0"
                 />
               )}
-              <span className="text-xs text-[hsl(var(--grafite))]">
+              <span className="text-xs text-[hsl(var(--grafite))] truncate">
                 {selectedFile.type.startsWith('audio/') ? '🎤' : '🖼️'} 
                 {' '}{selectedFile.name}
               </span>
@@ -311,15 +359,25 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
               size="icon" 
               variant="ghost" 
               onClick={clearFile}
-              className="h-6 w-6"
+              className="h-6 w-6 flex-shrink-0"
             >
               <X size={14} />
             </Button>
           </div>
         )}
 
+        {/* Recording Indicator */}
+        {isRecording && (
+          <div className="mb-xs p-xs bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
+            <div className="flex items-center gap-xs">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-xs text-red-700 font-medium">Gravando áudio...</span>
+            </div>
+          </div>
+        )}
+
         <div className="flex items-end gap-xs">
-          {/* Audio Input */}
+          {/* Audio Input - Record or Upload */}
           <input
             ref={audioInputRef}
             type="file"
@@ -330,12 +388,16 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
           <Button
             size="icon"
             variant="ghost"
-            onClick={() => audioInputRef.current?.click()}
+            onClick={isRecording ? stopRecording : startRecording}
             disabled={isSending}
-            className="h-10 w-10 mobile-touch-target"
-            title="Enviar áudio"
+            className={`h-10 w-10 mobile-touch-target ${isRecording ? 'bg-red-100 hover:bg-red-200' : ''}`}
+            title={isRecording ? "Parar gravação" : "Gravar áudio"}
           >
-            <Mic size={20} className="text-[hsl(var(--grafite))]" />
+            {isRecording ? (
+              <StopCircle size={20} className="text-red-600" />
+            ) : (
+              <Mic size={20} className="text-[hsl(var(--grafite))]" />
+            )}
           </Button>
 
           {/* Image Input */}
