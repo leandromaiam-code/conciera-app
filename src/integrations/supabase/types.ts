@@ -1491,6 +1491,14 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      get_funcionaria_empresa_id: {
+        Args: { _funcionaria_id: number }
+        Returns: number
+      }
+      get_user_empresa_id: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       vincular_cliente_memoria: {
         Args: {
           p_cliente_id: number
