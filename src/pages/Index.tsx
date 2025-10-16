@@ -6,10 +6,12 @@ import { AgendaView } from "@/components/pages/agenda-view";
 import { AnalyticsView } from "@/components/pages/analytics-view";
 import { ConversasView } from "@/components/pages/conversas-view";
 import { ConfiguracoesView } from "@/components/pages/configuracoes-view";
+import { useUserProfile } from "@/hooks/use-user-profile";
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
+  const { profile } = useUserProfile();
 
   const handleWhatsAppClick = () => {
     setIsWhatsAppOpen(true);
@@ -47,6 +49,7 @@ const Index = () => {
         <WhatsAppSimulation 
           isOpen={isWhatsAppOpen}
           onClose={() => setIsWhatsAppOpen(false)}
+          empresaId={profile?.empresa_id ?? undefined}
         />
       )}
     </>
