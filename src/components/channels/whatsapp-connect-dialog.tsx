@@ -79,6 +79,7 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           empresa_id: empresaId,
+          action: "conectar",
           channel: "whatsapp-web",
           telefone: phone,
         }),

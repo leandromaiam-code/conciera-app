@@ -84,7 +84,7 @@ export const useConfigInstance = (empresaId?: number): UseConfigInstanceResult =
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          acao: "desconectar",
+          action: "desconectar",
           instance_name: instanceName,
           channel: "whatsapp-web",
           empresa_id: empresaId,
