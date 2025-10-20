@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { useCoreEmpresa } from "@/hooks/use-core-empresa";
 import { useConfigConfiguracaoCanais } from "@/hooks/use-config-configuracoes-canais";
 import { useConfigConfiguracoesSistema } from "@/hooks/use-config-configuracoes-sistema";
+import { useConfigInstance } from "@/hooks/use-config-instance";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -80,6 +81,7 @@ export const ConfiguracoesView = () => {
   const { empresa, loading: empresaLoading, updateEmpresa, saving: empresaSaving } = useCoreEmpresa();
   const { canais, loading: canaisLoading, updateCanal, saving: canaisSaving } = useConfigConfiguracaoCanais();
   const { sistema, loading: sistemaLoading, updateSistema, saving: sistemaSaving } = useConfigConfiguracoesSistema();
+  const { instance, loading: instanceLoading, disconnectWhatsApp, disconnecting } = useConfigInstance(profile?.empresa_id);
 
   // Local state for form inputs
   const [clinicName, setClinicName] = useState("");
@@ -140,6 +142,25 @@ export const ConfiguracoesView = () => {
   };
 
   const handleToggleCanal = async (canalTipo: string, ativo: boolean) => {
+    // Se está tentando desativar o WhatsApp, desconectar primeiro
+    if (canalTipo === 'whatsapp' && !ativo && instance?.instance_name) {
+      try {
+        await disconnectWhatsApp(instance.instance_name);
+        await updateCanal(canalTipo, ativo);
+        toast({
+          title: "Sucesso",
+          description: "WhatsApp desconectado com sucesso!",
+        });
+      } catch (error) {
+        toast({
+          title: "Erro",
+          description: "Erro ao desconectar WhatsApp.",
+          variant: "destructive",
+        });
+      }
+      return;
+    }
+
     try {
       await updateCanal(canalTipo, ativo);
       toast({
@@ -178,7 +199,7 @@ export const ConfiguracoesView = () => {
     }
   };
 
-  if (empresaLoading || canaisLoading || sistemaLoading) {
+  if (empresaLoading || canaisLoading || sistemaLoading || instanceLoading) {
     return (
       <div className="space-y-md lg:space-y-lg">
         {Array.from({ length: 4 }).map((_, i) => (
@@ -283,6 +304,13 @@ export const ConfiguracoesView = () => {
             const IconComponent = channel.icon;
             const isChannelActive = canais ? canais[`config_configuracoes_canais_${channel.tipo}_ativo` as keyof typeof canais] : false;
             
+            // Get dynamic status from config_instance for WhatsApp
+            let channelStatus = channel.status;
+            if (channel.tipo === 'whatsapp' && instance) {
+              // Map "Ativado" to "conectado" and "Desativado" to "desconectado"
+              channelStatus = instance.status === 'Ativado' ? 'conectado' : 'desconectado';
+            }
+            
             return (
               <div key={channel.id} className={`p-4 border border-cinza-borda rounded-lg ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                 {/* First line: Icon + Name + Status Badge */}
@@ -291,8 +319,8 @@ export const ConfiguracoesView = () => {
                   <div className="flex-1">
                     <p className="font-medium text-onyx">{channel.nome}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <Badge className={getStatusColor(channel.status)}>
-                        {channel.status.charAt(0).toUpperCase() + channel.status.slice(1)}
+                      <Badge className={getStatusColor(channelStatus)}>
+                        {channelStatus.charAt(0).toUpperCase() + channelStatus.slice(1)}
                       </Badge>
                     </div>
                   </div>
@@ -302,7 +330,7 @@ export const ConfiguracoesView = () => {
                 <div className={`${isMobile ? 'bg-marfim/30 border border-cinza-borda/50 rounded-lg p-3' : ''} flex items-center gap-3 ${isMobile ? 'justify-center' : ''}`}>
                   <Switch
                     checked={Boolean(isChannelActive)}
-                    disabled={channel.status === 'desconectado' || canaisSaving}
+                    disabled={channelStatus === 'desconectado' || canaisSaving || disconnecting}
                     onCheckedChange={(checked) => handleToggleCanal(channel.tipo, checked)}
                   />
                   <Button 
@@ -312,9 +340,10 @@ export const ConfiguracoesView = () => {
                       if (channel.tipo === 'whatsapp') setWhatsappOpen(true);
                       if (channel.tipo === 'instagram') setInstagramOpen(true);
                     }}
-                    className={channel.status === 'conectado' ? '' : 'bg-esmeralda text-white hover:bg-esmeralda/90'}
+                    className={channelStatus === 'conectado' ? '' : 'bg-esmeralda text-white hover:bg-esmeralda/90'}
+                    disabled={disconnecting}
                   >
-                    {channel.status === 'conectado' ? 'Configurar' : 'Conectar'}
+                    {channelStatus === 'conectado' ? 'Configurar' : 'Conectar'}
                   </Button>
                 </div>
               </div>
