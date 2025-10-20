@@ -36,16 +36,16 @@ export const useConfigInstance = (empresaId?: number): UseConfigInstanceResult =
       setError(null);
 
       const { data, error: queryError } = await (supabase as any)
-        .from('config_instance')
-        .select('*')
-        .eq('empresa_id', empresaId)
-        .order('created_at', { ascending: false })
+        .from("config_instance")
+        .select("*")
+        .eq("empresa_id", empresaId)
+        .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
 
       if (queryError) {
-        console.error('Erro ao buscar config_instance:', queryError);
-        setError('Erro ao carregar status da instância');
+        console.error("Erro ao buscar config_instance:", queryError);
+        setError("Erro ao carregar status da instância");
         return;
       }
 
@@ -62,14 +62,14 @@ export const useConfigInstance = (empresaId?: number): UseConfigInstanceResult =
           // @ts-ignore
           status: data.status,
           // @ts-ignore
-          created_at: data.created_at
+          created_at: data.created_at,
         });
       } else {
         setInstance(null);
       }
     } catch (err) {
-      console.error('Erro inesperado:', err);
-      setError('Erro inesperado ao carregar status da instância');
+      console.error("Erro inesperado:", err);
+      setError("Erro inesperado ao carregar status da instância");
     } finally {
       setLoading(false);
     }
@@ -78,27 +78,24 @@ export const useConfigInstance = (empresaId?: number): UseConfigInstanceResult =
   const disconnectWhatsApp = async (instanceName: string) => {
     try {
       setDisconnecting(true);
-      
+
       // Send webhook to disconnect
-      const response = await fetch(
-        "https://n8n-n8n.ajpgd7.easypanel.host/webhook/conciera_whatsapp_web",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            acao: "desconectar",
-            instance_name: instanceName,
-            empresa_id: empresaId
-          }),
-        }
-      );
+      const response = await fetch("https://n8n-n8n.ajpgd7.easypanel.host/webhook/conciera_ai_conexao", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          acao: "desconectar",
+          instance_name: instanceName,
+          empresa_id: empresaId,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`Webhook retornou ${response.status}`);
       }
 
-      console.log('✅ Desconexão iniciada com sucesso');
-      
+      console.log("✅ Desconexão iniciada com sucesso");
+
       // Refetch to get updated status
       await fetchInstance();
     } catch (error) {
@@ -119,6 +116,6 @@ export const useConfigInstance = (empresaId?: number): UseConfigInstanceResult =
     error,
     refetch: fetchInstance,
     disconnectWhatsApp,
-    disconnecting
+    disconnecting,
   };
 };
