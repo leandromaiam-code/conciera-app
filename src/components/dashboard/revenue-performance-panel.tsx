@@ -19,6 +19,17 @@ export const RevenuePerformancePanel = () => {
     );
   }
 
+  // Handle null metrics
+  if (!metrics) {
+    return (
+      <div className="col-span-2 kpi-card">
+        <div className="text-center text-grafite py-lg">
+          <p>Nenhum dado disponível</p>
+        </div>
+      </div>
+    );
+  }
+
   // Simple sparkline calculation for trend direction
   const sparklineData = metrics.analytics_metricas_mensal_vendas_sparkline_30d;
   const isPositiveTrend = sparklineData[sparklineData.length - 1] > sparklineData[sparklineData.length - 7];
