@@ -311,6 +311,11 @@ export const ConfiguracoesView = () => {
               channelStatus = instance.status === 'Ativado' ? 'conectado' : 'desconectado';
             }
             
+            // Determine if the switch should be active based on status
+            const isSwitchActive = channel.tipo === 'whatsapp' && instance
+              ? instance.status === 'Ativado'
+              : Boolean(isChannelActive);
+            
             return (
               <div key={channel.id} className={`p-4 border border-cinza-borda rounded-lg ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                 {/* First line: Icon + Name + Status Badge */}
@@ -329,7 +334,7 @@ export const ConfiguracoesView = () => {
                 {/* Second line (mobile) or right side (desktop): Controls in Box */}
                 <div className={`${isMobile ? 'bg-marfim/30 border border-cinza-borda/50 rounded-lg p-3' : ''} flex items-center gap-3 ${isMobile ? 'justify-center' : ''}`}>
                   <Switch
-                    checked={Boolean(isChannelActive)}
+                    checked={isSwitchActive}
                     disabled={channelStatus === 'desconectado' || canaisSaving || disconnecting}
                     onCheckedChange={(checked) => handleToggleCanal(channel.tipo, checked)}
                   />
