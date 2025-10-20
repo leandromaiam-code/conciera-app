@@ -17,24 +17,10 @@ interface WhatsAppSimulationProps {
   empresaId?: number;
 }
 
-const simulationMessages: Omit<Message, 'id' | 'timestamp'>[] = [
-  { text: "Olá! 👋 Bem-vindo(a) à Clínica Exemplo! Sou o assistente CONCIERA e estou aqui para ajudar você.", isBot: true },
-  { text: "Preciso agendar uma consulta", isBot: false },
-  { text: "Perfeito! Posso te ajudar com o agendamento. Qual especialidade você precisa?", isBot: true },
-  { text: "Dermatologia", isBot: false },
-  { text: "Ótima escolha! Temos horários disponíveis com nossos dermatologistas. Prefere manhã ou tarde?", isBot: true },
-];
-
-const quickReplies = [
-  "Manhã",
-  "Tarde", 
-  "Não tenho preferência"
-];
 
 export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimulationProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [inputMessage, setInputMessage] = useState<string>("");
   const [isSending, setIsSending] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -52,11 +38,10 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  // Reset state when closing
+  // Reset state when closing and show welcome message
   useEffect(() => {
     if (!isOpen) {
       setMessages([]);
-      setCurrentMessageIndex(0);
       setInputMessage("");
       setSelectedFile(null);
       setFilePreview(null);
@@ -64,27 +49,17 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
       return;
     }
 
-    // Initial welcome message
-    const timer = setTimeout(() => {
-      if (currentMessageIndex < simulationMessages.length) {
-        setIsTyping(true);
-        
-        setTimeout(() => {
-          const newMessage: Message = {
-            id: Date.now().toString(),
-            ...simulationMessages[currentMessageIndex],
-            timestamp: new Date()
-          };
-          
-          setMessages(prev => [...prev, newMessage]);
-          setIsTyping(false);
-          setCurrentMessageIndex(prev => prev + 1);
-        }, simulationMessages[currentMessageIndex].isBot ? 2000 : 500);
-      }
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [isOpen, currentMessageIndex]);
+    // Show welcome message only when opening
+    if (messages.length === 0) {
+      const welcomeMessage: Message = {
+        id: 'welcome',
+        text: "Envie uma mensagem para testar a sua nova Concierge.",
+        isBot: true,
+        timestamp: new Date()
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, [isOpen]);
 
   // Convert file to Base64
   const convertFileToBase64 = (file: File): Promise<string> => {
@@ -224,26 +199,40 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
       }
 
       const data = await response.json();
+      console.log('📥 Resposta do webhook:', data);
+
+      // Parse response - support multiple formats
+      let resposta = '';
+      if (Array.isArray(data) && data.length > 0) {
+        resposta = data[0].mensagem || data[0].text || '';
+      } else if (data.resposta) {
+        resposta = data.resposta;
+      } else if (data.mensagem) {
+        resposta = data.mensagem;
+      }
 
       // Show typing indicator
       setIsTyping(true);
 
       // Simulate natural delay before showing AI response
       setTimeout(() => {
-        if (data.resposta) {
+        if (resposta) {
           const botMessage: Message = {
             id: `bot_${Date.now()}`,
-            text: data.resposta,
+            text: resposta,
             isBot: true,
             timestamp: new Date()
           };
           setMessages(prev => [...prev, botMessage]);
+        } else {
+          console.warn('⚠️ Nenhuma resposta encontrada no webhook');
         }
         setIsTyping(false);
       }, 1500);
 
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("❌ Erro ao enviar mensagem:", error);
+      console.error("Stack:", error instanceof Error ? error.stack : error);
       toast({
         title: "Erro ao enviar mensagem",
         description: "Não foi possível se comunicar com o assistente. Tente novamente.",
