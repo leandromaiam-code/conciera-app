@@ -86,6 +86,7 @@ export const useConfigInstance = (empresaId?: number): UseConfigInstanceResult =
         body: JSON.stringify({
           acao: "desconectar",
           instance_name: instanceName,
+          channel: "whatsapp-web",
           empresa_id: empresaId,
         }),
       });
