@@ -20,58 +20,63 @@ import { InstagramConnectDialog } from "@/components/channels/instagram-connect-
 interface ChannelConfig {
   id: string;
   nome: string;
-  tipo: 'instagram' | 'whatsapp' | 'email' | 'site';
-  status: 'conectado' | 'desconectado' | 'erro';
+  tipo: "instagram" | "whatsapp" | "email" | "site";
+  status: "conectado" | "desconectado" | "erro";
   ativo: boolean;
   icon: any;
 }
 
 const channelsConfig: ChannelConfig[] = [
   {
- 
-    id: "1", 
+    id: "1",
     nome: "WhatsApp Business",
     tipo: "whatsapp",
     status: "conectado",
     ativo: true,
-    icon: MessageSquare
+    icon: MessageSquare,
   },
-  { 
+  {
     id: "2",
-    nome: "Instagram @clinicaexemplo",
+    nome: "Instagram",
     tipo: "instagram",
     status: "desconectado",
     ativo: false,
-    icon: Instagram
+    icon: Instagram,
   },
   {
     id: "3",
-    nome: "Email contato@clinica.com",
-    tipo: "email", 
+    nome: "Email",
+    tipo: "email",
     status: "desconectado",
     ativo: false,
-    icon: Mail
+    icon: Mail,
   },
   {
     id: "4",
-    nome: "Site wwww.clinica.com.br",
+    nome: "Site",
     tipo: "site",
-    status: "desconectado", 
+    status: "desconectado",
     ativo: false,
-    icon: Globe
-  }
+    icon: Globe,
+  },
 ];
 
 export const ConfiguracoesView = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const { profile } = useUserProfile();
-  
+
   // Database hooks
   const { empresa, loading: empresaLoading, updateEmpresa, saving: empresaSaving } = useCoreEmpresa();
   const { canais, loading: canaisLoading, updateCanal, saving: canaisSaving } = useConfigConfiguracaoCanais();
   const { sistema, loading: sistemaLoading, updateSistema, saving: sistemaSaving } = useConfigConfiguracoesSistema();
-  const { instance, loading: instanceLoading, disconnectWhatsApp, disconnecting, refetch } = useConfigInstance(profile?.empresa_id);
+  const {
+    instance,
+    loading: instanceLoading,
+    disconnectWhatsApp,
+    disconnecting,
+    refetch,
+  } = useConfigInstance(profile?.empresa_id);
 
   // Local state for form inputs
   const [clinicName, setClinicName] = useState("");
@@ -108,16 +113,16 @@ export const ConfiguracoesView = () => {
 
   const handleSaveEmpresa = async () => {
     if (!empresa) return;
-    
+
     try {
       await updateEmpresa({
         core_empresa_nome: clinicName,
         core_empresa_endereco_empresa: address,
         core_empresa_preco_consulta: valorMedioConsulta,
         core_empresa_profissionais_empresa: specialistname,
-        core_empresa_servicos: services
+        core_empresa_servicos: services,
       });
-      
+
       toast({
         title: "Sucesso",
         description: "Informações da clínica atualizadas com sucesso!",
@@ -133,7 +138,7 @@ export const ConfiguracoesView = () => {
 
   const handleToggleCanal = async (canalTipo: string, ativo: boolean) => {
     // WhatsApp tem lógica especial
-    if (canalTipo === 'whatsapp') {
+    if (canalTipo === "whatsapp") {
       if (ativo) {
         // Ativando - abrir modal
         setWhatsappOpen(true);
@@ -163,12 +168,12 @@ export const ConfiguracoesView = () => {
       await updateCanal(canalTipo, ativo);
       toast({
         title: "Sucesso",
-        description: `Canal ${canalTipo} ${ativo ? 'ativado' : 'desativado'} com sucesso!`,
+        description: `Canal ${canalTipo} ${ativo ? "ativado" : "desativado"} com sucesso!`,
       });
     } catch (error) {
       toast({
         title: "Erro",
-        description: `Erro ao ${ativo ? 'ativar' : 'desativar'} canal.`,
+        description: `Erro ao ${ativo ? "ativar" : "desativar"} canal.`,
         variant: "destructive",
       });
     }
@@ -176,14 +181,14 @@ export const ConfiguracoesView = () => {
 
   const handleSaveSistema = async () => {
     if (!sistema) return;
-    
+
     try {
       await updateSistema({
         ui_auto_agendamento: autoAgendamento,
         ui_auto_pagamento: autoPagamento,
-        config_configuracoes_sistema_notificacoes_push: notificacoesPush
+        config_configuracoes_sistema_notificacoes_push: notificacoesPush,
       });
-      
+
       toast({
         title: "Sucesso",
         description: "Configurações da IA atualizadas com sucesso!",
@@ -216,7 +221,6 @@ export const ConfiguracoesView = () => {
 
   return (
     <div className="space-y-md lg:space-y-lg">
-
       {/* Informações da Clínica */}
       <Card>
         <CardHeader>
@@ -238,15 +242,10 @@ export const ConfiguracoesView = () => {
             </div>
             <div>
               <Label htmlFor="address">Endereço da Clínica</Label>
-              <Input
-                id="address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="mt-1"
-              />
+              <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} className="mt-1" />
             </div>
-         </div>
-         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="specialist-name">Nome dos Profissionais</Label>
               <Input
@@ -255,17 +254,12 @@ export const ConfiguracoesView = () => {
                 onChange={(e) => setSpecialistName(e.target.value)}
                 className="mt-1"
               />
-             </div>
-             <div>
-              <Label htmlFor="services">Procedimentos</Label>
-              <Input
-                id="services"
-                value={services}
-                onChange={(e) => setServices(e.target.value)}
-                className="mt-1"
-              />
             </div>
-          <div>
+            <div>
+              <Label htmlFor="services">Procedimentos</Label>
+              <Input id="services" value={services} onChange={(e) => setServices(e.target.value)} className="mt-1" />
+            </div>
+            <div>
               <Label htmlFor="valor-medio">Valor Médio da Consulta</Label>
               <div className="relative mt-1">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-grafite">R$</span>
@@ -276,10 +270,10 @@ export const ConfiguracoesView = () => {
                   className="pl-10"
                 />
               </div>
-              </div>
+            </div>
           </div>
-          
-          <Button 
+
+          <Button
             className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto"
             onClick={handleSaveEmpresa}
             disabled={empresaSaving}
@@ -300,20 +294,23 @@ export const ConfiguracoesView = () => {
         <CardContent className="space-y-4">
           {channelsConfig.map((channel) => {
             const IconComponent = channel.icon;
-            const isChannelActive = canais ? canais[`config_configuracoes_canais_${channel.tipo}_ativo` as keyof typeof canais] : false;
-            
+            const isChannelActive = canais
+              ? canais[`config_configuracoes_canais_${channel.tipo}_ativo` as keyof typeof canais]
+              : false;
+
             // Determine if the switch should be active based on status
-            const isSwitchActive = channel.tipo === 'whatsapp' && instance
-              ? instance.status === 'Ativado'
-              : Boolean(isChannelActive);
-            
+            const isSwitchActive =
+              channel.tipo === "whatsapp" && instance ? instance.status === "Ativado" : Boolean(isChannelActive);
+
             // Determine status for button text
-            const isConnected = channel.tipo === 'whatsapp' && instance
-              ? instance.status === 'Ativado'
-              : Boolean(isChannelActive);
-            
+            const isConnected =
+              channel.tipo === "whatsapp" && instance ? instance.status === "Ativado" : Boolean(isChannelActive);
+
             return (
-              <div key={channel.id} className={`p-4 border border-cinza-borda rounded-lg ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+              <div
+                key={channel.id}
+                className={`p-4 border border-cinza-borda rounded-lg ${isMobile ? "space-y-3" : "flex items-center justify-between"}`}
+              >
                 {/* First line: Icon + Name */}
                 <div className="flex items-center gap-4">
                   <IconComponent className="w-6 h-6 text-grafite" />
@@ -323,23 +320,25 @@ export const ConfiguracoesView = () => {
                 </div>
 
                 {/* Second line (mobile) or right side (desktop): Controls */}
-                <div className={`${isMobile ? 'bg-marfim/30 border border-cinza-borda/50 rounded-lg p-3' : ''} flex items-center gap-3 ${isMobile ? 'justify-center' : ''}`}>
+                <div
+                  className={`${isMobile ? "bg-marfim/30 border border-cinza-borda/50 rounded-lg p-3" : ""} flex items-center gap-3 ${isMobile ? "justify-center" : ""}`}
+                >
                   <Switch
                     checked={isSwitchActive}
                     disabled={!isConnected || canaisSaving || disconnecting}
                     onCheckedChange={(checked) => handleToggleCanal(channel.tipo, checked)}
                   />
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="outline"
                     onClick={() => {
-                      if (channel.tipo === 'whatsapp') setWhatsappOpen(true);
-                      if (channel.tipo === 'instagram') setInstagramOpen(true);
+                      if (channel.tipo === "whatsapp") setWhatsappOpen(true);
+                      if (channel.tipo === "instagram") setInstagramOpen(true);
                     }}
-                    className={isConnected ? '' : 'bg-esmeralda text-white hover:bg-esmeralda/90'}
+                    className={isConnected ? "" : "bg-esmeralda text-white hover:bg-esmeralda/90"}
                     disabled={disconnecting}
                   >
-                    {isConnected ? 'Configurar' : 'Conectar'}
+                    {isConnected ? "Configurar" : "Conectar"}
                   </Button>
                 </div>
               </div>
@@ -363,10 +362,7 @@ export const ConfiguracoesView = () => {
                 <Label className="text-base">Auto-agendamento</Label>
                 <p className="text-sm text-grafite">Permitir que a IA agende consultas automaticamente</p>
               </div>
-              <Switch
-                checked={autoAgendamento}
-                onCheckedChange={setAutoAgendamento}
-              />
+              <Switch checked={autoAgendamento} onCheckedChange={setAutoAgendamento} />
             </div>
 
             <Separator />
@@ -376,10 +372,7 @@ export const ConfiguracoesView = () => {
                 <Label className="text-base">Cobrança Automática</Label>
                 <p className="text-sm text-grafite">Permitir que a IA receba e confirme pagamentos</p>
               </div>
-              <Switch
-                checked={autoPagamento}
-                onCheckedChange={setAutoPagamento}
-              />
+              <Switch checked={autoPagamento} onCheckedChange={setAutoPagamento} />
             </div>
 
             <Separator />
@@ -388,10 +381,7 @@ export const ConfiguracoesView = () => {
                 <Label className="text-base">Notificações Push</Label>
                 <p className="text-sm text-grafite">Receber notificações de novas conversas</p>
               </div>
-              <Switch
-                checked={notificacoesPush}
-                onCheckedChange={setNotificacoesPush}
-              />
+              <Switch checked={notificacoesPush} onCheckedChange={setNotificacoesPush} />
             </div>
 
             <Separator />
@@ -405,7 +395,7 @@ export const ConfiguracoesView = () => {
             </div>
           </div>
 
-          <Button 
+          <Button
             className="bg-dourado text-onyx hover:bg-dourado/90"
             onClick={handleSaveSistema}
             disabled={sistemaSaving}
@@ -425,9 +415,7 @@ export const ConfiguracoesView = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Button variant="outline">
-              Alterar Senha
-            </Button>
+            <Button variant="outline">Alterar Senha</Button>
           </div>
         </CardContent>
       </Card>
@@ -453,28 +441,21 @@ export const ConfiguracoesView = () => {
           </div>
 
           <div className="flex gap-3">
-            <Button variant="outline">
-              Alterar Plano
-            </Button>
-            <Button variant="outline">
-              Histórico de Faturas
-            </Button>
+            <Button variant="outline">Alterar Plano</Button>
+            <Button variant="outline">Histórico de Faturas</Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Connection Dialogs */}
-      <WhatsAppConnectDialog 
+      <WhatsAppConnectDialog
         isOpen={whatsappOpen}
         onClose={() => setWhatsappOpen(false)}
         empresaId={profile?.empresa_id}
         onConnectionSuccess={() => refetch()}
       />
 
-      <InstagramConnectDialog
-        isOpen={instagramOpen}
-        onClose={() => setInstagramOpen(false)}
-      />
+      <InstagramConnectDialog isOpen={instagramOpen} onClose={() => setInstagramOpen(false)} />
     </div>
   );
 };
