@@ -14,7 +14,7 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
   const handleInstagramConnect = () => {
     try {
       // Configurações do seu App Meta
-      const APP_ID = "SEU_APP_ID_AQUI"; // Substitua pelo seu App ID
+      const APP_ID = "1106075518356263"; // Substitua pelo seu App ID
       const REDIRECT_URI = "https://conciera-visage.lovable.app/instagram/callback"; // Ajuste conforme necessário
 
       // Gera um código aleatório para segurança (state)
