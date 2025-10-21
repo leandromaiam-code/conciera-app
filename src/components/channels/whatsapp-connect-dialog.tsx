@@ -10,9 +10,10 @@ interface WhatsAppConnectDialogProps {
   isOpen: boolean;
   onClose: () => void;
   empresaId: number | undefined;
+  onConnectionSuccess?: () => void;
 }
 
-export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppConnectDialogProps) => {
+export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId, onConnectionSuccess }: WhatsAppConnectDialogProps) => {
   const { toast } = useToast();
   const [phone, setPhone] = useState("");
   const [qrCode, setQrCode] = useState("");
@@ -139,11 +140,9 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
       }
 
       setIsConnected(true);
-      toast({
-        title: "Sucesso!",
-        description: "WhatsApp conectado com sucesso",
-      });
-
+      
+      onConnectionSuccess?.();
+      
       setTimeout(() => {
         onClose();
       }, 2000);

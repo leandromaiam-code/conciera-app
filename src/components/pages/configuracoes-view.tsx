@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCoreEmpresa } from "@/hooks/use-core-empresa";
@@ -63,15 +62,6 @@ const channelsConfig: ChannelConfig[] = [
   }
 ];
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'conectado': return 'bg-esmeralda text-white';
-    case 'desconectado': return 'bg-gray-500 text-white';
-    case 'erro': return 'bg-red-500 text-white';
-    default: return 'bg-gray-500 text-white';
-  }
-};
-
 export const ConfiguracoesView = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -81,7 +71,7 @@ export const ConfiguracoesView = () => {
   const { empresa, loading: empresaLoading, updateEmpresa, saving: empresaSaving } = useCoreEmpresa();
   const { canais, loading: canaisLoading, updateCanal, saving: canaisSaving } = useConfigConfiguracaoCanais();
   const { sistema, loading: sistemaLoading, updateSistema, saving: sistemaSaving } = useConfigConfiguracoesSistema();
-  const { instance, loading: instanceLoading, disconnectWhatsApp, disconnecting } = useConfigInstance(profile?.empresa_id);
+  const { instance, loading: instanceLoading, disconnectWhatsApp, disconnecting, refetch } = useConfigInstance(profile?.empresa_id);
 
   // Local state for form inputs
   const [clinicName, setClinicName] = useState("");
@@ -312,38 +302,31 @@ export const ConfiguracoesView = () => {
             const IconComponent = channel.icon;
             const isChannelActive = canais ? canais[`config_configuracoes_canais_${channel.tipo}_ativo` as keyof typeof canais] : false;
             
-            // Get dynamic status from config_instance for WhatsApp
-            let channelStatus = channel.status;
-            if (channel.tipo === 'whatsapp' && instance) {
-              // Map "Ativado" to "conectado" and "Desativado" to "desconectado"
-              channelStatus = instance.status === 'Ativado' ? 'conectado' : 'desconectado';
-            }
-            
             // Determine if the switch should be active based on status
             const isSwitchActive = channel.tipo === 'whatsapp' && instance
               ? instance.status === 'Ativado'
               : Boolean(isChannelActive);
             
+            // Determine status for button text
+            const isConnected = channel.tipo === 'whatsapp' && instance
+              ? instance.status === 'Ativado'
+              : Boolean(isChannelActive);
+            
             return (
               <div key={channel.id} className={`p-4 border border-cinza-borda rounded-lg ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
-                {/* First line: Icon + Name + Status Badge */}
+                {/* First line: Icon + Name */}
                 <div className="flex items-center gap-4">
                   <IconComponent className="w-6 h-6 text-grafite" />
                   <div className="flex-1">
                     <p className="font-medium text-onyx">{channel.nome}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge className={getStatusColor(channelStatus)}>
-                        {channelStatus.charAt(0).toUpperCase() + channelStatus.slice(1)}
-                      </Badge>
-                    </div>
                   </div>
                 </div>
 
-                {/* Second line (mobile) or right side (desktop): Controls in Box */}
+                {/* Second line (mobile) or right side (desktop): Controls */}
                 <div className={`${isMobile ? 'bg-marfim/30 border border-cinza-borda/50 rounded-lg p-3' : ''} flex items-center gap-3 ${isMobile ? 'justify-center' : ''}`}>
                   <Switch
                     checked={isSwitchActive}
-                    disabled={channelStatus === 'desconectado' || canaisSaving || disconnecting}
+                    disabled={!isConnected || canaisSaving || disconnecting}
                     onCheckedChange={(checked) => handleToggleCanal(channel.tipo, checked)}
                   />
                   <Button 
@@ -353,10 +336,10 @@ export const ConfiguracoesView = () => {
                       if (channel.tipo === 'whatsapp') setWhatsappOpen(true);
                       if (channel.tipo === 'instagram') setInstagramOpen(true);
                     }}
-                    className={channelStatus === 'conectado' ? '' : 'bg-esmeralda text-white hover:bg-esmeralda/90'}
+                    className={isConnected ? '' : 'bg-esmeralda text-white hover:bg-esmeralda/90'}
                     disabled={disconnecting}
                   >
-                    {channelStatus === 'conectado' ? 'Configurar' : 'Conectar'}
+                    {isConnected ? 'Configurar' : 'Conectar'}
                   </Button>
                 </div>
               </div>
@@ -485,6 +468,7 @@ export const ConfiguracoesView = () => {
         isOpen={whatsappOpen}
         onClose={() => setWhatsappOpen(false)}
         empresaId={profile?.empresa_id}
+        onConnectionSuccess={() => refetch()}
       />
 
       <InstagramConnectDialog
