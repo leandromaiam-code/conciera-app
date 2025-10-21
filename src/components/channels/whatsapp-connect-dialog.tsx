@@ -246,7 +246,7 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
                 )}
               </div>
 
-              <div className="flex justify-center">
+              <div className="flex flex-col items-center gap-3">
                 <div className="bg-white p-6 rounded-2xl border-2 border-cinza-borda shadow-sm">
                   <img
                     src={`data:image/png;base64,${qrCode}`}
@@ -254,6 +254,11 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
                     className="w-64 h-64 object-contain"
                   />
                 </div>
+                {pairingCode && (
+                  <p className="text-xs text-muted-foreground">
+                    Código de Pareamento: <span className="font-mono font-semibold">{pairingCode}</span>
+                  </p>
+                )}
               </div>
 
               <div className="bg-esmeralda/10 border border-esmeralda/30 rounded-lg p-4">
