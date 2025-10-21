@@ -16,6 +16,7 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
   const { toast } = useToast();
   const [phone, setPhone] = useState("");
   const [qrCode, setQrCode] = useState("");
+  const [pairingCode, setPairingCode] = useState("");
   const [timeLeft, setTimeLeft] = useState(120);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
@@ -26,6 +27,7 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
     if (!isOpen) {
       setPhone("");
       setQrCode("");
+      setPairingCode("");
       setTimeLeft(120);
       setIsConnecting(false);
       setIsConfirming(false);
@@ -96,6 +98,7 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
 
       if (bodyData?.qrcode) {
         setQrCode(bodyData.qrcode);
+        setPairingCode(bodyData.pairingCode || "");
         setTimeLeft(120);
         toast({
           title: "QR Code gerado",
@@ -217,8 +220,10 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
           {qrCode && timeLeft > 0 && !isConnected && (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <h3 className="text-lg font-semibold text-gray-900">Escaneie o QR Code</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Conecte seu WhatsApp</h3>
                 <p className="text-sm text-gray-900 leading-relaxed">
+                  <strong className="text-gray-900">Opção 1 - QR Code:</strong>
+                  <br />
                   1. Abra o <strong className="text-gray-900">WhatsApp</strong> no seu celular
                   <br />
                   2. Toque em <strong className="text-gray-900">Configurações</strong> →{" "}
@@ -228,6 +233,17 @@ export const WhatsAppConnectDialog = ({ isOpen, onClose, empresaId }: WhatsAppCo
                   <br />
                   4. Aponte a câmera para o QR Code abaixo
                 </p>
+                {pairingCode && (
+                  <p className="text-sm text-gray-900 leading-relaxed mt-4 pt-4 border-t">
+                    <strong className="text-gray-900">Opção 2 - Código de Pareamento:</strong>
+                    <br />
+                    Ou digite este código de 8 dígitos no WhatsApp:
+                    <br />
+                    <span className="text-2xl font-bold text-esmeralda tracking-widest block mt-2">
+                      {pairingCode}
+                    </span>
+                  </p>
+                )}
               </div>
 
               <div className="flex justify-center">

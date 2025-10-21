@@ -142,21 +142,29 @@ export const ConfiguracoesView = () => {
   };
 
   const handleToggleCanal = async (canalTipo: string, ativo: boolean) => {
-    // Se está tentando desativar o WhatsApp, desconectar primeiro
-    if (canalTipo === 'whatsapp' && !ativo && instance?.instance_name) {
-      try {
-        await disconnectWhatsApp(instance.instance_name);
-        await updateCanal(canalTipo, ativo);
-        toast({
-          title: "Sucesso",
-          description: "WhatsApp desconectado com sucesso!",
-        });
-      } catch (error) {
-        toast({
-          title: "Erro",
-          description: "Erro ao desconectar WhatsApp.",
-          variant: "destructive",
-        });
+    // WhatsApp tem lógica especial
+    if (canalTipo === 'whatsapp') {
+      if (ativo) {
+        // Ativando - abrir modal
+        setWhatsappOpen(true);
+      } else {
+        // Desativando - desconectar
+        if (instance?.instance_name) {
+          try {
+            await disconnectWhatsApp(instance.instance_name);
+            await updateCanal(canalTipo, ativo);
+            toast({
+              title: "Sucesso",
+              description: "WhatsApp desconectado com sucesso!",
+            });
+          } catch (error) {
+            toast({
+              title: "Erro",
+              description: "Erro ao desconectar WhatsApp.",
+              variant: "destructive",
+            });
+          }
+        }
       }
       return;
     }
