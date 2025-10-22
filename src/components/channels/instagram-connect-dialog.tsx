@@ -11,10 +11,10 @@ interface InstagramConnectDialogProps {
 export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDialogProps) => {
   const { toast } = useToast();
 
-  const handleInstagramConnect = () => {
+const handleInstagramConnect = () => {
   try {
     // Configurações do seu App Meta
-    const APP_ID = "1487078672559424"; // ← CLIENT ID DO INSTAGRAM
+    const APP_ID = "1487078672559424"; // ← MUDOU AQUI
     const REDIRECT_URI = "https://app.conciera.com.br/instagram/callback";
     
     // Gera um código aleatório para segurança (state)
@@ -24,18 +24,16 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
     localStorage.setItem("instagram_oauth_state", state);
     localStorage.setItem("instagram_oauth_timestamp", Date.now().toString());
     
-    // Constrói a URL do OAuth DO INSTAGRAM
+    // Constrói a URL do OAuth
     const params = new URLSearchParams({
       client_id: APP_ID,
       redirect_uri: REDIRECT_URI,
-      scope: "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish",
+      scope: "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish", // ← MUDOU AQUI
       response_type: "code",
       state: state,
-      force_reauth: "true"
     });
     
-    // URL DO INSTAGRAM (não do Facebook!)
-    const oauthUrl = `https://www.instagram.com/oauth/authorize?${params.toString()}`;
+    const oauthUrl = `https://www.instagram.com/oauth/authorize?${params.toString()}`; // ← MUDOU AQUI
     
     // Redireciona para o Instagram OAuth
     window.location.href = oauthUrl;
