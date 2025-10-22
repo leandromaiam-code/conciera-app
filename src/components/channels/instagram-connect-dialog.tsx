@@ -14,34 +14,34 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
   const handleInstagramConnect = () => {
   try {
     // Configurações do seu App Meta
-    const APP_ID = '1487078672559424'; // ← ESSE É O CLIENT_ID CORRETO!
-    const REDIRECT_URI = 'https://app.conciera.com.br/instagram/callback';
+    const APP_ID = "1487078672559424"; // ← CLIENT ID DO INSTAGRAM
+    const REDIRECT_URI = "https://app.conciera.com.br/instagram/callback";
     
     // Gera um código aleatório para segurança (state)
     const state = generateRandomState();
     
     // Salva o state no localStorage temporariamente
-    localStorage.setItem('instagram_oauth_state', state);
-    localStorage.setItem('instagram_oauth_timestamp', Date.now().toString());
+    localStorage.setItem("instagram_oauth_state", state);
+    localStorage.setItem("instagram_oauth_timestamp", Date.now().toString());
     
-    // Constrói a URL do OAuth DO INSTAGRAM (não do Facebook!)
+    // Constrói a URL do OAuth DO INSTAGRAM
     const params = new URLSearchParams({
       client_id: APP_ID,
       redirect_uri: REDIRECT_URI,
-      scope: 'instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish',
-      response_type: 'code',
+      scope: "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish",
+      response_type: "code",
       state: state,
-      force_reauth: 'true'
+      force_reauth: "true"
     });
     
-    // URL CORRETA DO INSTAGRAM
+    // URL DO INSTAGRAM (não do Facebook!)
     const oauthUrl = `https://www.instagram.com/oauth/authorize?${params.toString()}`;
     
     // Redireciona para o Instagram OAuth
     window.location.href = oauthUrl;
     
   } catch (error) {
-    console.error('Erro ao iniciar conexão com Instagram:', error);
+    console.error("Erro ao iniciar conexão com Instagram:", error);
     toast({
       title: "Erro ao conectar",
       description: "Não foi possível iniciar a conexão com Instagram. Tente novamente.",
