@@ -16,6 +16,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useUserProfile } from "@/hooks/use-user-profile";
 import { WhatsAppConnectDialog } from "@/components/channels/whatsapp-connect-dialog";
 import { InstagramConnectDialog } from "@/components/channels/instagram-connect-dialog";
+import { ScriptGenerationDialog } from "@/components/configuracoes/script-generation-dialog";
 
 interface ChannelConfig {
   id: string;
@@ -91,6 +92,7 @@ export const ConfiguracoesView = () => {
   // Modal states
   const [whatsappOpen, setWhatsappOpen] = useState(false);
   const [instagramOpen, setInstagramOpen] = useState(false);
+  const [scriptModalOpen, setScriptModalOpen] = useState(false);
 
   // Update local state when database data loads
   useEffect(() => {
@@ -386,12 +388,17 @@ export const ConfiguracoesView = () => {
 
             <Separator />
 
-            <div>
-              <Label className="text-base mb-2 block">Personalização da IA</Label>
-              <textarea
-                className="w-full h-24 p-3 border border-cinza-borda rounded-lg text-sm"
-                placeholder="Instruções personalizadas para a IA (ex: Tom de voz, especialidades da clínica, etc.)"
-              />
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-base">Personalização da IA</Label>
+                <p className="text-sm text-grafite">Configure o script de atendimento personalizado</p>
+              </div>
+              <Button
+                className="bg-dourado text-onyx hover:bg-dourado/90"
+                onClick={() => setScriptModalOpen(true)}
+              >
+                Configurar
+              </Button>
             </div>
           </div>
 
@@ -456,6 +463,13 @@ export const ConfiguracoesView = () => {
       />
 
       <InstagramConnectDialog isOpen={instagramOpen} onClose={() => setInstagramOpen(false)} />
+
+      <ScriptGenerationDialog
+        isOpen={scriptModalOpen}
+        onClose={() => setScriptModalOpen(false)}
+        empresaId={profile?.empresa_id}
+        funcionariaId={1}
+      />
     </div>
   );
 };
