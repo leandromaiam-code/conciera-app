@@ -53,7 +53,7 @@ export const useDashboardInsights = (funcionariaId?: number) => {
       // Buscar tipos de solicitação baseado nos agendamentos e conversas
       let agendamentosQuery = supabase
         .from('core_agendamentos')
-        .select('id')
+        .select('id, conversa_id')
         .gte('created_at', startOfDay.toISOString());
 
       let conversasQuery = supabase
@@ -72,17 +72,33 @@ export const useDashboardInsights = (funcionariaId?: number) => {
 
       const totalConversas = conversas?.length || 0;
       const totalAgendamentos = agendamentos?.length || 0;
+      
+      // Contar conversas com agendamento (agendamentos que têm conversa_id)
+      const conversasComAgendamento = agendamentos?.filter(a => a.conversa_id)?.length || 0;
+      
+      // Contar reagendamentos (agendamentos sem conversa_id, que foram remarcados)
+      const reagendamentos = totalAgendamentos - conversasComAgendamento;
+      
+      // Conversas que não geraram agendamento
+      const conversasSemAgendamento = Math.max(0, totalConversas - conversasComAgendamento);
 
-      // Calcular percentuais aproximados
+      // Calcular percentuais reais com fallback para 0%
       const agendamentosPercent = totalConversas > 0 
-        ? Math.round((totalAgendamentos / totalConversas) * 100) 
-        : 65;
-      const informacoesPercent = 100 - agendamentosPercent - 10;
+        ? Math.round((conversasComAgendamento / totalConversas) * 100) 
+        : 0;
+      
+      const reagendamentosPercent = totalConversas > 0
+        ? Math.round((reagendamentos / totalConversas) * 100)
+        : 0;
+      
+      const informacoesPercent = totalConversas > 0
+        ? Math.max(0, 100 - agendamentosPercent - reagendamentosPercent)
+        : 0;
 
       const requestTypes: RequestType[] = [
         { tipo: 'Agendamentos', percentual: agendamentosPercent },
         { tipo: 'Informações', percentual: informacoesPercent },
-        { tipo: 'Reagendamentos', percentual: 10 }
+        { tipo: 'Reagendamentos', percentual: reagendamentosPercent }
       ];
 
       return {
