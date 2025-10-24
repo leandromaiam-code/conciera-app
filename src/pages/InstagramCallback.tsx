@@ -62,7 +62,7 @@ export const InstagramCallback = () => {
         }
 
         // Envia o code para seu backend
-        const response = await fetch("/api/instagram/connect", {
+        const response = await fetch("https://n8n-n8n.ajpgd7.easypanel.host/webhook/conciera_ai_conexao_insta", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
