@@ -9,6 +9,7 @@ export interface UpcomingAppointment {
   servico_interesse: string;
   cliente_nome: string | null;
   temperatura_lead: number | null;
+  status: string;
 }
 
 export const useOpportunityFeed = () => {
@@ -27,12 +28,13 @@ export const useOpportunityFeed = () => {
           id,
           data_hora,
           servico_interesse,
+          status,
           core_clientes ( nome_completo ),
           core_briefings ( temperatura_lead )
         `)
         .gte('data_hora', new Date().toISOString())
         .order('data_hora', { ascending: true })
-        .limit(3); // <<< ALTERAÇÃO APLICADA AQUI
+        .limit(3);
 
       if (error) {
         console.error('Erro ao buscar agendamentos:', error);
@@ -43,6 +45,7 @@ export const useOpportunityFeed = () => {
           id: agendamento.id,
           data_hora: agendamento.data_hora,
           servico_interesse: agendamento.servico_interesse,
+          status: agendamento.status,
           cliente_nome: agendamento.core_clientes?.nome_completo || 'Cliente',
           temperatura_lead: agendamento.core_briefings ? agendamento.core_briefings.temperatura_lead : null,
         }));

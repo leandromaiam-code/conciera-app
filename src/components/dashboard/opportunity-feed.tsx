@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, User, Clock } from "lucide-react";
 import { useOpportunityFeed, UpcomingAppointment } from "@/hooks/use-opportunity-feed";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom"; // <<< IMPORTAR O COMPONENTE LINK
 
 // Componente para o indicador de temperatura com a nova paleta de cores
 const TemperatureGauge = ({ level }: { level: number | null }) => {
@@ -31,16 +31,32 @@ const OpportunityCard = ({ opportunity }: { opportunity: UpcomingAppointment }) 
   const formattedDate = appointmentDate.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
   const formattedTime = appointmentDate.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "confirmado":
+        return <Badge className="bg-esmeralda text-white">Confirmado</Badge>;
+      case "pendente":
+        return <Badge className="bg-yellow-500 text-white">Não Confirmado</Badge>;
+      case "cancelado":
+        return <Badge className="bg-red-500 text-white">Cancelado</Badge>;
+      default:
+        return <Badge className="bg-gray-500 text-white">{status}</Badge>;
+    }
+  };
+
   return (
     <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
           <User className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
           <p className="font-semibold text-sm text-gray-800 dark:text-gray-100">{opportunity.cliente_nome}</p>
         </div>
         <TemperatureGauge level={opportunity.temperatura_lead} />
       </div>
-      <p className="text-xs text-gray-500 dark:text-gray-400 ml-6">{opportunity.servico_interesse}</p>
+      <div className="flex items-center justify-between ml-6">
+        <p className="text-xs text-gray-500 dark:text-gray-400">{opportunity.servico_interesse}</p>
+        {getStatusBadge(opportunity.status)}
+      </div>
       <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-2 ml-6">
         <Calendar className="w-3 h-3 mr-1" /> {formattedDate}
         <Clock className="w-3 h-3 mr-1 ml-3" /> {formattedTime}
@@ -49,7 +65,11 @@ const OpportunityCard = ({ opportunity }: { opportunity: UpcomingAppointment }) 
   );
 };
 
-export const OpportunityFeed = () => {
+interface OpportunityFeedProps {
+  onPageChange?: (page: string) => void;
+}
+
+export const OpportunityFeed = ({ onPageChange }: OpportunityFeedProps) => {
   const { opportunities, loading, error } = useOpportunityFeed();
 
   return (
@@ -80,14 +100,14 @@ export const OpportunityFeed = () => {
         </div>
 
         {/* Adiciona o link no final do card, apenas se houver agendamentos */}
-        {!loading && !error && opportunities.length > 0 && (
+        {!loading && !error && opportunities.length > 0 && onPageChange && (
           <div className="mt-4 text-center">
-            <Link
-              to="/agenda-view"
-              className="text-sm font-medium text-yellow-600 hover:text-yellow-700 dark:text-yellow-500 dark:hover:text-yellow-400"
+            <button
+              onClick={() => onPageChange("agenda")}
+              className="text-sm font-medium text-dourado hover:text-dourado/80 transition-colors"
             >
               Ver todos agendamentos
-            </Link>
+            </button>
           </div>
         )}
       </CardContent>
