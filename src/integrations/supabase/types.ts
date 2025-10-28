@@ -649,6 +649,225 @@ export type Database = {
         }
         Relationships: []
       }
+      config_playbooks: {
+        Row: {
+          created_at: string | null
+          descricao: string | null
+          empresa_id: number
+          funcionaria_id: number | null
+          id: number
+          nome: string
+          status: string
+          tipo: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          descricao?: string | null
+          empresa_id: number
+          funcionaria_id?: number | null
+          id?: number
+          nome: string
+          status?: string
+          tipo: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          descricao?: string | null
+          empresa_id?: number
+          funcionaria_id?: number | null
+          id?: number
+          nome?: string
+          status?: string
+          tipo?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      config_playbooks_control: {
+        Row: {
+          agendamento_id: number | null
+          cliente_id: number | null
+          conversa_id: number | null
+          created_at: string | null
+          data_execucao: string | null
+          data_programada: string | null
+          id: number
+          mensagem_enviada: string | null
+          message_id: number | null
+          playbook_id: number
+          resultado: Json | null
+          status: string
+          step_id: number | null
+        }
+        Insert: {
+          agendamento_id?: number | null
+          cliente_id?: number | null
+          conversa_id?: number | null
+          created_at?: string | null
+          data_execucao?: string | null
+          data_programada?: string | null
+          id?: number
+          mensagem_enviada?: string | null
+          message_id?: number | null
+          playbook_id: number
+          resultado?: Json | null
+          status?: string
+          step_id?: number | null
+        }
+        Update: {
+          agendamento_id?: number | null
+          cliente_id?: number | null
+          conversa_id?: number | null
+          created_at?: string | null
+          data_execucao?: string | null
+          data_programada?: string | null
+          id?: number
+          mensagem_enviada?: string | null
+          message_id?: number | null
+          playbook_id?: number
+          resultado?: Json | null
+          status?: string
+          step_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "config_playbooks_control_agendamento_id_fkey"
+            columns: ["agendamento_id"]
+            isOneToOne: false
+            referencedRelation: "core_agendamentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_playbooks_control_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "core_clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_playbooks_control_conversa_id_fkey"
+            columns: ["conversa_id"]
+            isOneToOne: false
+            referencedRelation: "core_conversas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_playbooks_control_conversa_id_fkey"
+            columns: ["conversa_id"]
+            isOneToOne: false
+            referencedRelation: "v_conversas_detalhadas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_playbooks_control_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "config_playbooks_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_playbooks_control_playbook_id_fkey"
+            columns: ["playbook_id"]
+            isOneToOne: false
+            referencedRelation: "config_playbooks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_playbooks_control_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "config_playbooks_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      config_playbooks_messages: {
+        Row: {
+          ativo: boolean | null
+          conteudo: string
+          created_at: string | null
+          id: number
+          peso_distribuicao: number | null
+          step_id: number
+          updated_at: string | null
+          variacao_numero: number
+        }
+        Insert: {
+          ativo?: boolean | null
+          conteudo: string
+          created_at?: string | null
+          id?: number
+          peso_distribuicao?: number | null
+          step_id: number
+          updated_at?: string | null
+          variacao_numero: number
+        }
+        Update: {
+          ativo?: boolean | null
+          conteudo?: string
+          created_at?: string | null
+          id?: number
+          peso_distribuicao?: number | null
+          step_id?: number
+          updated_at?: string | null
+          variacao_numero?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "config_playbooks_messages_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "config_playbooks_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      config_playbooks_steps: {
+        Row: {
+          ativo: boolean | null
+          condicoes: Json | null
+          created_at: string | null
+          id: number
+          momento_execucao: Json
+          nome_passo: string
+          ordem: number
+          playbook_id: number
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          condicoes?: Json | null
+          created_at?: string | null
+          id?: number
+          momento_execucao?: Json
+          nome_passo: string
+          ordem: number
+          playbook_id: number
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          condicoes?: Json | null
+          created_at?: string | null
+          id?: number
+          momento_execucao?: Json
+          nome_passo?: string
+          ordem?: number
+          playbook_id?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "config_playbooks_steps_playbook_id_fkey"
+            columns: ["playbook_id"]
+            isOneToOne: false
+            referencedRelation: "config_playbooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       config_script_vendas: {
         Row: {
           agendamento: string | null

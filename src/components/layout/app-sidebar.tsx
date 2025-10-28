@@ -6,7 +6,8 @@ import {
   BookOpen,
   Settings,
   X,
-  CheckSquare
+  CheckSquare,
+  Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -26,6 +27,7 @@ const navigationItems = [
   { id: "agenda", icon: Calendar, label: "Agendamentos" },
   { id: "analytics", icon: BarChart3, label: "Analytics" },
   { id: "conversas", icon: MessageSquare, label: "Conversas" },
+  { id: "playbooks-automation", icon: Clock, label: "Automações" },
   { id: "configuracoes", icon: Settings, label: "Configurações" },
 ];
 

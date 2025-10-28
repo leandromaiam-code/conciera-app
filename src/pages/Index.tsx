@@ -7,6 +7,7 @@ import { AgendaView } from "@/components/pages/agenda-view";
 import { AnalyticsView } from "@/components/pages/analytics-view";
 import { ConversasView } from "@/components/pages/conversas-view";
 import { ConfiguracoesView } from "@/components/pages/configuracoes-view";
+import { PlaybooksAutomationView } from "@/components/pages/playbooks-automation-view";
 import { useUserProfile } from "@/hooks/use-user-profile";
 
 const Index = () => {
@@ -30,6 +31,8 @@ const Index = () => {
         return <AnalyticsView />;
       case "conversas":
         return <ConversasView />;
+      case "playbooks-automation":
+        return <PlaybooksAutomationView />;
       case "configuracoes":
         return <ConfiguracoesView />;
       default:
