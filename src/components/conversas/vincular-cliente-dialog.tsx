@@ -29,7 +29,7 @@ export const VincularClienteDialog = ({
   conversaId,
   sessionId,
   telefoneConversa,
-  onClienteVinculado
+  onClienteVinculado,
 }: VincularClienteDialogProps) => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,18 +49,18 @@ export const VincularClienteDialog = ({
   const fetchClientes = async () => {
     try {
       const { data, error } = await supabase
-        .from('core_clientes')
-        .select('id, nome_completo, telefone')
-        .order('nome_completo');
+        .from("core_clientes")
+        .select("id, nome_completo, telefone")
+        .order("nome_completo");
 
       if (error) throw error;
       setClientes(data || []);
     } catch (error) {
-      console.error('Erro ao buscar clientes:', error);
+      console.error("Erro ao buscar clientes:", error);
       toast({
         title: "Erro",
         description: "Não foi possível carregar os clientes",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
@@ -70,7 +70,7 @@ export const VincularClienteDialog = ({
       toast({
         title: "Atenção",
         description: "Selecione um cliente para vincular",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -80,17 +80,17 @@ export const VincularClienteDialog = ({
 
       // Atualizar a conversa com o cliente_id
       const { error: conversaError } = await supabase
-        .from('core_conversas')
+        .from("core_conversas")
         .update({ cliente_id: parseInt(selectedClienteId) })
-        .eq('id', Number(conversaId));
+        .eq("id", Number(conversaId));
 
       if (conversaError) throw conversaError;
 
       // Atualizar as mensagens da memória com o cliente_id
       const { error: memoriaError } = await supabase
-        .from('ingestion_memoria_clientes_historico_01')
+        .from("memoria_clientes_historico_01")
         .update({ cliente_id: parseInt(selectedClienteId) })
-        .eq('session_id', sessionId);
+        .eq("session_id", sessionId);
 
       if (memoriaError) throw memoriaError;
 
@@ -102,20 +102,20 @@ export const VincularClienteDialog = ({
       onClienteVinculado();
       onOpenChange(false);
     } catch (error) {
-      console.error('Erro ao vincular cliente:', error);
+      console.error("Erro ao vincular cliente:", error);
       toast({
         title: "Erro",
         description: "Não foi possível vincular o cliente",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredClientes = clientes.filter(cliente =>
-    cliente.nome_completo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    cliente.telefone?.includes(searchTerm)
+  const filteredClientes = clientes.filter(
+    (cliente) =>
+      cliente.nome_completo?.toLowerCase().includes(searchTerm.toLowerCase()) || cliente.telefone?.includes(searchTerm),
   );
 
   return (
@@ -151,9 +151,7 @@ export const VincularClienteDialog = ({
               </SelectTrigger>
               <SelectContent>
                 {filteredClientes.length === 0 ? (
-                  <div className="p-4 text-center text-sm text-grafite">
-                    Nenhum cliente encontrado
-                  </div>
+                  <div className="p-4 text-center text-sm text-grafite">Nenhum cliente encontrado</div>
                 ) : (
                   filteredClientes.map((cliente) => (
                     <SelectItem key={cliente.id.toString()} value={cliente.id.toString()}>

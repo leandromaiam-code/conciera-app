@@ -10,35 +10,42 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ConversaHistoryDialog } from "@/components/conversas/conversa-history-dialog";
 import { VincularClienteDialog } from "@/components/conversas/vincular-cliente-dialog";
 
-
 const getChannelIcon = (canal: string) => {
   switch (canal) {
-    case 'instagram': return Instagram;
-    case 'whatsapp': return MessageSquare;
-    case 'email': return Mail;
-    case 'site': return Globe;
-    default: return MessageSquare;
+    case "instagram":
+      return Instagram;
+    case "whatsapp":
+      return MessageSquare;
+    case "email":
+      return Mail;
+    case "site":
+      return Globe;
+    default:
+      return MessageSquare;
   }
 };
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'novo': return 'bg-esmeralda text-white';
-    case 'em-andamento': return 'bg-dourado text-onyx';
-    case 'aguardando': return 'bg-blue-500 text-white';
-    case 'finalizada': return 'bg-red-500 text-white';
-    default: return 'bg-gray-500 text-white';
+    case "novo":
+      return "bg-esmeralda text-white";
+    case "em-andamento":
+      return "bg-dourado text-onyx";
+    case "aguardando":
+      return "bg-blue-500 text-white";
+    case "finalizada":
+      return "bg-red-500 text-white";
+    default:
+      return "bg-gray-500 text-white";
   }
 };
 
 const TemperatureIndicator = ({ ui_temperatura_lead }: { ui_temperatura_lead: 1 | 2 | 3 }) => (
   <div className="flex gap-1">
-    {[1, 2, 3].map(level => (
+    {[1, 2, 3].map((level) => (
       <div
         key={level}
-        className={`w-2 h-2 rounded-full ${
-          level <= ui_temperatura_lead ? 'bg-dourado' : 'bg-cinza-claro'
-        }`}
+        className={`w-2 h-2 rounded-full ${level <= ui_temperatura_lead ? "bg-dourado" : "bg-cinza-claro"}`}
       />
     ))}
   </div>
@@ -56,7 +63,7 @@ export const ConversasView = () => {
   const { conversas, loading, error, updateConversaStatus, refetch } = useVConversasDetalhadas(
     searchTerm,
     filterStatus,
-    filterCanal
+    filterCanal,
   );
 
   const handleVerConversa = (conversa: any) => {
@@ -78,7 +85,7 @@ export const ConversasView = () => {
             Nova Conversa
           </Button>
         </div>
-        
+
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -151,7 +158,7 @@ export const ConversasView = () => {
                 className="pl-10"
               />
             </div>
-            
+
             <Select value={filterStatus} onValueChange={setFilterStatus}>
               <SelectTrigger id="v-conversas-detalhadas-status-filter">
                 <SelectValue placeholder="Status" />
@@ -185,9 +192,12 @@ export const ConversasView = () => {
       <div className="space-y-4">
         {filteredConversas.map((conversa) => {
           const ChannelIcon = getChannelIcon(conversa.v_conversas_detalhadas_canal);
-          
+
           return (
-            <Card key={conversa.v_conversas_detalhadas_id.toString()} className="cursor-pointer hover:shadow-md transition-all">
+            <Card
+              key={conversa.v_conversas_detalhadas_id.toString()}
+              className="cursor-pointer hover:shadow-md transition-all"
+            >
               <CardContent className="p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                   <div className="flex items-start gap-3 flex-1">
@@ -199,13 +209,17 @@ export const ConversasView = () => {
                     {/* Conversation Info */}
                     <div className="space-y-2 flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                        <h3 className="font-semibold text-onyx text-sm sm:text-base">{conversa.v_conversas_detalhadas_nome_completo}</h3>
+                        <h3 className="font-semibold text-onyx text-sm sm:text-base">
+                          {conversa.v_conversas_detalhadas_nome_completo}
+                        </h3>
                         <div className="flex items-center gap-2">
                           {conversa.ui_temperatura_lead && (
                             <TemperatureIndicator ui_temperatura_lead={conversa.ui_temperatura_lead} />
                           )}
                           <Badge className={`${getStatusColor(conversa.v_conversas_detalhadas_status)} text-xs`}>
-                            {conversa.v_conversas_detalhadas_status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            {conversa.v_conversas_detalhadas_status
+                              .replace("-", " ")
+                              .replace(/\b\w/g, (l) => l.toUpperCase())}
                           </Badge>
                         </div>
                       </div>
@@ -223,29 +237,22 @@ export const ConversasView = () => {
                       <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-grafite">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {new Date(conversa.v_conversas_detalhadas_created_at).toLocaleDateString('pt-BR')}
+                          {new Date(conversa.v_conversas_detalhadas_created_at).toLocaleDateString("pt-BR")}
                         </div>
-                        <div className="capitalize">
-                          via {conversa.v_conversas_detalhadas_canal}
-                        </div>
+                        <div className="capitalize">via {conversa.v_conversas_detalhadas_canal}</div>
                       </div>
                     </div>
                   </div>
 
                   {/* Actions */}
                   <div className="flex flex-row sm:flex-col justify-between sm:items-end gap-2 sm:gap-2 flex-shrink-0">
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="text-xs"
-                      onClick={() => handleVerConversa(conversa)}
-                    >
+                    <Button size="sm" variant="outline" className="text-xs" onClick={() => handleVerConversa(conversa)}>
                       Ver Conversa
                     </Button>
                     {conversa.v_conversas_detalhadas_cliente_id === BigInt(0) && (
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
+                      <Button
+                        size="sm"
+                        variant="outline"
                         className="text-xs"
                         onClick={() => handleVincularCliente(conversa)}
                       >
@@ -280,6 +287,7 @@ export const ConversasView = () => {
             sessionId={selectedConversa.v_conversas_detalhadas_session_id}
             clienteNome={selectedConversa.v_conversas_detalhadas_nome_completo}
             status={selectedConversa.v_conversas_detalhadas_status}
+            funcionariaId={selectedConversa.v_conversas_detalhadas_funcionaria_id}
             onStatusChange={(newStatus) => {
               updateConversaStatus(selectedConversa.v_conversas_detalhadas_id, newStatus);
             }}
