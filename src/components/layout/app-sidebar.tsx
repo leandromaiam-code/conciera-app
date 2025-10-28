@@ -5,7 +5,8 @@ import {
   MessageSquare,
   BookOpen,
   Settings,
-  X
+  X,
+  CheckSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -21,6 +22,7 @@ interface AppSidebarProps {
 
 const navigationItems = [
   { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { id: "tasks", icon: CheckSquare, label: "Tasks" },
   { id: "agenda", icon: Calendar, label: "Agendamentos" },
   { id: "analytics", icon: BarChart3, label: "Analytics" },
   { id: "conversas", icon: MessageSquare, label: "Conversas" },

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { DashboardView } from "@/components/dashboard/dashboard-view";
 import { WhatsAppSimulation } from "@/components/dashboard/whatsapp-simulation";
+import { TasksView } from "@/components/pages/tasks-view";
 import { AgendaView } from "@/components/pages/agenda-view";
 import { AnalyticsView } from "@/components/pages/analytics-view";
 import { ConversasView } from "@/components/pages/conversas-view";
@@ -21,6 +22,8 @@ const Index = () => {
     switch (currentPage) {
       case "dashboard":
         return <DashboardView onWhatsAppClick={handleWhatsAppClick} onPageChange={setCurrentPage} />;
+      case "tasks":
+        return <TasksView onPageChange={setCurrentPage} />;
       case "agenda":
         return <AgendaView />;
       case "analytics":

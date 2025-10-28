@@ -533,6 +533,7 @@ export type Database = {
       }
       config_funcionaria_virtual: {
         Row: {
+          agenda: string | null
           created_at: string
           descricao_beneficios: string | null
           empresa_id: number | null
@@ -548,6 +549,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          agenda?: string | null
           created_at?: string
           descricao_beneficios?: string | null
           empresa_id?: number | null
@@ -563,6 +565,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          agenda?: string | null
           created_at?: string
           descricao_beneficios?: string | null
           empresa_id?: number | null
@@ -618,6 +621,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      config_instance: {
+        Row: {
+          created_at: string
+          empresa_id: number | null
+          funcionaria_id: number | null
+          id: number
+          instance_name: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string
+          empresa_id?: number | null
+          funcionaria_id?: number | null
+          id?: number
+          instance_name?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string
+          empresa_id?: number | null
+          funcionaria_id?: number | null
+          id?: number
+          instance_name?: string | null
+          status?: string | null
+        }
+        Relationships: []
       }
       config_script_vendas: {
         Row: {
@@ -1126,6 +1156,113 @@ export type Database = {
         }
         Relationships: []
       }
+      core_tasks: {
+        Row: {
+          categoria: string
+          cliente_id: number | null
+          created_at: string | null
+          descricao: string | null
+          empresa_id: number
+          funcionaria_id: number | null
+          id: number
+          prazo: string | null
+          prioridade: string
+          status: string
+          titulo: string
+          updated_at: string | null
+        }
+        Insert: {
+          categoria?: string
+          cliente_id?: number | null
+          created_at?: string | null
+          descricao?: string | null
+          empresa_id: number
+          funcionaria_id?: number | null
+          id?: number
+          prazo?: string | null
+          prioridade?: string
+          status?: string
+          titulo: string
+          updated_at?: string | null
+        }
+        Update: {
+          categoria?: string
+          cliente_id?: number | null
+          created_at?: string | null
+          descricao?: string | null
+          empresa_id?: number
+          funcionaria_id?: number | null
+          id?: number
+          prazo?: string | null
+          prioridade?: string
+          status?: string
+          titulo?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_tasks_cliente"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "core_clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      core_user_connections: {
+        Row: {
+          access_token_encrypted: string
+          connected_at: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          last_sync_at: string | null
+          metadata: Json | null
+          provider: string
+          provider_user_id: string
+          provider_username: string | null
+          refresh_token_encrypted: string | null
+          scopes: Json | null
+          token_expires_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          access_token_encrypted: string
+          connected_at?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          provider: string
+          provider_user_id: string
+          provider_username?: string | null
+          refresh_token_encrypted?: string | null
+          scopes?: Json | null
+          token_expires_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          access_token_encrypted?: string
+          connected_at?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          provider?: string
+          provider_user_id?: string
+          provider_username?: string | null
+          refresh_token_encrypted?: string | null
+          scopes?: Json | null
+          token_expires_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       core_users: {
         Row: {
           auth_id: string | null
@@ -1421,6 +1558,24 @@ export type Database = {
         }
         Relationships: []
       }
+      memoria_simulacao_historico_01: {
+        Row: {
+          id: number
+          message: Json
+          session_id: string
+        }
+        Insert: {
+          id?: number
+          message: Json
+          session_id: string
+        }
+        Update: {
+          id?: number
+          message?: Json
+          session_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       v_conversas_detalhadas: {
@@ -1487,17 +1642,52 @@ export type Database = {
         Args: { ano_mes_param: string; empresa_id_param: number }
         Returns: number
       }
-      fix_conversas_cliente_zero: {
-        Args: Record<PropertyKey, never>
-        Returns: number
+      decrypt_token: { Args: { encrypted_token: string }; Returns: string }
+      disconnect_user_connection: {
+        Args: { p_provider: string; p_user_id: string }
+        Returns: boolean
       }
+      encrypt_token: { Args: { token: string }; Returns: string }
+      fix_conversas_cliente_zero: { Args: never; Returns: number }
       get_funcionaria_empresa_id: {
         Args: { _funcionaria_id: number }
         Returns: number
       }
-      get_user_empresa_id: {
-        Args: Record<PropertyKey, never>
-        Returns: number
+      get_user_active_connections: {
+        Args: { p_user_id: string }
+        Returns: {
+          connected_at: string
+          id: string
+          last_sync_at: string
+          provider: string
+          provider_user_id: string
+          provider_username: string
+          scopes: Json
+        }[]
+      }
+      get_user_connection_token: {
+        Args: { p_provider: string; p_user_id: string }
+        Returns: {
+          access_token: string
+          metadata: Json
+          provider_user_id: string
+          refresh_token: string
+        }[]
+      }
+      get_user_empresa_id: { Args: never; Returns: number }
+      save_user_connection: {
+        Args: {
+          p_access_token: string
+          p_metadata?: Json
+          p_provider: string
+          p_provider_user_id: string
+          p_provider_username?: string
+          p_refresh_token?: string
+          p_scopes?: Json
+          p_token_expires_at?: string
+          p_user_id: string
+        }
+        Returns: string
       }
       vincular_cliente_memoria: {
         Args: {

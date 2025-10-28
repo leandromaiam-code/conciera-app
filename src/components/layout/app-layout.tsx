@@ -14,6 +14,7 @@ interface AppLayoutProps {
 const getPageTitle = (page: string): string => {
   const titles: Record<string, string> = {
     dashboard: "Dashboard",
+    tasks: "Gestão de Tasks",
     agenda: "Controle de Agendamentos", 
     analytics: "Analytics e Relatórios",
     conversas: "Histórico de Conversas",
