@@ -22,6 +22,7 @@ interface ConversaHistoryDialogProps {
   sessionId: string;
   clienteNome: string;
   status: string;
+  funcionariaId: number; // ADICIONAR ESTA PROP
   onStatusChange: (newStatus: string) => void;
 }
 
@@ -32,7 +33,8 @@ export const ConversaHistoryDialog = ({
   sessionId,
   clienteNome,
   status,
-  onStatusChange
+  funcionariaId, // ADICIONAR AQUI
+  onStatusChange,
 }: ConversaHistoryDialogProps) => {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -47,20 +49,23 @@ export const ConversaHistoryDialog = ({
   const fetchMessages = async () => {
     try {
       setLoading(true);
+
+      // CORRIGIDO: usa memoria_clientes_historico_01 e filtra por funcionaria_id
       const { data, error } = await supabase
-        .from('ingestion_memoria_clientes_historico_01')
-        .select('id, role, content_text, created_at')
-        .eq('session_id', sessionId)
-        .order('created_at', { ascending: true });
+        .from("memoria_clientes_historico_01")
+        .select("id, role, content_text, created_at")
+        .eq("session_id", sessionId)
+        .eq("funcionaria_id", funcionariaId) // FILTRO ADICIONADO
+        .order("created_at", { ascending: true });
 
       if (error) throw error;
       setMessages(data || []);
     } catch (error) {
-      console.error('Erro ao buscar mensagens:', error);
+      console.error("Erro ao buscar mensagens:", error);
       toast({
         title: "Erro",
         description: "Não foi possível carregar o histórico da conversa",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -75,17 +80,17 @@ export const ConversaHistoryDialog = ({
         description: `Conversa marcada como ${newStatus}`,
       });
     } catch (error) {
-      console.error('Erro ao atualizar status:', error);
+      console.error("Erro ao atualizar status:", error);
       toast({
         title: "Erro",
         description: "Não foi possível atualizar o status",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
   const handleMarkAsResolved = () => {
-    handleStatusChange('finalizada');
+    handleStatusChange("finalizada");
   };
 
   return (
@@ -97,15 +102,11 @@ export const ConversaHistoryDialog = ({
               <MessageSquare className="w-5 h-5" />
               Conversa com {clienteNome}
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onOpenChange(false)}
-            >
+            <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)}>
               <X className="w-4 h-4" />
             </Button>
           </DialogTitle>
-          
+
           <div className="flex items-center gap-3 mt-4">
             <Select value={status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-40">
@@ -118,13 +119,9 @@ export const ConversaHistoryDialog = ({
                 <SelectItem value="finalizada">Finalizada</SelectItem>
               </SelectContent>
             </Select>
-            
-            {status !== 'finalizada' && (
-              <Button
-                onClick={handleMarkAsResolved}
-                variant="outline"
-                size="sm"
-              >
+
+            {status !== "finalizada" && (
+              <Button onClick={handleMarkAsResolved} variant="outline" size="sm">
                 Marcar como Resolvida
               </Button>
             )}
@@ -133,42 +130,32 @@ export const ConversaHistoryDialog = ({
 
         <ScrollArea className="flex-1 pr-4">
           {loading ? (
-            <div className="text-center py-8 text-grafite">
-              Carregando mensagens...
-            </div>
+            <div className="text-center py-8 text-grafite">Carregando mensagens...</div>
           ) : messages.length === 0 ? (
-            <div className="text-center py-8 text-grafite">
-              Nenhuma mensagem encontrada
-            </div>
+            <div className="text-center py-8 text-grafite">Nenhuma mensagem encontrada</div>
           ) : (
             <div className="space-y-4 py-4">
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex gap-3 ${
-                    message.role === 'ai' ? 'justify-start' : 'justify-end'
-                  }`}
+                  className={`flex gap-3 ${message.role === "ai" ? "justify-start" : "justify-end"}`}
                 >
-                  {message.role === 'ai' && (
+                  {message.role === "ai" && (
                     <div className="w-8 h-8 rounded-full bg-dourado/20 flex items-center justify-center flex-shrink-0">
                       <Bot className="w-4 h-4 text-dourado" />
                     </div>
                   )}
-                  
+
                   <div
                     className={`max-w-[70%] rounded-lg p-3 ${
-                      message.role === 'ai'
-                        ? 'bg-cinza-claro/30 text-onyx'
-                        : 'bg-dourado text-onyx'
+                      message.role === "ai" ? "bg-cinza-claro/30 text-onyx" : "bg-dourado text-onyx"
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">{message.content_text}</p>
-                    <p className="text-xs opacity-70 mt-1">
-                      {new Date(message.created_at).toLocaleString('pt-BR')}
-                    </p>
+                    <p className="text-xs opacity-70 mt-1">{new Date(message.created_at).toLocaleString("pt-BR")}</p>
                   </div>
-                  
-                  {message.role === 'user' && (
+
+                  {message.role === "user" && (
                     <div className="w-8 h-8 rounded-full bg-esmeralda/20 flex items-center justify-center flex-shrink-0">
                       <User className="w-4 h-4 text-esmeralda" />
                     </div>
