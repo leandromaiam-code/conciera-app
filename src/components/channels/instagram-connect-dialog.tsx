@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client"; // ← ADICIONAR
 
 interface InstagramConnectDialogProps {
   isOpen: boolean;
@@ -11,32 +12,42 @@ interface InstagramConnectDialogProps {
 export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDialogProps) => {
   const { toast } = useToast();
 
-  const handleInstagramConnect = () => {
+  const handleInstagramConnect = async () => {
     try {
-      // Configurações do seu App Meta
-      const APP_ID = "1487078672559424"; // Substitua pelo seu App ID
-      const REDIRECT_URI = "https://app.conciera.com.br/instagram/callback"; // Ajuste conforme necessário
+      // ← PEGAR O USER_ID DO SUPABASE AUTH
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-      // Gera um código aleatório para segurança (state)
-      const state = generateRandomState();
+      if (!user) {
+        toast({
+          title: "Erro",
+          description: "Você precisa estar logado para conectar o Instagram.",
+          variant: "destructive",
+        });
+        return;
+      }
 
-      // Salva o state no localStorage temporariamente
+      const APP_ID = "1487078672559424";
+      const REDIRECT_URI = "https://app.conciera.com.br/instagram/callback";
+
+      // ← GERA STATE COM USER_ID INCLUÍDO
+      const randomState = generateRandomState();
+      const state = `${user.id}:${randomState}`; // ← FORMATO: "uuid:random"
+
       localStorage.setItem("instagram_oauth_state", state);
       localStorage.setItem("instagram_oauth_timestamp", Date.now().toString());
 
-      // Constrói a URL do OAuth
       const params = new URLSearchParams({
         client_id: APP_ID,
         redirect_uri: REDIRECT_URI,
         scope:
           "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish",
         response_type: "code",
-        state: state,
+        state: state, // ← Agora contém user_id
       });
 
       const oauthUrl = `https://www.instagram.com/oauth/authorize?${params.toString()}`;
-
-      // Redireciona para o Instagram OAuth
       window.location.href = oauthUrl;
     } catch (error) {
       console.error("Erro ao iniciar conexão com Instagram:", error);
@@ -48,7 +59,6 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
     }
   };
 
-  // Função para gerar código aleatório seguro
   const generateRandomState = (): string => {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
