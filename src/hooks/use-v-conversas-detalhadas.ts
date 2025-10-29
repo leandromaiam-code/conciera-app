@@ -24,10 +24,11 @@ export const useVConversasDetalhadas = (
       setLoading(true);
       setError(null);
       
-      let query = supabase
-        .from('v_conversas_detalhadas')
-        .select('*')
-        .order('timestamp_ultima_mensagem', { ascending: false });
+    let query = supabase
+      .from('v_conversas_detalhadas')
+      .select('*')
+      .neq('status', 'arquivado')
+      .order('timestamp_ultima_mensagem', { ascending: false });
 
       // Apply filters
       if (filterStatus && filterStatus !== 'todos') {
