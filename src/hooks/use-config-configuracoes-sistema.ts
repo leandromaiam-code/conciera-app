@@ -31,42 +31,42 @@ export const useConfigConfiguracoesSistema = (empresaId?: number): UseConfigConf
         query = query.eq('empresa_id', empresaId);
       }
 
-      const { data, error: queryError } = await query.limit(1);
+      const { data, error: queryError } = await query.limit(1).single();
 
       if (queryError) {
+        // If no data found and we have an empresaId, create default
+        if (queryError.code === 'PGRST116' && empresaId) {
+          console.log('No config found, creating default for empresa:', empresaId);
+          await createDefaultSistema(empresaId);
+          return;
+        }
+        
         console.error('Erro ao buscar configurações do sistema:', queryError);
         setError('Erro ao carregar configurações do sistema');
         return;
       }
 
-      if (data && data.length > 0) {
-        const row = data[0];
-        
+      if (data) {
         // Transform database data to match expected format
         const sistemaData: ConfigConfiguracoesSistema = {
-          config_configuracoes_sistema_id: BigInt(row.id),
-          config_configuracoes_sistema_empresa_id: row.empresa_id,
-          config_configuracoes_sistema_backup_automatico: row.backup_automatico || true,
-          config_configuracoes_sistema_notificacoes_email: row.notificacoes_email || true,
-          config_configuracoes_sistema_notificacoes_push: row.notificacoes_push || true,
-          config_configuracoes_sistema_logs_detalhados: row.logs_detalhados || false,
-          config_configuracoes_sistema_updated_at: row.updated_at || new Date().toISOString(),
+          config_configuracoes_sistema_id: BigInt(data.id),
+          config_configuracoes_sistema_empresa_id: data.empresa_id,
+          config_configuracoes_sistema_backup_automatico: data.backup_automatico || true,
+          config_configuracoes_sistema_notificacoes_email: data.notificacoes_email || true,
+          config_configuracoes_sistema_notificacoes_push: data.notificacoes_push || true,
+          config_configuracoes_sistema_logs_detalhados: data.logs_detalhados || false,
+          config_configuracoes_sistema_updated_at: data.updated_at || new Date().toISOString(),
           // Automation fields
-          ui_auto_agendamento: row.auto_agendamento ?? true,
-          ui_auto_pagamento: row.auto_pagamento ?? false,
+          ui_auto_agendamento: data.auto_agendamento ?? true,
+          ui_auto_pagamento: data.auto_pagamento ?? false,
           // Payment and calendar fields
-          chave_pix: row.chave_pix || null,
-          tipo_agenda_base: (row.tipo_agenda_base || 'conciera') as 'conciera' | 'google',
-          google_calendar_connected: row.google_calendar_connected || false,
-          google_calendar_metadata: (row.google_calendar_metadata || {}) as Record<string, any>
+          chave_pix: data.chave_pix || null,
+          tipo_agenda_base: (data.tipo_agenda_base || 'conciera') as 'conciera' | 'google',
+          google_calendar_connected: data.google_calendar_connected || false,
+          google_calendar_metadata: (data.google_calendar_metadata || {}) as Record<string, any>
         };
 
         setSistema(sistemaData);
-      } else {
-        // Create default configuration if none exists
-        if (empresaId) {
-          await createDefaultSistema(empresaId);
-        }
       }
     } catch (err) {
       console.error('Erro inesperado:', err);

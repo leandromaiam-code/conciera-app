@@ -72,7 +72,7 @@ export const ConfiguracoesView = () => {
   // Database hooks
   const { empresa, loading: empresaLoading, updateEmpresa, saving: empresaSaving } = useCoreEmpresa();
   const { canais, loading: canaisLoading, updateCanal, saving: canaisSaving } = useConfigConfiguracaoCanais();
-  const { sistema, loading: sistemaLoading, updateSistema, saving: sistemaSaving } = useConfigConfiguracoesSistema();
+  const { sistema, loading: sistemaLoading, updateSistema, saving: sistemaSaving } = useConfigConfiguracoesSistema(profile?.empresa_id);
   const {
     instance,
     loading: instanceLoading,
@@ -410,7 +410,8 @@ export const ConfiguracoesView = () => {
                   Configurar
                 </Button>
                 <Switch 
-                  checked={sistema?.ui_auto_agendamento || false} 
+                  checked={sistema?.ui_auto_agendamento || false}
+                  disabled={!sistema || sistemaSaving}
                   onCheckedChange={async (checked) => {
                     if (!sistema) return;
                     try {
@@ -451,7 +452,8 @@ export const ConfiguracoesView = () => {
                   Configurar
                 </Button>
                 <Switch 
-                  checked={sistema?.ui_auto_pagamento || false} 
+                  checked={sistema?.ui_auto_pagamento || false}
+                  disabled={!sistema || sistemaSaving}
                   onCheckedChange={async (checked) => {
                     if (!sistema) return;
                     
