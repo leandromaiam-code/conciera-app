@@ -32,11 +32,17 @@ export const RevenuePerformancePanel = () => {
 
   // Simple sparkline calculation for trend direction
   const sparklineData = metrics.analytics_metricas_mensal_vendas_sparkline_30d;
-  const isPositiveTrend = sparklineData[sparklineData.length - 1] > sparklineData[sparklineData.length - 7];
-  const trendPercentage = Math.abs(
-    ((sparklineData[sparklineData.length - 1] - sparklineData[sparklineData.length - 7]) / 
-    sparklineData[sparklineData.length - 7]) * 100
-  ).toFixed(1);
+  const lastValue = sparklineData[sparklineData.length - 1] || 0;
+  const previousValue = sparklineData[sparklineData.length - 7] || 0;
+  
+  let trendPercentage = "0.0";
+  let isPositiveTrend = true;
+  
+  if (previousValue > 0) {
+    const diff = ((lastValue - previousValue) / previousValue) * 100;
+    trendPercentage = Math.abs(diff).toFixed(1);
+    isPositiveTrend = diff >= 0;
+  }
 
   return (
     <div className="col-span-2 relative overflow-hidden">
@@ -63,13 +69,13 @@ export const RevenuePerformancePanel = () => {
           {/* RPG Principal */}
           <div>
             <div className="text-6xl font-bold text-transparent bg-gradient-to-r from-dourado to-yellow-600 bg-clip-text font-playfair mb-xs">
-              R$ {(metrics.analytics_metricas_mensal_vendas_rpg_mensal / 1000).toFixed(1)}k
+              R$ {(metrics.analytics_metricas_mensal_vendas_rpg_mensal / 1000).toFixed(1).replace('.', ',')}k
             </div>
             <div className="text-sm text-grafite mb-sm">
-              <span className="font-semibold text-dourado">Hoje:</span> R$ {metrics.analytics_metricas_mensal_vendas_rpg_diario.toLocaleString('pt-BR')}
+              <span className="font-semibold text-dourado">Hoje:</span> R$ {Number(metrics.analytics_metricas_mensal_vendas_rpg_diario).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
             <div className="text-xs text-grafite">
-              Valor médio por consulta: R$ {metrics.analytics_metricas_mensal_vendas_valor_medio_consulta}
+              Valor médio por consulta: R$ {Number(metrics.analytics_metricas_mensal_vendas_valor_medio_consulta).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
           </div>
 
