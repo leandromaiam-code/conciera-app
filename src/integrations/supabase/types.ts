@@ -757,6 +757,13 @@ export type Database = {
             foreignKeyName: "config_playbooks_control_conversa_id_fkey"
             columns: ["conversa_id"]
             isOneToOne: false
+            referencedRelation: "v_cliente_id_inconsistencias"
+            referencedColumns: ["conversa_id"]
+          },
+          {
+            foreignKeyName: "config_playbooks_control_conversa_id_fkey"
+            columns: ["conversa_id"]
+            isOneToOne: false
             referencedRelation: "v_conversas_detalhadas"
             referencedColumns: ["id"]
           },
@@ -1078,6 +1085,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "core_conversas"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agendamentos_conversa_id_fkey"
+            columns: ["conversa_id"]
+            isOneToOne: false
+            referencedRelation: "v_cliente_id_inconsistencias"
+            referencedColumns: ["conversa_id"]
           },
           {
             foreignKeyName: "agendamentos_conversa_id_fkey"
@@ -1824,6 +1838,29 @@ export type Database = {
       }
     }
     Views: {
+      v_cliente_id_inconsistencias: {
+        Row: {
+          conversa_cliente_id: number | null
+          conversa_cliente_nome: string | null
+          conversa_cliente_telefone: string | null
+          conversa_criada_em: string | null
+          conversa_id: number | null
+          memoria_cliente_id: number | null
+          memoria_cliente_nome: string | null
+          memoria_cliente_telefone: string | null
+          session_id: string | null
+          total_mensagens: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversas_cliente_id_fkey"
+            columns: ["conversa_cliente_id"]
+            isOneToOne: false
+            referencedRelation: "core_clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_conversas_detalhadas: {
         Row: {
           canal: string | null
@@ -1903,6 +1940,13 @@ export type Database = {
         Returns: boolean
       }
       encrypt_token: { Args: { token: string }; Returns: string }
+      fix_all_cliente_id_inconsistencies: {
+        Args: never
+        Returns: {
+          conversas_corrigidas: number
+          mensagens_corrigidas: number
+        }[]
+      }
       fix_conversas_cliente_zero: { Args: never; Returns: number }
       get_funcionaria_empresa_id: {
         Args: { _funcionaria_id: number }
