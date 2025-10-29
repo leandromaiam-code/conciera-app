@@ -51,10 +51,10 @@ export const useConfigConfiguracoesSistema = (empresaId?: number): UseConfigConf
           config_configuracoes_sistema_notificacoes_push: row.notificacoes_push || true,
           config_configuracoes_sistema_logs_detalhados: row.logs_detalhados || false,
           config_configuracoes_sistema_updated_at: row.updated_at || new Date().toISOString(),
-          // UI derived fields
-          ui_auto_agendamento: true,
-          ui_auto_pagamento: false,
-          // New fields
+          // Automation fields
+          ui_auto_agendamento: row.auto_agendamento ?? true,
+          ui_auto_pagamento: row.auto_pagamento ?? false,
+          // Payment and calendar fields
           chave_pix: row.chave_pix || null,
           tipo_agenda_base: (row.tipo_agenda_base || 'conciera') as 'conciera' | 'google',
           google_calendar_connected: row.google_calendar_connected || false,
@@ -83,7 +83,9 @@ export const useConfigConfiguracoesSistema = (empresaId?: number): UseConfigConf
         backup_automatico: true,
         notificacoes_email: true,
         notificacoes_push: true,
-        logs_detalhados: false
+        logs_detalhados: false,
+        auto_agendamento: true,
+        auto_pagamento: false
       };
 
       const { data, error } = await supabase
@@ -106,10 +108,10 @@ export const useConfigConfiguracoesSistema = (empresaId?: number): UseConfigConf
           config_configuracoes_sistema_notificacoes_push: data.notificacoes_push,
           config_configuracoes_sistema_logs_detalhados: data.logs_detalhados,
           config_configuracoes_sistema_updated_at: data.updated_at,
-          // UI derived fields
-          ui_auto_agendamento: true,
-          ui_auto_pagamento: false,
-          // New fields
+          // Automation fields
+          ui_auto_agendamento: data.auto_agendamento ?? true,
+          ui_auto_pagamento: data.auto_pagamento ?? false,
+          // Payment and calendar fields
           chave_pix: data.chave_pix || null,
           tipo_agenda_base: (data.tipo_agenda_base || 'conciera') as 'conciera' | 'google',
           google_calendar_connected: data.google_calendar_connected || false,

@@ -389,6 +389,8 @@ export type Database = {
       }
       config_configuracoes_sistema: {
         Row: {
+          auto_agendamento: boolean | null
+          auto_pagamento: boolean | null
           backup_automatico: boolean
           chave_pix: string | null
           empresa_id: number
@@ -402,6 +404,8 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          auto_agendamento?: boolean | null
+          auto_pagamento?: boolean | null
           backup_automatico?: boolean
           chave_pix?: string | null
           empresa_id: number
@@ -415,6 +419,8 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          auto_agendamento?: boolean | null
+          auto_pagamento?: boolean | null
           backup_automatico?: boolean
           chave_pix?: string | null
           empresa_id?: number

@@ -87,8 +87,6 @@ export const ConfiguracoesView = () => {
   const [valorMedioConsulta, setValorMedioConsulta] = useState("");
   const [specialistname, setSpecialistName] = useState("");
   const [services, setServices] = useState("");
-  const [autoAgendamento, setAutoAgendamento] = useState(true);
-  const [autoPagamento, setAutoPagamento] = useState(false);
   const [notificacoesPush, setNotificacoesPush] = useState(true);
 
   // Modal states
@@ -111,8 +109,6 @@ export const ConfiguracoesView = () => {
 
   useEffect(() => {
     if (sistema) {
-      setAutoAgendamento(sistema.ui_auto_agendamento);
-      setAutoPagamento(sistema.ui_auto_pagamento);
       setNotificacoesPush(sistema.config_configuracoes_sistema_notificacoes_push);
     }
   }, [sistema]);
@@ -190,8 +186,6 @@ export const ConfiguracoesView = () => {
 
     try {
       await updateSistema({
-        ui_auto_agendamento: autoAgendamento,
-        ui_auto_pagamento: autoPagamento,
         config_configuracoes_sistema_notificacoes_push: notificacoesPush,
       });
 
@@ -209,7 +203,25 @@ export const ConfiguracoesView = () => {
   };
 
   const handleSavePixKey = async (pixKey: string) => {
-    await updateSistema({ chave_pix: pixKey });
+    if (!sistema) return;
+    
+    try {
+      await updateSistema({ 
+        chave_pix: pixKey,
+        ui_auto_pagamento: true 
+      });
+      toast({
+        title: "Sucesso",
+        description: "Chave PIX salva com sucesso!",
+      });
+    } catch (error) {
+      console.error("Erro ao salvar chave PIX:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível salvar a chave PIX",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSaveAgendaType = async (type: 'conciera' | 'google') => {
@@ -389,14 +401,34 @@ export const ConfiguracoesView = () => {
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setAgendaModalOpen(true)}
-                  disabled={!autoAgendamento}
+                  disabled={!sistema?.ui_auto_agendamento}
+                  className="w-[120px]"
                 >
                   <Settings2 className="w-4 h-4 mr-1" />
                   Configurar
                 </Button>
-                <Switch checked={autoAgendamento} onCheckedChange={setAutoAgendamento} />
+                <Switch 
+                  checked={sistema?.ui_auto_agendamento || false} 
+                  onCheckedChange={async (checked) => {
+                    if (!sistema) return;
+                    try {
+                      await updateSistema({ ui_auto_agendamento: checked });
+                      toast({
+                        title: "Sucesso",
+                        description: `Auto-agendamento ${checked ? 'ativado' : 'desativado'}`,
+                      });
+                    } catch (error) {
+                      console.error("Erro ao atualizar auto-agendamento:", error);
+                      toast({
+                        title: "Erro",
+                        description: "Não foi possível atualizar a configuração",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                />
               </div>
             </div>
 
@@ -410,14 +442,41 @@ export const ConfiguracoesView = () => {
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setPixModalOpen(true)}
-                  disabled={!autoPagamento}
+                  disabled={!sistema?.ui_auto_pagamento}
+                  className="w-[120px]"
                 >
                   <Settings2 className="w-4 h-4 mr-1" />
-                  Configurar PIX
+                  Configurar
                 </Button>
-                <Switch checked={autoPagamento} onCheckedChange={setAutoPagamento} />
+                <Switch 
+                  checked={sistema?.ui_auto_pagamento || false} 
+                  onCheckedChange={async (checked) => {
+                    if (!sistema) return;
+                    
+                    // Se ativar, verificar se tem chave PIX
+                    if (checked && !sistema.chave_pix) {
+                      setPixModalOpen(true);
+                      return;
+                    }
+                    
+                    try {
+                      await updateSistema({ ui_auto_pagamento: checked });
+                      toast({
+                        title: "Sucesso",
+                        description: `Cobrança automática ${checked ? 'ativada' : 'desativada'}`,
+                      });
+                    } catch (error) {
+                      console.error("Erro ao atualizar cobrança automática:", error);
+                      toast({
+                        title: "Erro",
+                        description: "Não foi possível atualizar a configuração",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                />
               </div>
             </div>
 
