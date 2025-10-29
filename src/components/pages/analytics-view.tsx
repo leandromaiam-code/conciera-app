@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { KPICard } from "@/components/dashboard/kpi-card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
 import { TrendingUp, MessageSquare, DollarSign } from "lucide-react";
 import { useAnalyticsOverview } from "@/hooks/use-analytics-overview";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -83,22 +83,34 @@ export const AnalyticsView = () => {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={analytics.monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                    padding: '12px'
+                  }}
+                  labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
+                />
                 <Line 
                   type="monotone" 
                   dataKey="leads" 
-                  stroke="#8884d8" 
-                  strokeWidth={2}
+                  stroke="#6366f1" 
+                  strokeWidth={3}
+                  dot={{ fill: '#6366f1', r: 4 }}
+                  activeDot={{ r: 6 }}
                   name="Leads"
                 />
                 <Line 
                   type="monotone" 
                   dataKey="agendamentos" 
                   stroke="#D4AF37" 
-                  strokeWidth={2}
+                  strokeWidth={3}
+                  dot={{ fill: '#D4AF37', r: 4 }}
+                  activeDot={{ r: 6 }}
                   name="Agendamentos"
                 />
               </LineChart>
@@ -119,11 +131,10 @@ export const AnalyticsView = () => {
               <PieChart>
                 <Pie
                   data={analytics.channelData}
-                  cx="50%"
+                  cx="40%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
+                  outerRadius={90}
                   fill="#8884d8"
                   dataKey="value"
                 >
@@ -131,7 +142,26 @@ export const AnalyticsView = () => {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip 
+                  formatter={(value: any) => `${value} leads`}
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                    padding: '12px'
+                  }}
+                />
+                <Legend 
+                  layout="vertical"
+                  verticalAlign="middle"
+                  align="right"
+                  iconType="circle"
+                  formatter={(value, entry: any) => {
+                    const total = analytics.channelData.reduce((sum, item) => sum + item.value, 0);
+                    const percent = ((entry.payload.value / total) * 100).toFixed(0);
+                    return `${value} (${percent}%)`;
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -147,17 +177,29 @@ export const AnalyticsView = () => {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={analytics.procedureData}>
-                <CartesianGrid strokeDasharray="3 3" />
+              <BarChart 
+                data={analytics.procedureData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis dataKey="procedimento" />
                 <YAxis />
                 <Tooltip 
-                  formatter={(value: any, name: string) => [
-                    name === 'receita' ? `R$ ${value.toLocaleString()}` : value,
-                    name === 'receita' ? 'Receita' : 'Quantidade'
-                  ]}
+                  formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR')}`, 'Receita']}
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                    padding: '12px'
+                  }}
+                  labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
                 />
-                <Bar dataKey="receita" fill="#D4AF37" />
+                <Bar 
+                  dataKey="receita" 
+                  fill="#D4AF37" 
+                  maxBarSize={100}
+                  radius={[8, 8, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
