@@ -78,7 +78,7 @@ export const AgendaConfigDialog = ({
               <Label htmlFor="conciera" className="flex-1 cursor-pointer">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-primary" />
-                  <span className="font-medium">Agenda Conciera</span>
+                  <span className="font-medium text-foreground">Agenda Conciera</span>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   Use a agenda nativa do Conciera
@@ -87,15 +87,20 @@ export const AgendaConfigDialog = ({
             </div>
 
             <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors">
-              <RadioGroupItem value="google" id="google" disabled={!isGoogleConnected} />
+              <RadioGroupItem value="google" id="google" />
               <Label htmlFor="google" className="flex-1 cursor-pointer">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-blue-600" />
-                  <span className="font-medium">Google Calendar</span>
+                  <span className="font-medium text-foreground">Google Calendar</span>
                   {isGoogleConnected && (
                     <Badge variant="outline" className="ml-auto">
                       <Check className="w-3 h-3 mr-1" />
                       Conectado
+                    </Badge>
+                  )}
+                  {!isGoogleConnected && (
+                    <Badge variant="secondary" className="ml-auto">
+                      Não conectado
                     </Badge>
                   )}
                 </div>

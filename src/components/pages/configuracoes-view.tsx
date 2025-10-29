@@ -381,44 +381,42 @@ export const ConfiguracoesView = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className={`flex ${isMobile ? "flex-col gap-3" : "items-center justify-between"}`}>
               <div className="flex-1">
                 <Label className="text-base">Auto-agendamento</Label>
                 <p className="text-sm text-grafite">Permitir que a IA agende consultas automaticamente</p>
               </div>
               <div className="flex items-center gap-2">
-                {autoAgendamento && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setAgendaModalOpen(true)}
-                  >
-                    <Settings2 className="w-4 h-4 mr-1" />
-                    Configurar
-                  </Button>
-                )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setAgendaModalOpen(true)}
+                  disabled={!autoAgendamento}
+                >
+                  <Settings2 className="w-4 h-4 mr-1" />
+                  Configurar
+                </Button>
                 <Switch checked={autoAgendamento} onCheckedChange={setAutoAgendamento} />
               </div>
             </div>
 
             <Separator />
 
-            <div className="flex items-center justify-between">
+            <div className={`flex ${isMobile ? "flex-col gap-3" : "items-center justify-between"}`}>
               <div className="flex-1">
                 <Label className="text-base">Cobrança Automática</Label>
                 <p className="text-sm text-grafite">Permitir que a IA receba e confirme pagamentos</p>
               </div>
               <div className="flex items-center gap-2">
-                {autoPagamento && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setPixModalOpen(true)}
-                  >
-                    <Settings2 className="w-4 h-4 mr-1" />
-                    Configurar PIX
-                  </Button>
-                )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setPixModalOpen(true)}
+                  disabled={!autoPagamento}
+                >
+                  <Settings2 className="w-4 h-4 mr-1" />
+                  Configurar PIX
+                </Button>
                 <Switch checked={autoPagamento} onCheckedChange={setAutoPagamento} />
               </div>
             </div>
