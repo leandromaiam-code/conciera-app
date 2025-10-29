@@ -71,9 +71,6 @@ export interface VConversasDetalhadas {
   v_conversas_detalhadas_empresa_nome: string;
   v_conversas_detalhadas_contagem_mensagens: number;
   v_conversas_detalhadas_created_at: string;
-  // UI derived fields
-  ui_temperatura_lead?: 1 | 2 | 3;
-  ui_servico_desejado?: string;
 }
 
 // Config Script Vendas (Playbooks) table

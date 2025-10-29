@@ -69,10 +69,7 @@ export const useVConversasDetalhadas = (
         v_conversas_detalhadas_funcionaria_nome: row.funcionaria_nome || '',
         v_conversas_detalhadas_empresa_nome: row.empresa_nome || '',
         v_conversas_detalhadas_contagem_mensagens: row.contagem_mensagens || 0,
-        v_conversas_detalhadas_created_at: row.created_at || '',
-        // UI fields - could be derived from other data or set as defaults
-        ui_temperatura_lead: 2, // Default temperature
-        ui_servico_desejado: 'Consulta' // Default service
+        v_conversas_detalhadas_created_at: row.created_at || ''
       }));
 
       setConversas(transformedConversas);

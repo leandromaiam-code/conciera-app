@@ -23,26 +23,14 @@ const getChannelIcon = (canal: string) => {
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'novo': return 'bg-esmeralda text-white';
+    case 'ativa': return 'bg-esmeralda text-white';
     case 'em-andamento': return 'bg-dourado text-onyx';
-    case 'aguardando': return 'bg-blue-500 text-white';
-    case 'finalizada': return 'bg-red-500 text-white';
-    default: return 'bg-gray-500 text-white';
+    case 'inativa': return 'bg-cinza-claro text-onyx';
+    case 'finalizada': return 'bg-grafite text-white';
+    case 'arquivado': return 'bg-gray-400 text-white';
+    default: return 'bg-cinza-claro text-onyx';
   }
 };
-
-const TemperatureIndicator = ({ ui_temperatura_lead }: { ui_temperatura_lead: 1 | 2 | 3 }) => (
-  <div className="flex gap-1">
-    {[1, 2, 3].map(level => (
-      <div
-        key={level}
-        className={`w-2 h-2 rounded-full ${
-          level <= ui_temperatura_lead ? 'bg-dourado' : 'bg-cinza-claro'
-        }`}
-      />
-    ))}
-  </div>
-);
 
 export const ConversasView = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -151,10 +139,11 @@ export const ConversasView = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="todos">Todos os Status</SelectItem>
-                <SelectItem value="novo">Novo</SelectItem>
+                <SelectItem value="ativa">Ativa</SelectItem>
                 <SelectItem value="em-andamento">Em Andamento</SelectItem>
-                <SelectItem value="aguardando">Aguardando</SelectItem>
+                <SelectItem value="inativa">Inativa</SelectItem>
                 <SelectItem value="finalizada">Finalizada</SelectItem>
+                <SelectItem value="arquivado">Arquivado</SelectItem>
               </SelectContent>
             </Select>
 
@@ -191,7 +180,7 @@ export const ConversasView = () => {
 
                     {/* Conversation Info */}
                     <div className="space-y-2 flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                         <div className="flex items-center gap-2">
                           <h3 className="font-semibold text-onyx text-sm sm:text-base">{conversa.v_conversas_detalhadas_nome_completo}</h3>
                           {!conversa.v_conversas_detalhadas_cliente_id && (
@@ -200,21 +189,10 @@ export const ConversasView = () => {
                             </Badge>
                           )}
                         </div>
-                        <div className="flex items-center gap-2">
-                          {conversa.ui_temperatura_lead && (
-                            <TemperatureIndicator ui_temperatura_lead={conversa.ui_temperatura_lead} />
-                          )}
-                          <Badge className={`${getStatusColor(conversa.v_conversas_detalhadas_status)} text-xs`}>
-                            {conversa.v_conversas_detalhadas_status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                          </Badge>
-                        </div>
+                        <Badge className={`${getStatusColor(conversa.v_conversas_detalhadas_status)} text-xs`}>
+                          {conversa.v_conversas_detalhadas_status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </Badge>
                       </div>
-
-                      {conversa.ui_servico_desejado && (
-                        <p className="text-dourado font-medium text-xs sm:text-sm">
-                          Interesse: {conversa.ui_servico_desejado}
-                        </p>
-                      )}
 
                       <p className="text-grafite text-xs sm:text-sm line-clamp-2">
                         {conversa.v_conversas_detalhadas_ultima_mensagem_preview}

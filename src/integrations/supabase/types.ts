@@ -1913,6 +1913,7 @@ export type Database = {
       }
     }
     Functions: {
+      atualizar_status_conversas_inativas: { Args: never; Returns: undefined }
       calcular_metricas_conversas:
         | {
             Args: {
