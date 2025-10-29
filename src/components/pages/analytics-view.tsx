@@ -27,6 +27,9 @@ export const AnalyticsView = () => {
 
   if (!analytics) return null;
 
+  // Ordenar channelData do maior para o menor
+  const sortedChannelData = [...analytics.channelData].sort((a, b) => b.value - a.value);
+
   return (
     <div className="space-y-6">
 
@@ -51,7 +54,7 @@ export const AnalyticsView = () => {
           }}
         />
         <KPICard
-          title="Receita Total"
+          title="Oportunidades Geradas"
           subtitle="Faturamento do mês"
           value={`R$ ${(analytics.receitaTotal / 1000).toFixed(0)}K`}
           trend={{ 
@@ -130,7 +133,7 @@ export const AnalyticsView = () => {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={analytics.channelData}
+                  data={sortedChannelData}
                   cx="40%"
                   cy="50%"
                   labelLine={false}
@@ -138,7 +141,7 @@ export const AnalyticsView = () => {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {analytics.channelData.map((entry, index) => (
+                  {sortedChannelData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -156,10 +159,11 @@ export const AnalyticsView = () => {
                   verticalAlign="middle"
                   align="right"
                   iconType="circle"
+                  wrapperStyle={{ color: '#000000' }}
                   formatter={(value, entry: any) => {
-                    const total = analytics.channelData.reduce((sum, item) => sum + item.value, 0);
+                    const total = sortedChannelData.reduce((sum, item) => sum + item.value, 0);
                     const percent = ((entry.payload.value / total) * 100).toFixed(0);
-                    return `${value} (${percent}%)`;
+                    return <span style={{ color: '#000000' }}>{`${value} (${percent}%)`}</span>;
                   }}
                 />
               </PieChart>
@@ -172,7 +176,7 @@ export const AnalyticsView = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <DollarSign className="w-5 h-5" />
-              Receita por Procedimento
+              Oportunidades por Procedimento
             </CardTitle>
           </CardHeader>
           <CardContent>
