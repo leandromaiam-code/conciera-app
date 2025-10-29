@@ -542,10 +542,10 @@ export const ConfiguracoesView = () => {
           <div className="flex items-center justify-between p-4 bg-dourado/10 rounded-lg">
             <div>
               <h3 className="font-semibold text-onyx">Plano Conciera Pro</h3>
-              <p className="text-sm text-grafite">Sistema de Receita Recorrente = Conversas ilimitadas • IA avançada • Suporte</p>
+              <p className="text-sm text-grafite">Sistema de Receita Recorrente - Conversas ilimitadas • IA avançada • Suporte</p>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold text-dourado">R$ 2497</p>
+              <p className="text-2xl font-bold text-dourado">R$ 2.497</p>
               <p className="text-sm text-grafite">/mês</p>
             </div>
           </div>
