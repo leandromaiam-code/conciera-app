@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign, Globe } from "lucide-react";
+import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign, Globe, Settings2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCoreEmpresa } from "@/hooks/use-core-empresa";
 import { useConfigConfiguracaoCanais } from "@/hooks/use-config-configuracoes-canais";
@@ -17,6 +17,8 @@ import { useUserProfile } from "@/hooks/use-user-profile";
 import { WhatsAppConnectDialog } from "@/components/channels/whatsapp-connect-dialog";
 import { InstagramConnectDialog } from "@/components/channels/instagram-connect-dialog";
 import { ScriptGenerationDialog } from "@/components/configuracoes/script-generation-dialog";
+import { PixConfigDialogDialog } from "@/components/configuracoes/pix-config-dialog";
+import { AgendaConfigDialog } from "@/components/configuracoes/agenda-config-dialog";
 
 interface ChannelConfig {
   id: string;
@@ -93,6 +95,8 @@ export const ConfiguracoesView = () => {
   const [whatsappOpen, setWhatsappOpen] = useState(false);
   const [instagramOpen, setInstagramOpen] = useState(false);
   const [scriptModalOpen, setScriptModalOpen] = useState(false);
+  const [pixModalOpen, setPixModalOpen] = useState(false);
+  const [agendaModalOpen, setAgendaModalOpen] = useState(false);
 
   // Update local state when database data loads
   useEffect(() => {
@@ -202,6 +206,24 @@ export const ConfiguracoesView = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleSavePixKey = async (pixKey: string) => {
+    await updateSistema({ chave_pix: pixKey });
+  };
+
+  const handleSaveAgendaType = async (type: 'conciera' | 'google') => {
+    await updateSistema({ tipo_agenda_base: type });
+  };
+
+  const handleGoogleCalendarConnect = () => {
+    // Redirecionar para o OAuth do Google Calendar
+    const clientId = 'YOUR_GOOGLE_CLIENT_ID'; // TODO: Adicionar client ID via secret
+    const redirectUri = `${window.location.origin}/google-calendar/callback`;
+    const scope = 'https://www.googleapis.com/auth/calendar';
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline`;
+    
+    window.location.href = authUrl;
   };
 
   if (empresaLoading || canaisLoading || sistemaLoading || instanceLoading) {
@@ -360,21 +382,45 @@ export const ConfiguracoesView = () => {
         <CardContent className="space-y-4">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <div>
+              <div className="flex-1">
                 <Label className="text-base">Auto-agendamento</Label>
                 <p className="text-sm text-grafite">Permitir que a IA agende consultas automaticamente</p>
               </div>
-              <Switch checked={autoAgendamento} onCheckedChange={setAutoAgendamento} />
+              <div className="flex items-center gap-2">
+                {autoAgendamento && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setAgendaModalOpen(true)}
+                  >
+                    <Settings2 className="w-4 h-4 mr-1" />
+                    Configurar
+                  </Button>
+                )}
+                <Switch checked={autoAgendamento} onCheckedChange={setAutoAgendamento} />
+              </div>
             </div>
 
             <Separator />
 
             <div className="flex items-center justify-between">
-              <div>
+              <div className="flex-1">
                 <Label className="text-base">Cobrança Automática</Label>
                 <p className="text-sm text-grafite">Permitir que a IA receba e confirme pagamentos</p>
               </div>
-              <Switch checked={autoPagamento} onCheckedChange={setAutoPagamento} />
+              <div className="flex items-center gap-2">
+                {autoPagamento && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setPixModalOpen(true)}
+                  >
+                    <Settings2 className="w-4 h-4 mr-1" />
+                    Configurar PIX
+                  </Button>
+                )}
+                <Switch checked={autoPagamento} onCheckedChange={setAutoPagamento} />
+              </div>
             </div>
 
             <Separator />
@@ -469,6 +515,22 @@ export const ConfiguracoesView = () => {
         onClose={() => setScriptModalOpen(false)}
         empresaId={profile?.empresa_id}
         funcionariaId={1}
+      />
+
+      <PixConfigDialogDialog
+        isOpen={pixModalOpen}
+        onClose={() => setPixModalOpen(false)}
+        currentPixKey={sistema?.chave_pix || ""}
+        onSave={handleSavePixKey}
+      />
+
+      <AgendaConfigDialog
+        isOpen={agendaModalOpen}
+        onClose={() => setAgendaModalOpen(false)}
+        currentType={sistema?.tipo_agenda_base || 'conciera'}
+        isGoogleConnected={sistema?.google_calendar_connected || false}
+        onSave={handleSaveAgendaType}
+        onGoogleConnect={handleGoogleCalendarConnect}
       />
     </div>
   );

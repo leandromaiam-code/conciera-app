@@ -390,29 +390,41 @@ export type Database = {
       config_configuracoes_sistema: {
         Row: {
           backup_automatico: boolean
+          chave_pix: string | null
           empresa_id: number
+          google_calendar_connected: boolean | null
+          google_calendar_metadata: Json | null
           id: number
           logs_detalhados: boolean
           notificacoes_email: boolean
           notificacoes_push: boolean
+          tipo_agenda_base: string | null
           updated_at: string | null
         }
         Insert: {
           backup_automatico?: boolean
+          chave_pix?: string | null
           empresa_id: number
+          google_calendar_connected?: boolean | null
+          google_calendar_metadata?: Json | null
           id?: number
           logs_detalhados?: boolean
           notificacoes_email?: boolean
           notificacoes_push?: boolean
+          tipo_agenda_base?: string | null
           updated_at?: string | null
         }
         Update: {
           backup_automatico?: boolean
+          chave_pix?: string | null
           empresa_id?: number
+          google_calendar_connected?: boolean | null
+          google_calendar_metadata?: Json | null
           id?: number
           logs_detalhados?: boolean
           notificacoes_email?: boolean
           notificacoes_push?: boolean
+          tipo_agenda_base?: string | null
           updated_at?: string | null
         }
         Relationships: [

@@ -53,7 +53,12 @@ export const useConfigConfiguracoesSistema = (empresaId?: number): UseConfigConf
           config_configuracoes_sistema_updated_at: row.updated_at || new Date().toISOString(),
           // UI derived fields
           ui_auto_agendamento: true,
-          ui_auto_pagamento: false
+          ui_auto_pagamento: false,
+          // New fields
+          chave_pix: row.chave_pix || null,
+          tipo_agenda_base: (row.tipo_agenda_base || 'conciera') as 'conciera' | 'google',
+          google_calendar_connected: row.google_calendar_connected || false,
+          google_calendar_metadata: (row.google_calendar_metadata || {}) as Record<string, any>
         };
 
         setSistema(sistemaData);
@@ -103,7 +108,12 @@ export const useConfigConfiguracoesSistema = (empresaId?: number): UseConfigConf
           config_configuracoes_sistema_updated_at: data.updated_at,
           // UI derived fields
           ui_auto_agendamento: true,
-          ui_auto_pagamento: false
+          ui_auto_pagamento: false,
+          // New fields
+          chave_pix: data.chave_pix || null,
+          tipo_agenda_base: (data.tipo_agenda_base || 'conciera') as 'conciera' | 'google',
+          google_calendar_connected: data.google_calendar_connected || false,
+          google_calendar_metadata: (data.google_calendar_metadata || {}) as Record<string, any>
         };
         setSistema(sistemaData);
       }

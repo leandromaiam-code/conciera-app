@@ -6,6 +6,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import { Auth } from "./pages/Auth";
 import { InstagramCallback } from "./pages/InstagramCallback";
+import GoogleCalendarCallback from "./pages/GoogleCalendarCallback";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ const App = () => (
       <Routes>
         <Route path="/auth" element={<Auth />} />
         <Route path="/instagram/callback" element={<InstagramCallback />} />
+        <Route path="/google-calendar/callback" element={<GoogleCalendarCallback />} />
         <Route path="/" element={
           <ProtectedRoute>
             <Index />

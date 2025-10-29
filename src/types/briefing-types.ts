@@ -147,6 +147,12 @@ export interface ConfigConfiguracoesSistema {
   // UI derived fields
   ui_auto_agendamento: boolean;
   ui_auto_pagamento: boolean;
+  // Payment fields
+  chave_pix?: string | null;
+  // Calendar fields
+  tipo_agenda_base?: 'conciera' | 'google';
+  google_calendar_connected?: boolean;
+  google_calendar_metadata?: Record<string, any>;
 }
 
 // Legacy interfaces for backward compatibility (will be removed gradually)
