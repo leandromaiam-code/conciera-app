@@ -72,7 +72,7 @@ export const RevenuePerformancePanel = () => {
               R$ {(metrics.analytics_metricas_mensal_vendas_rpg_mensal / 1000).toFixed(1).replace('.', ',')}k
             </div>
             <div className="text-sm text-grafite mb-sm">
-              <span className="font-semibold text-dourado">Hoje:</span> R$ {Number(metrics.analytics_metricas_mensal_vendas_rpg_diario).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <span className="font-semibold text-dourado">Hoje:</span> {metrics.novosLeadsHoje || 0} oportunidades
             </div>
             <div className="text-xs text-grafite">
               Valor médio por consulta: R$ {Number(metrics.analytics_metricas_mensal_vendas_valor_medio_consulta).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
