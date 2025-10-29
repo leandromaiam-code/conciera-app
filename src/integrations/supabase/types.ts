@@ -1914,6 +1914,14 @@ export type Database = {
     }
     Functions: {
       atualizar_status_conversas_inativas: { Args: never; Returns: undefined }
+      calcular_analytics_procedimentos_empresa: {
+        Args: { p_ano_mes: string; p_empresa_id: number }
+        Returns: undefined
+      }
+      calcular_analytics_vendas_empresa: {
+        Args: { p_ano_mes: string; p_empresa_id: number }
+        Returns: undefined
+      }
       calcular_metricas_conversas:
         | {
             Args: {
