@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,10 +9,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTasks, useCreateTask, useUpdateTask, useDeleteTask, Task } from "@/hooks/use-core-tasks";
 import { useUserProfile } from "@/hooks/use-user-profile";
 import { LayoutList, LayoutGrid, Plus, Pencil, Trash2, User, Phone } from "lucide-react";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const CATEGORIAS = ["agendamento", "pagamento", "prospeccao", "duvida", "melhorias", "outros"];
 const STATUS_OPTIONS = ["a_fazer", "em_andamento", "concluida", "cancelada"];
@@ -126,6 +129,23 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
     acc[status] = tasks.filter(task => task.status === status);
     return acc;
   }, {} as Record<string, Task[]>);
+
+  const handleDragEnd = async (result: DropResult) => {
+    if (!result.destination) return;
+    
+    const { source, destination, draggableId } = result;
+    
+    // Se mudou de coluna (status)
+    if (source.droppableId !== destination.droppableId) {
+      const taskId = parseInt(draggableId);
+      const newStatus = destination.droppableId;
+      
+      await updateTask.mutateAsync({
+        id: taskId,
+        status: newStatus
+      });
+    }
+  };
 
   if (isLoading) {
     return <div className="p-6">Carregando tasks...</div>;
@@ -326,63 +346,98 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
           </div>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 max-h-[calc(100vh-300px)] lg:max-h-none overflow-y-auto lg:overflow-visible">
-          {STATUS_OPTIONS.map((status) => (
-            <div key={status} className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold capitalize">{status.replace("_", " ")}</h3>
-                <Badge variant="secondary">{tasksByStatus[status].length}</Badge>
-              </div>
-              <div className="space-y-2">
-                {tasksByStatus[status].map((task) => (
-                  <Card key={task.id} className="p-4 space-y-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-medium text-sm">{task.titulo}</h4>
-                      <Badge variant="secondary" className={getPrioridadeColor(task.prioridade)}>
-                        {task.prioridade}
-                      </Badge>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <div className="flex gap-4 overflow-x-auto pb-4">
+            {STATUS_OPTIONS.map((status) => (
+              <Droppable droppableId={status} key={status}>
+                {(provided, snapshot) => (
+                  <div
+                    className={cn(
+                      "flex-shrink-0 w-80 flex flex-col rounded-lg transition-colors",
+                      snapshot.isDraggingOver && "bg-accent/50"
+                    )}
+                  >
+                    <div className="mb-3 flex items-center justify-between px-1">
+                      <h3 className="font-semibold capitalize">{status.replace("_", " ")}</h3>
+                      <Badge variant="secondary">{tasksByStatus[status].length}</Badge>
                     </div>
-                    {task.descricao && (
-                      <p className="text-xs text-muted-foreground line-clamp-2">{task.descricao}</p>
-                    )}
-                    <Badge variant="secondary" className={getCategoriaColor(task.categoria)}>
-                      {task.categoria}
-                    </Badge>
-                    {task.cliente_nome && (
-                      <div className="space-y-1 text-xs">
-                        <div className="flex items-center gap-1">
-                          <User className="w-3 h-3" />
-                          {task.cliente_nome}
-                        </div>
-                        <Button
-                          variant="link"
-                          size="sm"
-                          className="p-0 h-auto text-xs"
-                          onClick={() => task.cliente_id && handleViewConversas(task.cliente_id)}
-                        >
-                          Ver conversas
-                        </Button>
+                    
+                    <ScrollArea className="flex-1 max-h-[calc(100vh-300px)]">
+                      <div 
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className="space-y-2 pr-4"
+                      >
+                        {tasksByStatus[status].map((task, index) => (
+                          <Draggable 
+                            key={task.id} 
+                            draggableId={task.id.toString()} 
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <Card 
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={cn(
+                                  "p-4 space-y-2 cursor-grab active:cursor-grabbing transition-all",
+                                  snapshot.isDragging && "shadow-lg rotate-2 opacity-80"
+                                )}
+                              >
+                                <div className="flex items-start justify-between gap-2">
+                                  <h4 className="font-medium text-sm">{task.titulo}</h4>
+                                  <Badge variant="secondary" className={getPrioridadeColor(task.prioridade)}>
+                                    {task.prioridade}
+                                  </Badge>
+                                </div>
+                                {task.descricao && (
+                                  <p className="text-xs text-muted-foreground line-clamp-2">{task.descricao}</p>
+                                )}
+                                <Badge variant="secondary" className={getCategoriaColor(task.categoria)}>
+                                  {task.categoria}
+                                </Badge>
+                                {task.cliente_nome && (
+                                  <div className="space-y-1 text-xs">
+                                    <div className="flex items-center gap-1">
+                                      <User className="w-3 h-3" />
+                                      {task.cliente_nome}
+                                    </div>
+                                    <Button
+                                      variant="link"
+                                      size="sm"
+                                      className="p-0 h-auto text-xs"
+                                      onClick={() => task.cliente_id && handleViewConversas(task.cliente_id)}
+                                    >
+                                      Ver conversas
+                                    </Button>
+                                  </div>
+                                )}
+                                {task.prazo && (
+                                  <div className="text-xs text-muted-foreground">
+                                    {format(new Date(task.prazo), "dd/MM HH:mm")}
+                                  </div>
+                                )}
+                                <div className="flex gap-2">
+                                  <Button variant="ghost" size="sm" onClick={() => handleEdit(task)}>
+                                    <Pencil className="w-3 h-3" />
+                                  </Button>
+                                  <Button variant="ghost" size="sm" onClick={() => handleDelete(task.id)}>
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              </Card>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
                       </div>
-                    )}
-                    {task.prazo && (
-                      <div className="text-xs text-muted-foreground">
-                        {format(new Date(task.prazo), "dd/MM HH:mm")}
-                      </div>
-                    )}
-                    <div className="flex gap-2">
-                      <Button variant="ghost" size="sm" onClick={() => handleEdit(task)}>
-                        <Pencil className="w-3 h-3" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDelete(task.id)}>
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+                    </ScrollArea>
+                  </div>
+                )}
+              </Droppable>
+            ))}
+          </div>
+        </DragDropContext>
       )}
     </div>
   );
