@@ -20,6 +20,10 @@ const CATEGORIAS = ["agendamento", "pagamento", "prospeccao", "duvida", "melhori
 const STATUS_OPTIONS = ["a_fazer", "em_andamento", "concluida", "cancelada"];
 const PRIORIDADES = ["baixa", "media", "alta", "urgente"];
 
+const capitalize = (text: string) => {
+  return text.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+};
+
 const getCategoriaColor = (categoria: string) => {
   const colors: Record<string, string> = {
     agendamento: "bg-blue-500/10 text-blue-500",
@@ -131,19 +135,24 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
   }, {} as Record<string, Task[]>);
 
   const handleDragEnd = async (result: DropResult) => {
-    if (!result.destination) return;
-    
     const { source, destination, draggableId } = result;
     
-    // Se mudou de coluna (status)
-    if (source.droppableId !== destination.droppableId) {
-      const taskId = parseInt(draggableId);
-      const newStatus = destination.droppableId;
-      
+    // Se não há destino, cancela
+    if (!destination) return;
+    
+    // Se não mudou de coluna, não faz nada
+    if (source.droppableId === destination.droppableId) return;
+    
+    const taskId = parseInt(draggableId);
+    const newStatus = destination.droppableId;
+    
+    try {
       await updateTask.mutateAsync({
         id: taskId,
         status: newStatus
       });
+    } catch (error) {
+      console.error("Erro ao atualizar status da task:", error);
     }
   };
 
@@ -213,7 +222,7 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
                     </SelectTrigger>
                     <SelectContent>
                       {CATEGORIAS.map(cat => (
-                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        <SelectItem key={cat} value={cat}>{capitalize(cat)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -226,7 +235,7 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
                     </SelectTrigger>
                     <SelectContent>
                       {STATUS_OPTIONS.map(st => (
-                        <SelectItem key={st} value={st}>{st.replace("_", " ")}</SelectItem>
+                        <SelectItem key={st} value={st}>{capitalize(st)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -241,7 +250,7 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
                     </SelectTrigger>
                     <SelectContent>
                       {PRIORIDADES.map(pri => (
-                        <SelectItem key={pri} value={pri}>{pri}</SelectItem>
+                        <SelectItem key={pri} value={pri}>{capitalize(pri)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -289,17 +298,17 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
                   <TableCell className="font-medium">{task.titulo}</TableCell>
                   <TableCell>
                     <Badge variant="secondary" className={getCategoriaColor(task.categoria)}>
-                      {task.categoria}
+                      {capitalize(task.categoria)}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary" className={getStatusColor(task.status)}>
-                      {task.status.replace("_", " ")}
+                      {capitalize(task.status)}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary" className={getPrioridadeColor(task.prioridade)}>
-                      {task.prioridade}
+                      {capitalize(task.prioridade)}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -353,21 +362,20 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
                 {(provided, snapshot) => (
                   <div
                     className={cn(
-                      "flex-shrink-0 w-80 flex flex-col rounded-lg transition-colors",
+                      "flex-shrink-0 w-80 flex flex-col rounded-lg transition-colors p-2",
                       snapshot.isDraggingOver && "bg-accent/50"
                     )}
                   >
                     <div className="mb-3 flex items-center justify-between px-1">
-                      <h3 className="font-semibold capitalize">{status.replace("_", " ")}</h3>
+                      <h3 className="font-semibold">{capitalize(status)}</h3>
                       <Badge variant="secondary">{tasksByStatus[status].length}</Badge>
                     </div>
                     
-                    <ScrollArea className="flex-1 max-h-[calc(100vh-300px)]">
-                      <div 
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className="space-y-2 pr-4"
-                      >
+                    <div 
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="space-y-2 flex-1 min-h-[200px]"
+                    >
                         {tasksByStatus[status].map((task, index) => (
                           <Draggable 
                             key={task.id} 
@@ -387,14 +395,14 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
                                 <div className="flex items-start justify-between gap-2">
                                   <h4 className="font-medium text-sm">{task.titulo}</h4>
                                   <Badge variant="secondary" className={getPrioridadeColor(task.prioridade)}>
-                                    {task.prioridade}
+                                    {capitalize(task.prioridade)}
                                   </Badge>
                                 </div>
                                 {task.descricao && (
                                   <p className="text-xs text-muted-foreground line-clamp-2">{task.descricao}</p>
                                 )}
                                 <Badge variant="secondary" className={getCategoriaColor(task.categoria)}>
-                                  {task.categoria}
+                                  {capitalize(task.categoria)}
                                 </Badge>
                                 {task.cliente_nome && (
                                   <div className="space-y-1 text-xs">
@@ -431,7 +439,6 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
                         ))}
                         {provided.placeholder}
                       </div>
-                    </ScrollArea>
                   </div>
                 )}
               </Droppable>
