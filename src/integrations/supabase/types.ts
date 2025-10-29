@@ -1269,7 +1269,7 @@ export type Database = {
       core_conversas: {
         Row: {
           canal: string
-          cliente_id: number
+          cliente_id: number | null
           contagem_mensagens: number
           created_at: string | null
           funcionaria_id: number
@@ -1281,7 +1281,7 @@ export type Database = {
         }
         Insert: {
           canal: string
-          cliente_id: number
+          cliente_id?: number | null
           contagem_mensagens?: number
           created_at?: string | null
           funcionaria_id: number
@@ -1293,7 +1293,7 @@ export type Database = {
         }
         Update: {
           canal?: string
-          cliente_id?: number
+          cliente_id?: number | null
           contagem_mensagens?: number
           created_at?: string | null
           funcionaria_id?: number
@@ -1933,6 +1933,14 @@ export type Database = {
       calcular_rpg_mensal: {
         Args: { ano_mes_param: string; empresa_id_param: number }
         Returns: number
+      }
+      create_missing_conversas: {
+        Args: never
+        Returns: {
+          mensagens_contadas: number
+          session_id_criado: string
+          telefone: string
+        }[]
       }
       decrypt_token: { Args: { encrypted_token: string }; Returns: string }
       disconnect_user_connection: {

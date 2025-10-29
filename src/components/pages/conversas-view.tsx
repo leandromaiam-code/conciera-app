@@ -192,7 +192,14 @@ export const ConversasView = () => {
                     {/* Conversation Info */}
                     <div className="space-y-2 flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                        <h3 className="font-semibold text-onyx text-sm sm:text-base">{conversa.v_conversas_detalhadas_nome_completo}</h3>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-onyx text-sm sm:text-base">{conversa.v_conversas_detalhadas_nome_completo}</h3>
+                          {!conversa.v_conversas_detalhadas_cliente_id && (
+                            <Badge variant="outline" className="text-xs">
+                              Não cadastrado
+                            </Badge>
+                          )}
+                        </div>
                         <div className="flex items-center gap-2">
                           {conversa.ui_temperatura_lead && (
                             <TemperatureIndicator ui_temperatura_lead={conversa.ui_temperatura_lead} />
@@ -235,7 +242,7 @@ export const ConversasView = () => {
                     >
                       Ver Conversa
                     </Button>
-                    {conversa.v_conversas_detalhadas_cliente_id === BigInt(0) && (
+                    {!conversa.v_conversas_detalhadas_cliente_id && (
                       <Button 
                         size="sm" 
                         variant="outline" 
