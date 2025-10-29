@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Play, Pause, Archive, Edit, Trash2, Clock, MessageSquare, TrendingUp } from "lucide-react";
+import { Plus, Play, Pause, Archive, Edit, Trash2, Clock, MessageSquare, TrendingUp, HelpCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const getTipoLabel = (tipo: string) => {
   const labels: Record<string, string> = {
@@ -50,6 +63,15 @@ const getStatusColor = (status: string) => {
   return colors[status] || colors.arquivado;
 };
 
+const getStatusLabel = (status: string) => {
+  const labels: Record<string, string> = {
+    ativo: 'Ativo',
+    pausado: 'Pausado',
+    arquivado: 'Arquivado',
+  };
+  return labels[status] || status;
+};
+
 export const PlaybooksAutomationView = () => {
   const { profile } = useUserProfile();
   const { playbooks, isLoading, updatePlaybook, deletePlaybook } = usePlaybooksAutomation(profile?.empresa_id);
@@ -57,6 +79,13 @@ export const PlaybooksAutomationView = () => {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [playbookToDelete, setPlaybookToDelete] = useState<number | null>(null);
+  const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
+  const [playbookToArchive, setPlaybookToArchive] = useState<PlaybookAutomation | null>(null);
+  const [showArchived, setShowArchived] = useState<'active' | 'archived'>('active');
+
+  // TODO: Implementar verificação de role com tabela user_roles no Supabase
+  // Por enquanto, usando verificação temporária baseada no plano
+  const isAdmin = profile?.plano === 'admin' || profile?.email?.includes('admin');
 
   const handleCreateNew = () => {
     setSelectedPlaybook(null);
@@ -73,8 +102,17 @@ export const PlaybooksAutomationView = () => {
     await updatePlaybook.mutateAsync({ id: playbook.id, status: newStatus });
   };
 
-  const handleArchive = async (playbook: PlaybookAutomation) => {
-    await updatePlaybook.mutateAsync({ id: playbook.id, status: 'arquivado' });
+  const handleArchive = (playbook: PlaybookAutomation) => {
+    setPlaybookToArchive(playbook);
+    setArchiveDialogOpen(true);
+  };
+
+  const handleArchiveConfirm = async () => {
+    if (playbookToArchive) {
+      await updatePlaybook.mutateAsync({ id: playbookToArchive.id, status: 'arquivado' });
+      setArchiveDialogOpen(false);
+      setPlaybookToArchive(null);
+    }
   };
 
   const handleDeleteConfirm = async () => {
@@ -87,6 +125,14 @@ export const PlaybooksAutomationView = () => {
 
   const activePlaybooks = playbooks?.filter(p => p.status === 'ativo').length || 0;
   const totalExecutions = 0; // TODO: Calcular do banco
+
+  // Filtrar playbooks baseado no filtro selecionado
+  const filteredPlaybooks = playbooks?.filter(p => {
+    if (showArchived === 'archived') {
+      return p.status === 'arquivado';
+    }
+    return p.status !== 'arquivado';
+  });
 
   if (isLoading) {
     return (
@@ -157,30 +203,63 @@ export const PlaybooksAutomationView = () => {
             Configure fluxos automáticos de mensagens para lembretes e reativação
           </p>
         </div>
-        <Button onClick={handleCreateNew}>
-          <Plus className="mr-2 h-4 w-4" />
-          Novo Playbook
-        </Button>
+        <div className="flex items-center gap-3">
+          <Select value={showArchived} onValueChange={(value: 'active' | 'archived') => setShowArchived(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="active">Playbooks Ativos</SelectItem>
+              <SelectItem value="archived">Playbooks Arquivados</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <Button onClick={handleCreateNew} disabled={!isAdmin}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Novo Playbook
+                    {!isAdmin && <HelpCircle className="ml-2 h-3 w-3" />}
+                  </Button>
+                </div>
+              </TooltipTrigger>
+              {!isAdmin && (
+                <TooltipContent>
+                  <p>Apenas administradores podem criar novos playbooks</p>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </div>
 
       {/* Playbooks Grid */}
-      {!playbooks || playbooks.length === 0 ? (
+      {!filteredPlaybooks || filteredPlaybooks.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Clock className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Nenhum playbook configurado</h3>
+            <h3 className="text-lg font-semibold mb-2">
+              {showArchived === 'archived' ? 'Nenhum playbook arquivado' : 'Nenhum playbook configurado'}
+            </h3>
             <p className="text-muted-foreground text-center mb-4">
-              Crie seu primeiro playbook de automação para começar a enviar mensagens automáticas
+              {showArchived === 'archived' 
+                ? 'Não há playbooks arquivados no momento'
+                : 'Crie seu primeiro playbook de automação para começar a enviar mensagens automáticas'
+              }
             </p>
-            <Button onClick={handleCreateNew}>
-              <Plus className="mr-2 h-4 w-4" />
-              Criar Primeiro Playbook
-            </Button>
+            {showArchived === 'active' && isAdmin && (
+              <Button onClick={handleCreateNew}>
+                <Plus className="mr-2 h-4 w-4" />
+                Criar Primeiro Playbook
+              </Button>
+            )}
           </CardContent>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {playbooks.map((playbook) => (
+          {filteredPlaybooks.map((playbook) => (
             <Card key={playbook.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -191,7 +270,7 @@ export const PlaybooksAutomationView = () => {
                         {getTipoLabel(playbook.tipo)}
                       </Badge>
                       <Badge className={getStatusColor(playbook.status)} variant="secondary">
-                        {playbook.status}
+                        {getStatusLabel(playbook.status)}
                       </Badge>
                     </div>
                   </div>
@@ -262,6 +341,25 @@ export const PlaybooksAutomationView = () => {
         playbook={selectedPlaybook}
         empresaId={profile?.empresa_id}
       />
+
+      {/* Archive Confirmation Dialog */}
+      <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Arquivamento</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja arquivar este playbook? Ele não será mais executado automaticamente,
+              mas você poderá reativá-lo posteriormente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Não</AlertDialogCancel>
+            <AlertDialogAction onClick={handleArchiveConfirm}>
+              Sim, Arquivar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
