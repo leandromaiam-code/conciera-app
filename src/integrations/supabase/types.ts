@@ -1196,6 +1196,7 @@ export type Database = {
           cpf: string | null
           created_at: string | null
           data_nascimento: string | null
+          "e-mail": string | null
           empresa_id: number
           estado: string | null
           genero: string | null
@@ -1212,6 +1213,7 @@ export type Database = {
           cpf?: string | null
           created_at?: string | null
           data_nascimento?: string | null
+          "e-mail"?: string | null
           empresa_id: number
           estado?: string | null
           genero?: string | null
@@ -1228,6 +1230,7 @@ export type Database = {
           cpf?: string | null
           created_at?: string | null
           data_nascimento?: string | null
+          "e-mail"?: string | null
           empresa_id?: number
           estado?: string | null
           genero?: string | null
@@ -1654,6 +1657,7 @@ export type Database = {
       }
       ingestion_memoria_clientes_historico_01: {
         Row: {
+          canal: string | null
           cliente_id: number | null
           content_text: string | null
           created_at: string | null
@@ -1665,6 +1669,7 @@ export type Database = {
           telefone: string | null
         }
         Insert: {
+          canal?: string | null
           cliente_id?: number | null
           content_text?: string | null
           created_at?: string | null
@@ -1676,6 +1681,7 @@ export type Database = {
           telefone?: string | null
         }
         Update: {
+          canal?: string | null
           cliente_id?: number | null
           content_text?: string | null
           created_at?: string | null
@@ -1761,19 +1767,40 @@ export type Database = {
       }
       memoria_clientes_historico_01: {
         Row: {
+          canal: string | null
+          cliente_id: number | null
+          content_text: string | null
+          created_at: string | null
+          funcionaria_id: number | null
           id: number
           message: Json
+          role: string | null
           session_id: string
+          telefone: string | null
         }
         Insert: {
+          canal?: string | null
+          cliente_id?: number | null
+          content_text?: string | null
+          created_at?: string | null
+          funcionaria_id?: number | null
           id?: number
           message: Json
+          role?: string | null
           session_id: string
+          telefone?: string | null
         }
         Update: {
+          canal?: string | null
+          cliente_id?: number | null
+          content_text?: string | null
+          created_at?: string | null
+          funcionaria_id?: number | null
           id?: number
           message?: Json
+          role?: string | null
           session_id?: string
+          telefone?: string | null
         }
         Relationships: []
       }
@@ -1849,14 +1876,23 @@ export type Database = {
       }
     }
     Functions: {
-      calcular_metricas_conversas: {
-        Args: {
-          ano_mes_param: string
-          empresa_id_param: number
-          funcionaria_id_param: number
-        }
-        Returns: undefined
-      }
+      calcular_metricas_conversas:
+        | {
+            Args: {
+              ano_mes_param: string
+              empresa_id_param: number
+              funcionaria_id_param: number
+            }
+            Returns: undefined
+          }
+        | {
+            Args: {
+              ano_mes_param: string
+              empresa_id_param: number
+              funcionaria_id_param: number
+            }
+            Returns: undefined
+          }
       calcular_rpg_mensal: {
         Args: { ano_mes_param: string; empresa_id_param: number }
         Returns: number
