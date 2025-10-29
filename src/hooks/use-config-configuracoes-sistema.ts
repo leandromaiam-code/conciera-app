@@ -135,7 +135,9 @@ export const useConfigConfiguracoesSistema = (empresaId?: number): UseConfigConf
       const dbData: any = {};
       
       Object.keys(updateData).forEach(key => {
-        const dbField = key.replace('config_configuracoes_sistema_', '');
+        let dbField = key.replace('config_configuracoes_sistema_', '');
+        // Also remove ui_ prefix for auto_agendamento and auto_pagamento
+        dbField = dbField.replace('ui_', '');
         if (updateData[key as keyof ConfigConfiguracoesSistema] !== undefined) {
           dbData[dbField] = updateData[key as keyof ConfigConfiguracoesSistema];
         }
