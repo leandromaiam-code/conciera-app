@@ -11,8 +11,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
 import concieraLogo from "@/assets/C-logo-White-Black-transparente.png";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTasks } from "@/hooks/use-core-tasks";
+import { isToday, isPast, parseISO } from "date-fns";
 
 interface AppSidebarProps {
   currentPage: string;
@@ -33,6 +36,20 @@ const navigationItems = [
 
 export const AppSidebar = ({ currentPage, onPageChange, isOpen, onOpenChange }: AppSidebarProps) => {
   const isMobile = useIsMobile();
+  const { data: tasks } = useTasks();
+
+  // Calcular tasks vencidas ou do dia atual
+  const urgentTasksCount = tasks?.filter(task => {
+    if (task.status === 'concluida') return false;
+    if (!task.prazo) return false;
+    
+    try {
+      const deadline = parseISO(task.prazo);
+      return isToday(deadline) || isPast(deadline);
+    } catch {
+      return false;
+    }
+  }).length || 0;
 
   const handlePageChange = (page: string) => {
     onPageChange(page);
@@ -59,17 +76,26 @@ export const AppSidebar = ({ currentPage, onPageChange, isOpen, onOpenChange }: 
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPage === item.id;
+            const showBadge = item.id === 'tasks' && urgentTasksCount > 0;
             
             return (
               <button
                 key={item.id}
                 onClick={() => onPageChange(item.id)}
-                className={`nav-item w-12 h-12 flex items-center justify-center ${
+                className={`nav-item w-12 h-12 flex items-center justify-center relative ${
                   isActive ? 'active' : ''
                 }`}
                 title={item.label}
               >
                 <Icon size={24} />
+                {showBadge && (
+                  <Badge 
+                    variant="destructive" 
+                    className="absolute -top-1 -right-1 h-5 min-w-5 px-1 flex items-center justify-center text-xs font-bold"
+                  >
+                    {urgentTasksCount > 99 ? '99+' : urgentTasksCount}
+                  </Badge>
+                )}
               </button>
             );
           })}
@@ -97,17 +123,26 @@ export const AppSidebar = ({ currentPage, onPageChange, isOpen, onOpenChange }: 
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPage === item.id;
+            const showBadge = item.id === 'tasks' && urgentTasksCount > 0;
             
             return (
               <button
                 key={item.id}
                 onClick={() => handlePageChange(item.id)}
-                className={`nav-item-mobile w-full ${
+                className={`nav-item-mobile w-full relative ${
                   isActive ? 'active' : ''
                 }`}
               >
                 <Icon size={20} />
                 <span className="font-medium">{item.label}</span>
+                {showBadge && (
+                  <Badge 
+                    variant="destructive" 
+                    className="ml-auto h-5 min-w-5 px-1.5 flex items-center justify-center text-xs font-bold"
+                  >
+                    {urgentTasksCount > 99 ? '99+' : urgentTasksCount}
+                  </Badge>
+                )}
               </button>
             );
           })}
