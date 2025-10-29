@@ -118,16 +118,6 @@ export const ConversaHistoryDialog = ({
                 <SelectItem value="finalizada">Finalizada</SelectItem>
               </SelectContent>
             </Select>
-            
-            {status !== 'finalizada' && (
-              <Button
-                onClick={handleMarkAsResolved}
-                variant="outline"
-                size="sm"
-              >
-                Marcar como Resolvida
-              </Button>
-            )}
           </div>
         </DialogHeader>
 

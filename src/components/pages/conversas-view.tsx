@@ -148,12 +148,12 @@ export const ConversasView = () => {
                 placeholder="Buscar por nome ou procedimento..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 text-onyx placeholder:text-grafite/70"
               />
             </div>
             
             <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger id="v-conversas-detalhadas-status-filter">
+              <SelectTrigger id="v-conversas-detalhadas-status-filter" className="text-onyx">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -166,7 +166,7 @@ export const ConversasView = () => {
             </Select>
 
             <Select value={filterCanal} onValueChange={setFilterCanal}>
-              <SelectTrigger id="v-conversas-detalhadas-canal-filter">
+              <SelectTrigger id="v-conversas-detalhadas-canal-filter" className="text-onyx">
                 <SelectValue placeholder="Canal" />
               </SelectTrigger>
               <SelectContent>
@@ -182,7 +182,7 @@ export const ConversasView = () => {
       </Card>
 
       {/* Conversations List */}
-      <div className="space-y-4">
+      <div className="space-y-4 max-h-[calc(100vh-400px)] overflow-y-auto lg:max-h-none lg:overflow-visible">
         {filteredConversas.map((conversa) => {
           const ChannelIcon = getChannelIcon(conversa.v_conversas_detalhadas_canal);
           
