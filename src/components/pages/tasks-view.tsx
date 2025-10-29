@@ -249,19 +249,20 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
       </div>
 
       {viewMode === "list" ? (
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Título</TableHead>
-                <TableHead>Categoria</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Prioridade</TableHead>
-                <TableHead>Cliente</TableHead>
-                <TableHead>Prazo</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
+        <Card className="overflow-hidden">
+          <div className="overflow-x-auto max-h-[calc(100vh-300px)] lg:max-h-none">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-onyx font-semibold">Título</TableHead>
+                  <TableHead className="text-onyx font-semibold">Categoria</TableHead>
+                  <TableHead className="text-onyx font-semibold">Status</TableHead>
+                  <TableHead className="text-onyx font-semibold">Prioridade</TableHead>
+                  <TableHead className="text-onyx font-semibold">Cliente</TableHead>
+                  <TableHead className="text-onyx font-semibold">Prazo</TableHead>
+                  <TableHead className="text-right text-onyx font-semibold">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
             <TableBody>
               {tasks.map((task) => (
                 <TableRow key={task.id}>
@@ -322,9 +323,10 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
               ))}
             </TableBody>
           </Table>
+          </div>
         </Card>
       ) : (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 max-h-[calc(100vh-300px)] lg:max-h-none overflow-y-auto lg:overflow-visible">
           {STATUS_OPTIONS.map((status) => (
             <div key={status} className="space-y-3">
               <div className="flex items-center justify-between">
