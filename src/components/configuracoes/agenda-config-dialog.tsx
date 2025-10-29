@@ -65,46 +65,46 @@ export const AgendaConfigDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Configurar Agenda Base</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-onyx">Configurar Agenda Base</DialogTitle>
+          <DialogDescription className="text-grafite">
             Escolha qual agenda será usada para o auto-agendamento
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4 py-4">
           <RadioGroup value={selectedType} onValueChange={(value) => setSelectedType(value as "conciera" | "google")}>
-            <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors">
+            <div className="flex items-center space-x-3 p-4 border border-cinza-borda rounded-lg hover:bg-marfim/30 transition-colors">
               <RadioGroupItem value="conciera" id="conciera" />
               <Label htmlFor="conciera" className="flex-1 cursor-pointer">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-primary" />
-                  <span className="font-medium text-foreground">Agenda Conciera</span>
+                  <Calendar className="w-5 h-5 text-esmeralda" />
+                  <span className="font-medium text-onyx">Agenda Conciera</span>
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-sm text-grafite mt-1">
                   Use a agenda nativa do Conciera
                 </p>
               </Label>
             </div>
 
-            <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors">
+            <div className="flex items-center space-x-3 p-4 border border-cinza-borda rounded-lg hover:bg-marfim/30 transition-colors">
               <RadioGroupItem value="google" id="google" />
               <Label htmlFor="google" className="flex-1 cursor-pointer">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-blue-600" />
-                  <span className="font-medium text-foreground">Google Calendar</span>
+                  <Calendar className="w-5 h-5 text-esmeralda" />
+                  <span className="font-medium text-onyx">Google Calendar</span>
                   {isGoogleConnected && (
-                    <Badge variant="outline" className="ml-auto">
+                    <Badge variant="outline" className="ml-auto border-esmeralda text-esmeralda">
                       <Check className="w-3 h-3 mr-1" />
                       Conectado
                     </Badge>
                   )}
                   {!isGoogleConnected && (
-                    <Badge variant="secondary" className="ml-auto">
+                    <Badge variant="secondary" className="ml-auto bg-grafite/20 text-grafite border-grafite/30">
                       Não conectado
                     </Badge>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-sm text-grafite mt-1">
                   Sincronize com seu Google Calendar
                 </p>
               </Label>
@@ -112,14 +112,14 @@ export const AgendaConfigDialog = ({
           </RadioGroup>
 
           {selectedType === "google" && !isGoogleConnected && (
-            <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-              <p className="text-sm text-blue-900 dark:text-blue-100 mb-3">
+            <div className="p-4 bg-esmeralda/10 border border-esmeralda/30 rounded-lg">
+              <p className="text-sm text-grafite mb-3">
                 Para usar o Google Calendar, você precisa conectar sua conta primeiro
               </p>
               <Button 
                 onClick={onGoogleConnect}
                 variant="outline"
-                className="w-full"
+                className="w-full border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-white"
                 size="sm"
               >
                 <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
