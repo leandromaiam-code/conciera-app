@@ -46,7 +46,7 @@ export const RevenuePerformancePanel = () => {
       <div className="kpi-card relative z-10 border border-dourado/20 min-h-[280px] py-lg">
         <div className="mb-md">
           <div className="flex items-center justify-between mb-xxs">
-            <h2 className="text-onyx">Receita de Pipeline Gerado</h2>
+            <h2 className="text-onyx">Total de Oportunidades Geradas</h2>
             <div className={`flex items-center gap-xxs text-sm font-semibold ${
               isPositiveTrend ? 'text-esmeralda' : 'text-erro'
             }`}>
@@ -55,7 +55,7 @@ export const RevenuePerformancePanel = () => {
             </div>
           </div>
           <p className="text-secondary text-grafite">
-            Performance financeira consolidada do mês
+            Performance consolidada do mês
           </p>
         </div>
 
