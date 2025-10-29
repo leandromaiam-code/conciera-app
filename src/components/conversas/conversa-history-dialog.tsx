@@ -1,9 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageSquare, User, Bot, Phone, X } from "lucide-react";
+import { MessageSquare, User, Bot, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -21,8 +19,8 @@ interface ConversaHistoryDialogProps {
   conversaId: bigint;
   sessionId: string;
   clienteNome: string;
-  status: string;
-  onStatusChange: (newStatus: string) => void;
+  status?: string;
+  onStatusChange?: (newStatus: string) => void;
 }
 
 export const ConversaHistoryDialog = ({
@@ -31,8 +29,6 @@ export const ConversaHistoryDialog = ({
   conversaId,
   sessionId,
   clienteNome,
-  status,
-  onStatusChange
 }: ConversaHistoryDialogProps) => {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -67,27 +63,6 @@ export const ConversaHistoryDialog = ({
     }
   };
 
-  const handleStatusChange = async (newStatus: string) => {
-    try {
-      onStatusChange(newStatus);
-      toast({
-        title: "Status atualizado",
-        description: `Conversa marcada como ${newStatus}`,
-      });
-    } catch (error) {
-      console.error('Erro ao atualizar status:', error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível atualizar o status",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleMarkAsResolved = () => {
-    handleStatusChange('finalizada');
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col">
@@ -105,23 +80,9 @@ export const ConversaHistoryDialog = ({
               <X className="w-4 h-4" />
             </Button>
           </DialogTitle>
-          
-          <div className="flex items-center gap-3 mt-4">
-            <Select value={status} onValueChange={handleStatusChange}>
-              <SelectTrigger className="w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="novo">Novo</SelectItem>
-                <SelectItem value="em-andamento">Em Andamento</SelectItem>
-                <SelectItem value="aguardando">Aguardando</SelectItem>
-                <SelectItem value="finalizada">Finalizada</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 pr-4">
+        <ScrollArea className="flex-1 pr-4 [&>[data-radix-scroll-area-viewport]]:max-h-[50vh]">
           {loading ? (
             <div className="text-center py-8 text-grafite">
               Carregando mensagens...

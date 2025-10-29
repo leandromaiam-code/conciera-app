@@ -279,10 +279,6 @@ export const ConversasView = () => {
             conversaId={selectedConversa.v_conversas_detalhadas_id}
             sessionId={selectedConversa.v_conversas_detalhadas_session_id}
             clienteNome={selectedConversa.v_conversas_detalhadas_nome_completo}
-            status={selectedConversa.v_conversas_detalhadas_status}
-            onStatusChange={(newStatus) => {
-              updateConversaStatus(selectedConversa.v_conversas_detalhadas_id, newStatus);
-            }}
           />
 
           <VincularClienteDialog
