@@ -262,7 +262,7 @@ export const AgendaView = () => {
                     } ${selectedAgendamento?.core_agendamentos_id === agendamento.core_agendamentos_id ? 'bg-dourado/10' : 'bg-branco-puro'}`}
                     onClick={() => setSelectedAgendamento(agendamento)}
                   >
-                    <div className="flex items-start justify-between">
+                    <div className="flex flex-col gap-3">
                       <div className="space-y-2 flex-1">
                         <div className="flex items-center gap-3">
                           <h3 className="font-semibold text-onyx">{agendamento.core_clientes_nome_completo}</h3>
@@ -271,7 +271,7 @@ export const AgendaView = () => {
                         
                         <p className="text-grafite">{agendamento.core_agendamentos_servico_interesse}</p>
                         
-                        <div className="flex items-center gap-4 text-sm text-grafite">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-grafite">
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
                             {dataHora.toLocaleTimeString('pt-BR', { 
@@ -292,14 +292,14 @@ export const AgendaView = () => {
                         )}
                       </div>
 
-                      <div className="flex flex-col items-end gap-2">
+                      <div className="flex flex-col gap-2 pt-2 border-t border-cinza-borda">
                         <Select
                           value={agendamento.core_agendamentos_status}
                           onValueChange={(newStatus) => 
                             handleStatusChange(BigInt(agendamento.core_agendamentos_id), newStatus)
                           }
                         >
-                          <SelectTrigger className="w-32">
+                          <SelectTrigger className="w-full">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -309,39 +309,59 @@ export const AgendaView = () => {
                           </SelectContent>
                         </Select>
 
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 w-full">
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleEditarAgendamento(BigInt(agendamento.core_agendamentos_id))}
+                            className="flex-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditarAgendamento(BigInt(agendamento.core_agendamentos_id));
+                            }}
                           >
-                            <Edit className="w-3 h-3" />
+                            <Edit className="w-3 h-3 mr-1" />
+                            Editar
                           </Button>
                           
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleDeleteClick(BigInt(agendamento.core_agendamentos_id))}
+                            className="flex-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteClick(BigInt(agendamento.core_agendamentos_id));
+                            }}
                           >
-                            <Trash2 className="w-3 h-3" />
+                            <Trash2 className="w-3 h-3 mr-1" />
+                            Excluir
                           </Button>
                         </div>
 
                         {agendamento.core_agendamentos_status === 'confirmado' && (
-                          <div className="flex gap-1">
+                          <div className="flex gap-2 w-full">
                             <Button
                               size="sm"
                               variant={agendamento.core_agendamentos_compareceu === true ? "default" : "outline"}
-                              onClick={() => handleMarcarComparecimento(BigInt(agendamento.core_agendamentos_id), true)}
+                              className="flex-1"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMarcarComparecimento(BigInt(agendamento.core_agendamentos_id), true);
+                              }}
                             >
-                              <CheckCircle className="w-3 h-3" />
+                              <CheckCircle className="w-3 h-3 mr-1" />
+                              Compareceu
                             </Button>
                             <Button
                               size="sm"
                               variant={agendamento.core_agendamentos_compareceu === false ? "destructive" : "outline"}
-                              onClick={() => handleMarcarComparecimento(BigInt(agendamento.core_agendamentos_id), false)}
+                              className="flex-1"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMarcarComparecimento(BigInt(agendamento.core_agendamentos_id), false);
+                              }}
                             >
-                              <XCircle className="w-3 h-3" />
+                              <XCircle className="w-3 h-3 mr-1" />
+                              Faltou
                             </Button>
                           </div>
                         )}

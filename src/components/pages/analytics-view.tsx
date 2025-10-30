@@ -83,41 +83,45 @@ export const AnalyticsView = () => {
               Performance Mensal
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={analytics.monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip 
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    padding: '12px'
-                  }}
-                  labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="leads" 
-                  stroke="#6366f1" 
-                  strokeWidth={3}
-                  dot={{ fill: '#6366f1', r: 4 }}
-                  activeDot={{ r: 6 }}
-                  name="Leads"
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="agendamentos" 
-                  stroke="#D4AF37" 
-                  strokeWidth={3}
-                  dot={{ fill: '#D4AF37', r: 4 }}
-                  activeDot={{ r: 6 }}
-                  name="Agendamentos"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+          <CardContent className="px-2 sm:px-6">
+            <div className="w-full overflow-x-auto">
+              <div className="min-w-[300px]">
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={analytics.monthlyData}>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        padding: '12px'
+                      }}
+                      labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="leads" 
+                      stroke="#6366f1" 
+                      strokeWidth={3}
+                      dot={{ fill: '#6366f1', r: 4 }}
+                      activeDot={{ r: 6 }}
+                      name="Leads"
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="agendamentos" 
+                      stroke="#D4AF37" 
+                      strokeWidth={3}
+                      dot={{ fill: '#D4AF37', r: 4 }}
+                      activeDot={{ r: 6 }}
+                      name="Agendamentos"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -129,45 +133,49 @@ export const AnalyticsView = () => {
               Origem dos Leads
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={sortedChannelData}
-                  cx="40%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={90}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {sortedChannelData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value: any) => `${value} leads`}
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    padding: '12px'
-                  }}
-                />
-                <Legend 
-                  layout="vertical"
-                  verticalAlign="middle"
-                  align="right"
-                  iconType="circle"
-                  wrapperStyle={{ color: '#000000' }}
-                  formatter={(value, entry: any) => {
-                    const total = sortedChannelData.reduce((sum, item) => sum + item.value, 0);
-                    const percent = ((entry.payload.value / total) * 100).toFixed(0);
-                    return <span style={{ color: '#000000' }}>{`${value} (${percent}%)`}</span>;
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+          <CardContent className="px-2 sm:px-6">
+            <div className="w-full overflow-x-auto">
+              <div className="min-w-[300px]">
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={sortedChannelData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {sortedChannelData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value: any) => `${value} leads`}
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        padding: '12px'
+                      }}
+                    />
+                    <Legend 
+                      layout="horizontal"
+                      verticalAlign="bottom"
+                      align="center"
+                      iconType="circle"
+                      wrapperStyle={{ color: '#000000', paddingTop: '20px' }}
+                      formatter={(value, entry: any) => {
+                        const total = sortedChannelData.reduce((sum, item) => sum + item.value, 0);
+                        const percent = ((entry.payload.value / total) * 100).toFixed(0);
+                        return <span style={{ color: '#000000', fontSize: '12px' }}>{`${value} (${percent}%)`}</span>;
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -179,33 +187,43 @@ export const AnalyticsView = () => {
               Oportunidades por Procedimento
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart 
-                data={analytics.procedureData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="procedimento" />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR')}`, 'Receita']}
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    padding: '12px'
-                  }}
-                  labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
-                />
-                <Bar 
-                  dataKey="receita" 
-                  fill="#D4AF37" 
-                  maxBarSize={100}
-                  radius={[8, 8, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+          <CardContent className="px-2 sm:px-6">
+            <div className="w-full overflow-x-auto">
+              <div className="min-w-[300px]">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart 
+                    data={analytics.procedureData}
+                    margin={{ top: 20, right: 10, left: 10, bottom: 40 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                    <XAxis 
+                      dataKey="procedimento" 
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                      interval={0}
+                    />
+                    <YAxis />
+                    <Tooltip 
+                      formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR')}`, 'Receita']}
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        padding: '12px'
+                      }}
+                      labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
+                    />
+                    <Bar 
+                      dataKey="receita" 
+                      fill="#D4AF37" 
+                      maxBarSize={60}
+                      radius={[8, 8, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
