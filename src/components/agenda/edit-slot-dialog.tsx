@@ -16,6 +16,7 @@ interface EditSlotDialogProps {
     horario_inicio: string;
     horario_fim: string;
     tipo: string;
+    tipo_consulta: string;
     procedimento: string;
   }) => void;
 }
@@ -24,6 +25,7 @@ export function EditSlotDialog({ open, onClose, slot, diaSemana, turno, onSave }
   const [horarioInicio, setHorarioInicio] = useState("");
   const [horarioFim, setHorarioFim] = useState("");
   const [tipo, setTipo] = useState("ambos");
+  const [tipoConsulta, setTipoConsulta] = useState("ambos");
   const [procedimento, setProcedimento] = useState("todos");
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export function EditSlotDialog({ open, onClose, slot, diaSemana, turno, onSave }
       setHorarioInicio(slot.horario_inicio);
       setHorarioFim(slot.horario_fim);
       setTipo(slot.tipo);
+      setTipoConsulta((slot as any).tipo_consulta || "ambos");
       setProcedimento(slot.procedimento);
     } else {
       // Default values for new slots
@@ -43,6 +46,7 @@ export function EditSlotDialog({ open, onClose, slot, diaSemana, turno, onSave }
       setHorarioInicio(defaultTime.inicio);
       setHorarioFim(defaultTime.fim);
       setTipo("ambos");
+      setTipoConsulta("ambos");
       setProcedimento("todos");
     }
   }, [slot, turno]);
@@ -52,6 +56,7 @@ export function EditSlotDialog({ open, onClose, slot, diaSemana, turno, onSave }
       horario_inicio: horarioInicio,
       horario_fim: horarioFim,
       tipo,
+      tipo_consulta: tipoConsulta,
       procedimento
     });
     onClose();
@@ -120,20 +125,38 @@ export function EditSlotDialog({ open, onClose, slot, diaSemana, turno, onSave }
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="tipo" className="text-sm font-medium">
-              Tipo de Atendimento
-            </Label>
-            <Select value={tipo} onValueChange={setTipo}>
-              <SelectTrigger id="tipo">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ambos">Ambos (Presencial e Online)</SelectItem>
-                <SelectItem value="presencial">Apenas Presencial</SelectItem>
-                <SelectItem value="online">Apenas Online</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="tipo" className="text-sm font-medium">
+                Tipo de Atendimento
+              </Label>
+              <Select value={tipo} onValueChange={setTipo}>
+                <SelectTrigger id="tipo">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ambos">Ambos</SelectItem>
+                  <SelectItem value="presencial">Presencial</SelectItem>
+                  <SelectItem value="online">Online</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="tipo-consulta" className="text-sm font-medium">
+                Tipo Consulta
+              </Label>
+              <Select value={tipoConsulta} onValueChange={setTipoConsulta}>
+                <SelectTrigger id="tipo-consulta">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ambos">Ambos</SelectItem>
+                  <SelectItem value="primeira_consulta">1ª Consulta</SelectItem>
+                  <SelectItem value="retorno">Retorno</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-2">

@@ -179,8 +179,7 @@ export const AgendaView = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <Button 
-            variant="outline"
-            className="w-full sm:w-auto"
+            className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto"
             onClick={() => setShowDisponibilidadeDialog(true)}
           >
             <CalendarIcon className="w-4 h-4 mr-2" />

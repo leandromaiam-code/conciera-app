@@ -54,6 +54,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
     horario_inicio: string;
     horario_fim: string;
     tipo: string;
+    tipo_consulta: string;
     procedimento: string;
   }) => {
     if (!editingSlot) return;
@@ -69,7 +70,8 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
         horario_fim: data.horario_fim,
         tipo: data.tipo as any,
         procedimento: data.procedimento,
-        ativo: true
+        ativo: true,
+        ...({ tipo_consulta: data.tipo_consulta } as any)
       });
       toast.success("Disponibilidade atualizada");
     } else {
@@ -81,7 +83,8 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
         tipo: data.tipo as any,
         procedimento: data.procedimento,
         ativo: true,
-        is_recorrente: true
+        is_recorrente: true,
+        ...({ tipo_consulta: data.tipo_consulta } as any)
       });
       toast.success("Disponibilidade criada");
     }
