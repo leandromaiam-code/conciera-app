@@ -323,9 +323,9 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                           ) : (
                             <span className="text-red-600 dark:text-red-400">🚫 Bloqueado</span>
                           )}
-                          <span className="text-muted-foreground ml-2">
-                            {periodo.horario_inicio} - {periodo.horario_fim}
-                          </span>
+                        </div>
+                        <div className="text-sm text-foreground mt-1">
+                          ⏰ {periodo.horario_inicio} - {periodo.horario_fim}
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
