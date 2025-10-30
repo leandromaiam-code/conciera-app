@@ -54,7 +54,7 @@ export const PlaybooksView = () => {
         <h1 className="text-3xl font-bold text-onyx">Processos Personalizados</h1>
         <Button className="bg-dourado text-onyx hover:bg-dourado/90">
           <Plus className="w-4 h-4 mr-2" />
-          Novo Playbook
+          Novo Processo
         </Button>
       </div>
 
@@ -66,7 +66,7 @@ export const PlaybooksView = () => {
               <Brain className="w-8 h-8 text-dourado" />
               <div>
                 <p className="text-2xl font-bold text-onyx">{playbooks.length}</p>
-                <p className="text-sm text-grafite">Total Playbooks</p>
+                <p className="text-sm text-grafite">Total Processos</p>
               </div>
             </div>
           </CardContent>
@@ -115,7 +115,7 @@ export const PlaybooksView = () => {
         </Card>
       </div>
 
-      {/* Playbooks Grid */}
+      {/* Processos Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {(playbooks || []).map((playbook) => (
           <Card 
@@ -190,7 +190,7 @@ export const PlaybooksView = () => {
       {selectedPlaybook && (
         <Card>
           <CardHeader>
-            <CardTitle>Detalhes do Playbook: {selectedPlaybook.nome_agente}</CardTitle>
+            <CardTitle>Detalhes do Processo: {selectedPlaybook.nome_agente}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -233,7 +233,7 @@ export const PlaybooksView = () => {
             <div className="flex gap-3 pt-4 border-t border-cinza-borda">
               <Button className="bg-dourado text-onyx hover:bg-dourado/90">
                 <Edit className="w-4 h-4 mr-2" />
-                Editar Playbook
+                Editar Processo
               </Button>
               <Button variant="outline">
                 <Play className="w-4 h-4 mr-2" />
