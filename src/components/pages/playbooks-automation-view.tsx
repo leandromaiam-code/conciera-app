@@ -18,56 +18,45 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const getTipoLabel = (tipo: string) => {
   const labels: Record<string, string> = {
-    lembrete_consulta: 'Lembrete de Consulta',
-    reativacao_conversa: 'Reativação de Conversa',
-    pos_atendimento: 'Pós-Atendimento',
-    follow_up: 'Follow-up',
-    outros: 'Outros',
+    lembrete_consulta: "Lembrete de Consulta",
+    reativacao_conversa: "Reativação de Conversa",
+    pos_atendimento: "Pós-Atendimento",
+    follow_up: "Follow-up",
+    outros: "Outros",
   };
   return labels[tipo] || tipo;
 };
 
 const getTipoColor = (tipo: string) => {
   const colors: Record<string, string> = {
-    lembrete_consulta: 'bg-blue-500/10 text-blue-700 dark:text-blue-300',
-    reativacao_conversa: 'bg-purple-500/10 text-purple-700 dark:text-purple-300',
-    pos_atendimento: 'bg-green-500/10 text-green-700 dark:text-green-300',
-    follow_up: 'bg-orange-500/10 text-orange-700 dark:text-orange-300',
-    outros: 'bg-gray-500/10 text-gray-700 dark:text-gray-300',
+    lembrete_consulta: "bg-blue-500/10 text-blue-700 dark:text-blue-300",
+    reativacao_conversa: "bg-purple-500/10 text-purple-700 dark:text-purple-300",
+    pos_atendimento: "bg-green-500/10 text-green-700 dark:text-green-300",
+    follow_up: "bg-orange-500/10 text-orange-700 dark:text-orange-300",
+    outros: "bg-gray-500/10 text-gray-700 dark:text-gray-300",
   };
   return colors[tipo] || colors.outros;
 };
 
 const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
-    ativo: 'bg-green-500/10 text-green-700 dark:text-green-300',
-    pausado: 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-300',
-    arquivado: 'bg-gray-500/10 text-gray-700 dark:text-gray-300',
+    ativo: "bg-green-500/10 text-green-700 dark:text-green-300",
+    pausado: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-300",
+    arquivado: "bg-gray-500/10 text-gray-700 dark:text-gray-300",
   };
   return colors[status] || colors.arquivado;
 };
 
 const getStatusLabel = (status: string) => {
   const labels: Record<string, string> = {
-    ativo: 'Ativo',
-    pausado: 'Pausado',
-    arquivado: 'Arquivado',
+    ativo: "Ativo",
+    pausado: "Pausado",
+    arquivado: "Arquivado",
   };
   return labels[status] || status;
 };
@@ -81,11 +70,11 @@ export const PlaybooksAutomationView = () => {
   const [playbookToDelete, setPlaybookToDelete] = useState<number | null>(null);
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [playbookToArchive, setPlaybookToArchive] = useState<PlaybookAutomation | null>(null);
-  const [showArchived, setShowArchived] = useState<'active' | 'archived'>('active');
+  const [showArchived, setShowArchived] = useState<"active" | "archived">("active");
 
   // TODO: Implementar verificação de role com tabela user_roles no Supabase
   // Por enquanto, usando verificação temporária baseada no plano
-  const isAdmin = profile?.plano === 'admin' || profile?.email?.includes('admin');
+  const isAdmin = profile?.plano === "admin" || profile?.email?.includes("admin");
 
   const handleCreateNew = () => {
     setSelectedPlaybook(null);
@@ -98,7 +87,7 @@ export const PlaybooksAutomationView = () => {
   };
 
   const handleToggleStatus = async (playbook: PlaybookAutomation) => {
-    const newStatus = playbook.status === 'ativo' ? 'pausado' : 'ativo';
+    const newStatus = playbook.status === "ativo" ? "pausado" : "ativo";
     await updatePlaybook.mutateAsync({ id: playbook.id, status: newStatus });
   };
 
@@ -109,7 +98,7 @@ export const PlaybooksAutomationView = () => {
 
   const handleArchiveConfirm = async () => {
     if (playbookToArchive) {
-      await updatePlaybook.mutateAsync({ id: playbookToArchive.id, status: 'arquivado' });
+      await updatePlaybook.mutateAsync({ id: playbookToArchive.id, status: "arquivado" });
       setArchiveDialogOpen(false);
       setPlaybookToArchive(null);
     }
@@ -123,15 +112,15 @@ export const PlaybooksAutomationView = () => {
     }
   };
 
-  const activePlaybooks = playbooks?.filter(p => p.status === 'ativo').length || 0;
+  const activePlaybooks = playbooks?.filter((p) => p.status === "ativo").length || 0;
   const totalExecutions = 0; // TODO: Calcular do banco
 
   // Filtrar playbooks baseado no filtro selecionado
-  const filteredPlaybooks = playbooks?.filter(p => {
-    if (showArchived === 'archived') {
-      return p.status === 'arquivado';
+  const filteredPlaybooks = playbooks?.filter((p) => {
+    if (showArchived === "archived") {
+      return p.status === "arquivado";
     }
-    return p.status !== 'arquivado';
+    return p.status !== "arquivado";
   });
 
   if (isLoading) {
@@ -162,9 +151,7 @@ export const PlaybooksAutomationView = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{activePlaybooks}</div>
-            <p className="text-xs text-muted-foreground">
-              {playbooks?.length || 0} total cadastrados
-            </p>
+            <p className="text-xs text-muted-foreground">{playbooks?.length || 0} total cadastrados</p>
           </CardContent>
         </Card>
 
@@ -175,9 +162,7 @@ export const PlaybooksAutomationView = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalExecutions}</div>
-            <p className="text-xs text-muted-foreground">
-              Mensagens enviadas este mês
-            </p>
+            <p className="text-xs text-muted-foreground">Mensagens enviadas este mês</p>
           </CardContent>
         </Card>
 
@@ -188,9 +173,7 @@ export const PlaybooksAutomationView = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">--</div>
-            <p className="text-xs text-muted-foreground">
-              Em desenvolvimento
-            </p>
+            <p className="text-xs text-muted-foreground">Em desenvolvimento</p>
           </CardContent>
         </Card>
       </div>
@@ -198,19 +181,17 @@ export const PlaybooksAutomationView = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Playbooks de Automação</h2>
-          <p className="text-muted-foreground">
-            Configure fluxos automáticos de mensagens para lembretes e reativação
-          </p>
+          <h2 className="text-2xl font-bold tracking-tight">Processos</h2>
+          <p className="text-muted-foreground">Configure fluxos automáticos de mensagens para lembretes e reativação</p>
         </div>
         <div className="flex items-center gap-3">
-          <Select value={showArchived} onValueChange={(value: 'active' | 'archived') => setShowArchived(value)}>
+          <Select value={showArchived} onValueChange={(value: "active" | "archived") => setShowArchived(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="active">Playbooks Ativos</SelectItem>
-              <SelectItem value="archived">Playbooks Arquivados</SelectItem>
+              <SelectItem value="active">Processos Ativos</SelectItem>
+              <SelectItem value="archived">Processos Arquivados</SelectItem>
             </SelectContent>
           </Select>
 
@@ -241,15 +222,14 @@ export const PlaybooksAutomationView = () => {
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Clock className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">
-              {showArchived === 'archived' ? 'Nenhum playbook arquivado' : 'Nenhum playbook configurado'}
+              {showArchived === "archived" ? "Nenhum playbook arquivado" : "Nenhum playbook configurado"}
             </h3>
             <p className="text-muted-foreground text-center mb-4">
-              {showArchived === 'archived' 
-                ? 'Não há playbooks arquivados no momento'
-                : 'Crie seu primeiro playbook de automação para começar a enviar mensagens automáticas'
-              }
+              {showArchived === "archived"
+                ? "Não há playbooks arquivados no momento"
+                : "Crie seu primeiro playbook de automação para começar a enviar mensagens automáticas"}
             </p>
-            {showArchived === 'active' && isAdmin && (
+            {showArchived === "active" && isAdmin && (
               <Button onClick={handleCreateNew}>
                 <Plus className="mr-2 h-4 w-4" />
                 Criar Primeiro Playbook
@@ -276,27 +256,17 @@ export const PlaybooksAutomationView = () => {
                   </div>
                 </div>
                 {playbook.descricao && (
-                  <CardDescription className="line-clamp-2 mt-2">
-                    {playbook.descricao}
-                  </CardDescription>
+                  <CardDescription className="line-clamp-2 mt-2">{playbook.descricao}</CardDescription>
                 )}
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEdit(playbook)}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => handleEdit(playbook)}>
                     <Edit className="h-3 w-3 mr-1" />
                     Editar
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleToggleStatus(playbook)}
-                  >
-                    {playbook.status === 'ativo' ? (
+                  <Button variant="outline" size="sm" onClick={() => handleToggleStatus(playbook)}>
+                    {playbook.status === "ativo" ? (
                       <>
                         <Pause className="h-3 w-3 mr-1" />
                         Pausar
@@ -308,12 +278,8 @@ export const PlaybooksAutomationView = () => {
                       </>
                     )}
                   </Button>
-                  {playbook.status !== 'arquivado' && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleArchive(playbook)}
-                    >
+                  {playbook.status !== "arquivado" && (
+                    <Button variant="outline" size="sm" onClick={() => handleArchive(playbook)}>
                       <Archive className="h-3 w-3" />
                     </Button>
                   )}
@@ -348,15 +314,13 @@ export const PlaybooksAutomationView = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Arquivamento</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja arquivar este playbook? Ele não será mais executado automaticamente,
-              mas você poderá reativá-lo posteriormente.
+              Tem certeza que deseja arquivar este playbook? Ele não será mais executado automaticamente, mas você
+              poderá reativá-lo posteriormente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Não</AlertDialogCancel>
-            <AlertDialogAction onClick={handleArchiveConfirm}>
-              Sim, Arquivar
-            </AlertDialogAction>
+            <AlertDialogAction onClick={handleArchiveConfirm}>Sim, Arquivar</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -367,15 +331,13 @@ export const PlaybooksAutomationView = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir este playbook? Esta ação não pode ser desfeita.
-              Todos os passos e mensagens associadas também serão excluídos.
+              Tem certeza que deseja excluir este playbook? Esta ação não pode ser desfeita. Todos os passos e mensagens
+              associadas também serão excluídos.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConfirm}>
-              Excluir
-            </AlertDialogAction>
+            <AlertDialogAction onClick={handleDeleteConfirm}>Excluir</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
