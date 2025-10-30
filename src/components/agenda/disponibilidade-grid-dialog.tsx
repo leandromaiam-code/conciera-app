@@ -314,15 +314,15 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                             <> até {format(new Date(periodo.data_fim), "dd/MM/yyyy", { locale: ptBR })}</>
                           )}
                         </div>
-                        <div className="text-sm text-muted-foreground mt-0.5">
-                          {periodo.horario_inicio} - {periodo.horario_fim}
-                        </div>
                         <div className="text-sm font-medium mt-1">
                           {periodo.ativo ? (
                             <span className="text-green-600 dark:text-green-400">✅ Disponível</span>
                           ) : (
                             <span className="text-red-600 dark:text-red-400">🚫 Bloqueado</span>
                           )}
+                          <span className="text-muted-foreground ml-2">
+                            {periodo.horario_inicio} - {periodo.horario_fim}
+                          </span>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
