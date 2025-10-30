@@ -19,7 +19,7 @@ const getPageTitle = (page: string): string => {
     analytics: "Analytics e Relatórios",
     conversas: "Histórico de Conversas",
     playbooks: "Gestão de Playbooks",
-    "playbooks-automation": "Automações de Playbooks",
+    "playbooks-automation": "Processos Personalizados",
     configuracoes: "Configurações do Sistema"
   };
   return titles[page] || "CONCIERA Suite™️";

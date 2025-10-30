@@ -30,7 +30,7 @@ const navigationItems = [
   { id: "agenda", icon: Calendar, label: "Agendamentos" },
   { id: "analytics", icon: BarChart3, label: "Analytics" },
   { id: "conversas", icon: MessageSquare, label: "Conversas" },
-  { id: "playbooks-automation", icon: Clock, label: "Automações" },
+  { id: "playbooks-automation", icon: Clock, label: "Processos" },
   { id: "configuracoes", icon: Settings, label: "Configurações" },
 ];
 
