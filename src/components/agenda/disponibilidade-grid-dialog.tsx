@@ -3,15 +3,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useDisponibilidadeAgenda, DisponibilidadeAgenda } from "@/hooks/use-disponibilidade-agenda";
 import { Switch } from "@/components/ui/switch";
 import { Trash2, Plus, Calendar as CalendarIcon, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { format, addDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { EditSlotDialog } from "./edit-slot-dialog";
 
 interface DisponibilidadeGridDialogProps {
   open: boolean;
@@ -38,32 +37,53 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
   const { disponibilidades, createDisponibilidade, updateDisponibilidade, deleteDisponibilidade } = useDisponibilidadeAgenda();
   
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to?: Date | undefined }>({ from: undefined, to: undefined });
-  const [selectedPeriod, setSelectedPeriod] = useState<'recorrente' | 'periodo'>('recorrente');
+  const [editingSlot, setEditingSlot] = useState<{ dia: string; turno: string; slot: DisponibilidadeAgenda | null } | null>(null);
   
   const recorrentes = disponibilidades.filter(d => d.is_recorrente);
   const periodos = disponibilidades.filter(d => !d.is_recorrente);
 
-  const handleToggleSlot = async (dia: string, turno: string) => {
+  const handleSlotClick = (dia: string, turno: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     const existing = recorrentes.find(
       d => d.dia_semana === dia && d.turno === turno && d.is_recorrente
+    );
+    setEditingSlot({ dia, turno, slot: existing || null });
+  };
+
+  const handleSaveSlot = async (data: {
+    horario_inicio: string;
+    horario_fim: string;
+    tipo: string;
+    procedimento: string;
+  }) => {
+    if (!editingSlot) return;
+
+    const existing = recorrentes.find(
+      d => d.dia_semana === editingSlot.dia && d.turno === editingSlot.turno
     );
 
     if (existing) {
       await updateDisponibilidade.mutateAsync({
         id: existing.id,
-        ativo: !existing.ativo
+        horario_inicio: data.horario_inicio,
+        horario_fim: data.horario_fim,
+        tipo: data.tipo as any,
+        procedimento: data.procedimento,
+        ativo: true
       });
+      toast.success("Disponibilidade atualizada");
     } else {
       await createDisponibilidade.mutateAsync({
-        dia_semana: dia as any,
-        turno: turno as any,
-        horario_inicio: turno === 'manha' ? '08:00' : turno === 'tarde' ? '14:00' : '18:00',
-        horario_fim: turno === 'manha' ? '12:00' : turno === 'tarde' ? '18:00' : '22:00',
-        tipo: 'ambos',
-        procedimento: 'todos',
+        dia_semana: editingSlot.dia as any,
+        turno: editingSlot.turno as any,
+        horario_inicio: data.horario_inicio,
+        horario_fim: data.horario_fim,
+        tipo: data.tipo as any,
+        procedimento: data.procedimento,
         ativo: true,
         is_recorrente: true
       });
+      toast.success("Disponibilidade criada");
     }
   };
 
@@ -140,7 +160,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                     return (
                       <div key={turno.value} className="border-r border-t last:border-r-0 p-2 bg-background">
                         <button
-                          onClick={() => handleToggleSlot(dia.value, turno.value)}
+                          onClick={(e) => handleSlotClick(dia.value, turno.value, e)}
                           className={`w-full h-full min-h-[70px] rounded-md transition-all flex flex-col items-center justify-center gap-1.5 border-2 ${
                             isActive 
                               ? 'bg-primary text-primary-foreground hover:bg-primary/90 border-primary shadow-sm' 
@@ -158,7 +178,10 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                               </span>
                             </>
                           ) : (
-                            <Plus className="w-5 h-5" />
+                            <>
+                              <Plus className="w-5 h-5" />
+                              <span className="text-[10px] mt-1">Adicionar</span>
+                            </>
                           )}
                         </button>
                       </div>
@@ -268,6 +291,15 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
           </Button>
         </div>
       </DialogContent>
+
+      <EditSlotDialog
+        open={!!editingSlot}
+        onClose={() => setEditingSlot(null)}
+        slot={editingSlot?.slot || null}
+        diaSemana={editingSlot?.dia || ''}
+        turno={editingSlot?.turno || ''}
+        onSave={handleSaveSlot}
+      />
     </Dialog>
   );
 }
