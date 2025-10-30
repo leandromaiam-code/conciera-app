@@ -163,17 +163,17 @@ export function EditSlotDialog({ open, onClose, slot, diaSemana, turno, onSave }
             <Label htmlFor="procedimento" className="text-sm font-medium">
               Procedimentos
             </Label>
-            <Select value={procedimento} onValueChange={setProcedimento}>
-              <SelectTrigger id="procedimento">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todos">Todos os Procedimentos</SelectItem>
-                <SelectItem value="avaliacao">Apenas Avaliação</SelectItem>
-                <SelectItem value="consulta">Apenas Consulta</SelectItem>
-                <SelectItem value="retorno">Apenas Retorno</SelectItem>
-              </SelectContent>
-            </Select>
+            <Input
+              id="procedimento"
+              type="text"
+              placeholder="Ex: Todos, Avaliação, Limpeza..."
+              value={procedimento}
+              onChange={(e) => setProcedimento(e.target.value)}
+              className="w-full"
+            />
+            <p className="text-xs text-muted-foreground">
+              Digite os procedimentos que podem ser agendados neste horário
+            </p>
           </div>
         </div>
 

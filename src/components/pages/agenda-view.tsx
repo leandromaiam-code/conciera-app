@@ -176,7 +176,7 @@ export const AgendaView = () => {
 
   return (
     <div className="space-y-md lg:space-y-lg">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <Button 
             className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto"
