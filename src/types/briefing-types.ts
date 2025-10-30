@@ -44,6 +44,8 @@ export interface AnalyticsMetricasMensaisVendas {
   analytics_metricas_mensal_vendas_rpg_diario: number;
   analytics_metricas_mensal_vendas_valor_medio_consulta: number;
   analytics_metricas_mensal_vendas_sparkline_30d: number[];
+  novos_leads_hoje?: number;
+  agendamentos_hoje?: number;
 }
 
 // Conversion Funnel (calculated metrics)

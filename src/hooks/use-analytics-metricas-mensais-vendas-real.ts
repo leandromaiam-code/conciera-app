@@ -64,7 +64,9 @@ export const useAnalyticsMetricasMensaisVendasReal = (
           analytics_metricas_mensal_vendas_rpg_mensal: rpgMensal,
           analytics_metricas_mensal_vendas_rpg_diario: rpgDiario,
           analytics_metricas_mensal_vendas_valor_medio_consulta: valorMedioConsulta,
-          analytics_metricas_mensal_vendas_sparkline_30d: sparkline30d
+          analytics_metricas_mensal_vendas_sparkline_30d: sparkline30d,
+          novos_leads_hoje: row.novos_leads_hoje || 0,
+          agendamentos_hoje: row.agendamentos_hoje || 0
         };
 
         setMetrics(metricsData);
@@ -74,7 +76,9 @@ export const useAnalyticsMetricasMensaisVendasReal = (
           analytics_metricas_mensal_vendas_rpg_mensal: 0,
           analytics_metricas_mensal_vendas_rpg_diario: 0,
           analytics_metricas_mensal_vendas_valor_medio_consulta: 0,
-          analytics_metricas_mensal_vendas_sparkline_30d: Array(30).fill(0)
+          analytics_metricas_mensal_vendas_sparkline_30d: Array(30).fill(0),
+          novos_leads_hoje: 0,
+          agendamentos_hoje: 0
         };
         setMetrics(defaultMetrics);
       }

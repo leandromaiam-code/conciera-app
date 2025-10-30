@@ -68,7 +68,7 @@ export const RevenuePerformancePanel = () => {
         <div className="grid grid-cols-2 gap-lg items-end">
           {/* RPG Principal */}
           <div>
-            <div className="text-6xl font-bold text-transparent bg-gradient-to-r from-dourado to-yellow-600 bg-clip-text font-playfair mb-xs">
+            <div className="text-4xl md:text-6xl font-bold text-transparent bg-gradient-to-r from-dourado to-yellow-600 bg-clip-text font-playfair mb-xs">
               R$ {(metrics.analytics_metricas_mensal_vendas_rpg_mensal / 1000).toFixed(1).replace('.', ',')}k
             </div>
             <div className="text-sm text-grafite mb-sm">
