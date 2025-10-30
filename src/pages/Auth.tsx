@@ -23,6 +23,7 @@ export const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -127,9 +128,50 @@ export const Auth = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    const emailSchema = z.string().trim().email({ message: "Email inválido" });
+    
+    try {
+      emailSchema.parse(formData.email);
+      setErrors([]);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setErrors(error.errors.map(err => err.message));
+      }
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(formData.email.trim(), {
+        redirectTo: `${window.location.origin}/auth`,
+      });
+
+      if (error) {
+        setErrors([error.message]);
+        return;
+      }
+
+      toast({
+        title: "Email enviado",
+        description: "Verifique seu email para redefinir sua senha",
+      });
+      
+      setIsForgotPassword(false);
+      setFormData({ email: '', password: '', nome: '' });
+    } catch (error) {
+      console.error('Erro ao enviar email de recuperação:', error);
+      setErrors(['Erro inesperado ao enviar email de recuperação']);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isLogin) {
+    if (isForgotPassword) {
+      handleForgotPassword();
+    } else if (isLogin) {
       handleLogin();
     } else {
       handleSignup();
@@ -161,18 +203,21 @@ export const Auth = () => {
               />
             </div>
             <CardTitle className="text-2xl">
-              {isLogin ? 'Bem-vindo(a) de volta' : 'Crie a sua Conta'}
+              {isForgotPassword ? 'Recuperar Senha' : (isLogin ? 'Bem-vindo(a) de volta' : 'Crie a sua Conta')}
             </CardTitle>
             <CardDescription>
-              {isLogin 
-                ? 'Aceda à sua suite de inteligência de receita'
-                : 'Comece a transformar atendimento em resultado'
+              {isForgotPassword
+                ? 'Digite seu email para receber instruções de recuperação'
+                : (isLogin 
+                  ? 'Aceda à sua suite de inteligência de receita'
+                  : 'Comece a transformar atendimento em resultado'
+                )
               }
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
+              {!isLogin && !isForgotPassword && (
                 <div className="space-y-2">
                   <Label htmlFor="nome">Nome Completo</Label>
                   <Input
@@ -202,19 +247,38 @@ export const Auth = () => {
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Digite sua senha"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  disabled={loading}
-                  required
-                  className="placeholder:text-gray-500"
-                />
-              </div>
+              {!isForgotPassword && (
+                <div className="space-y-2">
+                  <Label htmlFor="password">Senha</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Digite sua senha"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    disabled={loading}
+                    required
+                    className="placeholder:text-gray-500"
+                  />
+                </div>
+              )}
+
+              {isLogin && !isForgotPassword && (
+                <div className="text-right">
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => {
+                      setIsForgotPassword(true);
+                      setErrors([]);
+                    }}
+                    disabled={loading}
+                    className="text-sm text-grafite hover:text-onyx p-0 h-auto"
+                  >
+                    Esqueci a senha?
+                  </Button>
+                </div>
+              )}
 
               {errors.length > 0 && (
                 <Alert variant="destructive">
@@ -233,7 +297,7 @@ export const Auth = () => {
                 className="w-full bg-dourado text-onyx hover:bg-dourado/90"
                 disabled={loading}
               >
-                {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Criar Conta')}
+                {loading ? 'Processando...' : (isForgotPassword ? 'Enviar Email' : (isLogin ? 'Entrar' : 'Criar Conta'))}
               </Button>
             </form>
 
@@ -241,16 +305,23 @@ export const Auth = () => {
               <Button
                 variant="link"
                 onClick={() => {
-                  setIsLogin(!isLogin);
+                  if (isForgotPassword) {
+                    setIsForgotPassword(false);
+                  } else {
+                    setIsLogin(!isLogin);
+                  }
                   setErrors([]);
                   setFormData({ email: '', password: '', nome: '' });
                 }}
                 disabled={loading}
                 className="text-grafite hover:text-onyx"
               >
-                {isLogin 
-                  ? 'Não tem uma conta? Criar conta'
-                  : 'Já tem uma conta? Fazer login'
+                {isForgotPassword
+                  ? 'Voltar para login'
+                  : (isLogin 
+                    ? 'Não tem uma conta? Criar conta'
+                    : 'Já tem uma conta? Fazer login'
+                  )
                 }
               </Button>
             </div>
