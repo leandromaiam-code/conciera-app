@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useDisponibilidadeAgenda, DisponibilidadeAgenda } from "@/hooks/use-disponibilidade-agenda";
 import { Switch } from "@/components/ui/switch";
-import { Trash2, Plus, Calendar as CalendarIcon } from "lucide-react";
+import { Trash2, Plus, Calendar as CalendarIcon, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { format, addDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -109,18 +109,18 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
             <TabsTrigger value="periodos">Exceções e Períodos</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="semanal" className="space-y-4">
-            <div className="text-sm text-muted-foreground mb-4">
-              Clique para ativar/desativar disponibilidade em cada turno
+          <TabsContent value="semanal" className="space-y-4 bg-background">
+            <div className="text-sm text-foreground/70 mb-4 p-4 bg-muted/50 rounded-lg border">
+              💡 Clique nos slots para ativar/desativar ou use o ícone <Pencil className="w-3 h-3 inline mx-1" /> para editar horários específicos
             </div>
 
             {/* Grid de Disponibilidade */}
-            <div className="border rounded-lg overflow-hidden">
+            <div className="border rounded-lg overflow-hidden bg-card shadow-sm">
               {/* Header */}
-              <div className="grid grid-cols-4 bg-muted">
-                <div className="p-3 font-medium border-r text-sm"></div>
+              <div className="grid grid-cols-4 bg-primary/10 border-b-2 border-primary/20">
+                <div className="p-3 font-semibold border-r text-sm text-foreground"></div>
                 {turnos.map(turno => (
-                  <div key={turno.value} className="p-3 text-center font-medium border-r last:border-r-0 text-sm">
+                  <div key={turno.value} className="p-3 text-center font-semibold border-r last:border-r-0 text-sm text-foreground">
                     <span className="mr-1">{turno.icon}</span>
                     {turno.label}
                   </div>
@@ -129,8 +129,8 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
 
               {/* Rows */}
               {diasSemana.map((dia, idx) => (
-                <div key={dia.value} className={`grid grid-cols-4 ${idx % 2 === 0 ? 'bg-background' : 'bg-muted/30'}`}>
-                  <div className="p-3 font-medium border-r border-t flex items-center text-sm">
+                <div key={dia.value} className={`grid grid-cols-4 ${idx % 2 === 0 ? 'bg-card' : 'bg-muted/20'}`}>
+                  <div className="p-3 font-semibold border-r border-t flex items-center text-sm text-foreground bg-muted/30">
                     {dia.label}
                   </div>
                   {turnos.map(turno => {
@@ -138,18 +138,19 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                     const slot = recorrentes.find(d => d.dia_semana === dia.value && d.turno === turno.value);
                     
                     return (
-                      <div key={turno.value} className="border-r border-t last:border-r-0 p-2">
+                      <div key={turno.value} className="border-r border-t last:border-r-0 p-2 bg-background">
                         <button
                           onClick={() => handleToggleSlot(dia.value, turno.value)}
-                          className={`w-full h-full min-h-[60px] rounded-md transition-all flex flex-col items-center justify-center gap-1 ${
+                          className={`w-full h-full min-h-[70px] rounded-md transition-all flex flex-col items-center justify-center gap-1.5 border-2 ${
                             isActive 
-                              ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
-                              : 'bg-muted hover:bg-muted/70 text-muted-foreground'
+                              ? 'bg-primary text-primary-foreground hover:bg-primary/90 border-primary shadow-sm' 
+                              : 'bg-card hover:bg-accent text-muted-foreground border-border hover:border-primary/30'
                           }`}
                         >
                           {slot ? (
                             <>
-                              <span className="text-xs font-medium">
+                              <Pencil className="w-3.5 h-3.5 mb-0.5" />
+                              <span className="text-xs font-semibold">
                                 {slot.horario_inicio} - {slot.horario_fim}
                               </span>
                               <span className="text-[10px] opacity-75">
@@ -157,7 +158,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                               </span>
                             </>
                           ) : (
-                            <Plus className="w-4 h-4" />
+                            <Plus className="w-5 h-5" />
                           )}
                         </button>
                       </div>
@@ -167,40 +168,44 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
               ))}
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mt-4">
-              <div className="flex items-center gap-1">
-                <div className="w-4 h-4 bg-primary rounded"></div>
-                <span>Disponível</span>
+            <div className="flex items-center gap-4 text-xs text-foreground/70 mt-4 p-3 bg-muted/30 rounded-lg border">
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 bg-primary rounded border-2 border-primary"></div>
+                <span className="font-medium">Disponível</span>
               </div>
-              <div className="flex items-center gap-1">
-                <div className="w-4 h-4 bg-muted rounded"></div>
-                <span>Indisponível</span>
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 bg-card rounded border-2 border-border"></div>
+                <span className="font-medium">Indisponível</span>
+              </div>
+              <div className="flex items-center gap-2 ml-auto">
+                <Pencil className="w-4 h-4" />
+                <span className="font-medium">Clique para editar horários</span>
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="periodos" className="space-y-4">
-            <div className="text-sm text-muted-foreground mb-4">
-              Adicione períodos específicos de bloqueio ou disponibilidade excepcional
+          <TabsContent value="periodos" className="space-y-4 bg-background">
+            <div className="text-sm text-foreground/70 mb-4 p-4 bg-muted/50 rounded-lg border">
+              📅 Adicione períodos específicos de bloqueio ou disponibilidade excepcional
             </div>
 
             {/* Add Period Form */}
-            <div className="border rounded-lg p-4 space-y-4">
-              <div className="space-y-2">
-                <Label>Selecione o período</Label>
-                <div className="flex gap-2 justify-center">
+            <div className="border rounded-lg p-6 space-y-6 bg-card shadow-sm">
+              <div className="space-y-3">
+                <Label className="text-base font-semibold text-foreground">Selecione o período</Label>
+                <div className="flex gap-2 justify-center p-4 bg-background rounded-lg border">
                   <Calendar
                     mode="range"
                     selected={dateRange}
                     onSelect={(range) => setDateRange(range || { from: undefined, to: undefined })}
                     disabled={(date) => date < addDays(new Date(), -1)}
-                    className="border rounded-md pointer-events-auto"
+                    className="border rounded-md pointer-events-auto bg-card"
                   />
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <Button onClick={handleAddPeriodo} disabled={!dateRange.from}>
+                <Button onClick={handleAddPeriodo} disabled={!dateRange.from} size="lg">
                   <CalendarIcon className="w-4 h-4 mr-2" />
                   Adicionar Período de Bloqueio
                 </Button>
@@ -208,28 +213,32 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
             </div>
 
             {/* List of Periods */}
-            <div className="space-y-2">
-              <Label>Períodos Configurados</Label>
+            <div className="space-y-3">
+              <Label className="text-base font-semibold text-foreground">Períodos Configurados</Label>
               {periodos.length === 0 ? (
-                <div className="text-sm text-muted-foreground text-center py-8 border rounded-lg">
+                <div className="text-sm text-muted-foreground text-center py-12 border-2 border-dashed rounded-lg bg-muted/30">
                   Nenhum período específico configurado
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {periodos.map(periodo => (
-                    <div key={periodo.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={periodo.id} className="flex items-center justify-between p-4 border-2 rounded-lg bg-card shadow-sm hover:border-primary/30 transition-colors">
                       <div className="flex-1">
-                        <div className="font-medium">
+                        <div className="font-semibold text-foreground">
                           {periodo.data_inicio && format(new Date(periodo.data_inicio), "dd/MM/yyyy", { locale: ptBR })}
                           {periodo.data_fim && periodo.data_fim !== periodo.data_inicio && (
                             <> até {format(new Date(periodo.data_fim), "dd/MM/yyyy", { locale: ptBR })}</>
                           )}
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          {periodo.ativo ? '✅ Disponível' : '🚫 Bloqueado'}
+                        <div className="text-sm font-medium mt-1">
+                          {periodo.ativo ? (
+                            <span className="text-green-600 dark:text-green-400">✅ Disponível</span>
+                          ) : (
+                            <span className="text-red-600 dark:text-red-400">🚫 Bloqueado</span>
+                          )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <Switch
                           checked={periodo.ativo}
                           onCheckedChange={(checked) => 
@@ -240,6 +249,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                           variant="ghost"
                           size="icon"
                           onClick={() => deleteDisponibilidade.mutateAsync(periodo.id)}
+                          className="hover:bg-destructive/10 hover:text-destructive"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
