@@ -87,6 +87,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
         procedimento: data.procedimento,
         ativo: true,
         is_recorrente: true,
+        evento: 'disponibilidade',
         ...({ tipo_consulta: data.tipo_consulta } as any)
       });
       toast.success("Disponibilidade criada");
@@ -109,6 +110,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
       procedimento: 'todos',
       ativo: false, // Bloqueio por padrão
       is_recorrente: false,
+      evento: 'bloqueio',
       data_inicio: format(dateRange.from, 'yyyy-MM-dd'),
       data_fim: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : format(dateRange.from, 'yyyy-MM-dd')
     });

@@ -17,6 +17,7 @@ export interface DisponibilidadeAgenda {
   data_inicio?: string;
   data_fim?: string;
   is_recorrente: boolean;
+  evento: 'disponibilidade' | 'bloqueio';
   created_at?: string;
   updated_at?: string;
 }

@@ -489,6 +489,7 @@ export type Database = {
           data_inicio: string | null
           dia_semana: string
           empresa_id: number
+          evento: string
           horario_fim: string
           horario_inicio: string
           id: number
@@ -506,6 +507,7 @@ export type Database = {
           data_inicio?: string | null
           dia_semana: string
           empresa_id: number
+          evento?: string
           horario_fim: string
           horario_inicio: string
           id?: number
@@ -523,6 +525,7 @@ export type Database = {
           data_inicio?: string | null
           dia_semana?: string
           empresa_id?: number
+          evento?: string
           horario_fim?: string
           horario_inicio?: string
           id?: number
