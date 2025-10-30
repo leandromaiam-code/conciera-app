@@ -117,10 +117,10 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
             {/* Grid de Disponibilidade */}
             <div className="border rounded-lg overflow-hidden">
               {/* Header */}
-              <div className="grid grid-cols-8 bg-muted">
-                <div className="p-3 font-medium border-r"></div>
+              <div className="grid grid-cols-4 bg-muted">
+                <div className="p-3 font-medium border-r text-sm"></div>
                 {turnos.map(turno => (
-                  <div key={turno.value} className="p-3 text-center font-medium border-r last:border-r-0 col-span-2">
+                  <div key={turno.value} className="p-3 text-center font-medium border-r last:border-r-0 text-sm">
                     <span className="mr-1">{turno.icon}</span>
                     {turno.label}
                   </div>
@@ -129,8 +129,8 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
 
               {/* Rows */}
               {diasSemana.map((dia, idx) => (
-                <div key={dia.value} className={`grid grid-cols-8 ${idx % 2 === 0 ? 'bg-background' : 'bg-muted/30'}`}>
-                  <div className="p-3 font-medium border-r border-t flex items-center">
+                <div key={dia.value} className={`grid grid-cols-4 ${idx % 2 === 0 ? 'bg-background' : 'bg-muted/30'}`}>
+                  <div className="p-3 font-medium border-r border-t flex items-center text-sm">
                     {dia.label}
                   </div>
                   {turnos.map(turno => {
@@ -138,7 +138,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                     const slot = recorrentes.find(d => d.dia_semana === dia.value && d.turno === turno.value);
                     
                     return (
-                      <div key={turno.value} className="col-span-2 border-r border-t last:border-r-0 p-2">
+                      <div key={turno.value} className="border-r border-t last:border-r-0 p-2">
                         <button
                           onClick={() => handleToggleSlot(dia.value, turno.value)}
                           className={`w-full h-full min-h-[60px] rounded-md transition-all flex flex-col items-center justify-center gap-1 ${
@@ -147,17 +147,18 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                               : 'bg-muted hover:bg-muted/70 text-muted-foreground'
                           }`}
                         >
-                          {slot && (
+                          {slot ? (
                             <>
                               <span className="text-xs font-medium">
                                 {slot.horario_inicio} - {slot.horario_fim}
                               </span>
-                              <span className="text-xs opacity-75">
-                                {slot.tipo === 'ambos' ? 'Todos' : slot.tipo}
+                              <span className="text-[10px] opacity-75">
+                                {slot.procedimento}
                               </span>
                             </>
+                          ) : (
+                            <Plus className="w-4 h-4" />
                           )}
-                          {!slot && <Plus className="w-4 h-4" />}
                         </button>
                       </div>
                     );
@@ -187,13 +188,13 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
             <div className="border rounded-lg p-4 space-y-4">
               <div className="space-y-2">
                 <Label>Selecione o período</Label>
-                <div className="flex gap-2">
+                <div className="flex gap-2 justify-center">
                   <Calendar
                     mode="range"
                     selected={dateRange}
                     onSelect={(range) => setDateRange(range || { from: undefined, to: undefined })}
                     disabled={(date) => date < addDays(new Date(), -1)}
-                    className="border rounded-md"
+                    className="border rounded-md pointer-events-auto"
                   />
                 </div>
               </div>
