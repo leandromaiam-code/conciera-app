@@ -11,6 +11,7 @@ export interface DisponibilidadeAgenda {
   horario_inicio: string;
   horario_fim: string;
   tipo: 'primeira_consulta' | 'retorno' | 'ambos';
+  tipo_consulta: 'primeira_consulta' | 'retorno' | 'ambos';
   procedimento: string;
   ativo: boolean;
   data_inicio?: string;

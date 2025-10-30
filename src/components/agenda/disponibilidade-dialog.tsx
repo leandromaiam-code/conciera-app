@@ -46,6 +46,7 @@ export const DisponibilidadeDialog = ({ open, onClose }: DisponibilidadeDialogPr
     horario_inicio: '09:00',
     horario_fim: '12:00',
     tipo: 'ambos' as DisponibilidadeAgenda['tipo'],
+    tipo_consulta: 'ambos' as DisponibilidadeAgenda['tipo_consulta'],
     procedimento: 'todos',
     ativo: true,
     is_recorrente: true,

@@ -105,6 +105,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
       horario_inicio: periodoHorarioInicio,
       horario_fim: periodoHorarioFim,
       tipo: 'ambos',
+      tipo_consulta: 'ambos',
       procedimento: 'todos',
       ativo: false, // Bloqueio por padrão
       is_recorrente: false,

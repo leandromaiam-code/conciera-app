@@ -495,6 +495,7 @@ export type Database = {
           is_recorrente: boolean
           procedimento: string | null
           tipo: string
+          tipo_consulta: string
           turno: string
           updated_at: string | null
         }
@@ -511,6 +512,7 @@ export type Database = {
           is_recorrente?: boolean
           procedimento?: string | null
           tipo?: string
+          tipo_consulta?: string
           turno: string
           updated_at?: string | null
         }
@@ -527,6 +529,7 @@ export type Database = {
           is_recorrente?: boolean
           procedimento?: string | null
           tipo?: string
+          tipo_consulta?: string
           turno?: string
           updated_at?: string | null
         }
