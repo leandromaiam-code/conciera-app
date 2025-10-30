@@ -111,7 +111,7 @@ export const ConversasView = () => {
   const filteredConversas = conversas;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-4">
       {/* Filters */}
       <Card>
         <CardHeader>

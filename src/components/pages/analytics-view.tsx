@@ -31,7 +31,7 @@ export const AnalyticsView = () => {
   const sortedChannelData = [...analytics.channelData].sort((a, b) => b.value - a.value);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-4">
 
       {/* KPIs Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

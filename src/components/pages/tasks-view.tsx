@@ -161,7 +161,7 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-4">
       <div className="flex justify-between items-center">
         <div className="flex gap-2">
           <Button

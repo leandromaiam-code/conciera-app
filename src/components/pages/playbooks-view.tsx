@@ -49,7 +49,7 @@ export const PlaybooksView = () => {
   if (!playbooks) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-4">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-onyx">Processos Personalizados</h1>
         <Button className="bg-dourado text-onyx hover:bg-dourado/90">

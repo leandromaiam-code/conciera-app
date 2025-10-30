@@ -256,7 +256,7 @@ export const ConfiguracoesView = () => {
   }
 
   return (
-    <div className="space-y-md lg:space-y-lg">
+    <div className="space-y-md lg:space-y-lg mt-4">
       {/* Informações da Clínica */}
       <Card>
         <CardHeader>

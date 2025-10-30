@@ -17,7 +17,7 @@ export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewPr
   const { data: insights, isLoading: isLoadingInsights } = useDashboardInsights();
 
   return (
-    <div className="animate-fade-in space-y-sm lg:space-y-md">
+    <div className="animate-fade-in space-y-sm lg:space-y-md mt-4">
       {/* Main Dashboard Grid - Revenue Focus */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
         {/* Revenue Performance Panel - Takes 2 columns on desktop, full width on mobile */}
