@@ -74,6 +74,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
         tipo: data.tipo as any,
         procedimento: data.procedimento,
         ativo: true,
+        evento: 'disponibilidade',
         ...({ tipo_consulta: data.tipo_consulta } as any)
       });
       toast.success("Disponibilidade atualizada");
