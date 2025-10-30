@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { KPICard } from "./kpi-card";
 import { RevenuePerformancePanel } from "./revenue-performance-panel";
 import { ConversionFunnelWidget } from "./conversion-funnel-widget";
 import { OpportunityFeed } from "./opportunity-feed";
+import { MonthSelector } from "./month-selector";
 import { MessageSquare, Clock, Star, CalendarCheck } from "lucide-react";
 import { useDashboardSecondaryKPIs } from "@/hooks/use-dashboard-secondary-kpis";
 import { useDashboardInsights } from "@/hooks/use-dashboard-insights";
 import { Skeleton } from "@/components/ui/skeleton";
+import { startOfMonth } from "date-fns";
 
 interface DashboardViewProps {
   onWhatsAppClick: () => void;
@@ -13,16 +16,26 @@ interface DashboardViewProps {
 }
 
 export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewProps) => {
-  const { data: secondaryKPIs, isLoading: isLoadingKPIs } = useDashboardSecondaryKPIs();
-  const { data: insights, isLoading: isLoadingInsights } = useDashboardInsights();
+  const [selectedMonth, setSelectedMonth] = useState<Date>(startOfMonth(new Date()));
+  
+  const { data: secondaryKPIs, isLoading: isLoadingKPIs } = useDashboardSecondaryKPIs(undefined, selectedMonth);
+  const { data: insights, isLoading: isLoadingInsights } = useDashboardInsights(undefined, selectedMonth);
 
   return (
     <div className="animate-fade-in space-y-sm lg:space-y-md mt-4">
+      {/* Month Selector */}
+      <div className="flex justify-end mb-md">
+        <MonthSelector 
+          selectedMonth={selectedMonth}
+          onMonthChange={setSelectedMonth}
+        />
+      </div>
+
       {/* Main Dashboard Grid - Revenue Focus */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
         {/* Revenue Performance Panel - Takes 2 columns on desktop, full width on mobile */}
         <div className="lg:col-span-2">
-          <RevenuePerformancePanel />
+          <RevenuePerformancePanel selectedMonth={selectedMonth} />
         </div>
 
         {/* Opportunity Feed - Takes 1 column on desktop, full width on mobile */}
@@ -32,7 +45,7 @@ export const DashboardView = ({ onWhatsAppClick, onPageChange }: DashboardViewPr
       </div>
 
       {/* Conversion Funnel Widget */}
-      <ConversionFunnelWidget />
+      <ConversionFunnelWidget selectedMonth={selectedMonth} />
 
       {/* Secondary KPI Row */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-md">

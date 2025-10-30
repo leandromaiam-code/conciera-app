@@ -1,12 +1,26 @@
 import { TrendingUp } from "lucide-react";
 import { useAnalyticsMetricasMensaisVendasReal } from "@/hooks/use-analytics-metricas-mensais-vendas";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 /**
  * Painel Principal: Receita de Pipeline Gerado (RPG)
  * Component central do dashboard focado em performance financeira
  */
-export const RevenuePerformancePanel = () => {
-  const { metrics, isLoading } = useAnalyticsMetricasMensaisVendasReal();
+interface RevenuePerformancePanelProps {
+  selectedMonth?: Date;
+}
+
+export const RevenuePerformancePanel = ({ selectedMonth }: RevenuePerformancePanelProps) => {
+  const anoMes = selectedMonth 
+    ? `${selectedMonth.getFullYear()}-${String(selectedMonth.getMonth() + 1).padStart(2, '0')}`
+    : undefined;
+  
+  const { metrics, isLoading } = useAnalyticsMetricasMensaisVendasReal(undefined, anoMes);
+  
+  const monthName = selectedMonth 
+    ? format(selectedMonth, 'MMMM yyyy', { locale: ptBR })
+    : format(new Date(), 'MMMM yyyy', { locale: ptBR });
 
   if (isLoading) {
     return (
@@ -61,7 +75,7 @@ export const RevenuePerformancePanel = () => {
             </div>
           </div>
           <p className="text-secondary text-grafite">
-            Performance consolidada do mês
+            Performance consolidada de {monthName.charAt(0).toUpperCase() + monthName.slice(1)}
           </p>
         </div>
 

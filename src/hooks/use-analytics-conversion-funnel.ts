@@ -12,9 +12,13 @@ export interface ConversionFunnelData {
   };
 }
 
-export const useAnalyticsConversionFunnel = (funcionariaId?: number) => {
+export const useAnalyticsConversionFunnel = (funcionariaId?: number, selectedMonth?: Date) => {
+  const anoMes = selectedMonth 
+    ? `${selectedMonth.getFullYear()}-${String(selectedMonth.getMonth() + 1).padStart(2, '0')}-01`
+    : `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-01`;
+
   const metricsQuery = useQuery({
-    queryKey: ["conversion-funnel-metrics", funcionariaId],
+    queryKey: ["conversion-funnel-metrics", funcionariaId, anoMes],
     queryFn: async () => {
       let query = supabase
         .from("analytics_metricas_mensais_vendas")
@@ -26,9 +30,11 @@ export const useAnalyticsConversionFunnel = (funcionariaId?: number) => {
           agendamentos_trend,
           leads_whatsapp,
           leads_instagram,
-          leads_indicacao
+          leads_indicacao,
+          clientes_novos,
+          clientes_diferentes
         `)
-        .order("ano_mes", { ascending: false });
+        .eq("ano_mes", anoMes);
 
       if (funcionariaId) {
         query = query.eq("funcionaria_id", funcionariaId);
@@ -47,7 +53,7 @@ export const useAnalyticsConversionFunnel = (funcionariaId?: number) => {
   });
 
   const conversasQuery = useQuery({
-    queryKey: ["conversion-funnel-conversas", funcionariaId],
+    queryKey: ["conversion-funnel-conversas", funcionariaId, anoMes],
     queryFn: async () => {
       let query = supabase
         .from("analytics_conversas_metricas")
@@ -58,7 +64,7 @@ export const useAnalyticsConversionFunnel = (funcionariaId?: number) => {
           tempo_medio_primeira_resposta_segundos,
           taxa_resposta_rapida
         `)
-        .order("ano_mes", { ascending: false });
+        .eq("ano_mes", anoMes);
 
       if (funcionariaId) {
         query = query.eq("funcionaria_id", funcionariaId);
@@ -83,9 +89,14 @@ export const useAnalyticsConversionFunnel = (funcionariaId?: number) => {
     if (!metrics && !conversas) return null;
 
     return {
-      newLeads: metrics?.novos_leads_hoje || 0,
-      scheduledAppointments: metrics?.agendamentos_hoje || 0,
+      // Dados MENSAIS para o funil
+      newLeads: metrics?.clientes_novos || 0,
+      scheduledAppointments: conversas?.conversas_com_agendamento || 0,
       conversionRate: conversas?.taxa_conversao_agendamento || metrics?.taxa_conversao || 0,
+      
+      // Dados diários separados
+      newLeadsToday: metrics?.novos_leads_hoje || 0,
+      scheduledAppointmentsToday: metrics?.agendamentos_hoje || 0,
       
       // Additional metrics
       totalConversations: conversas?.total_conversas || 0,

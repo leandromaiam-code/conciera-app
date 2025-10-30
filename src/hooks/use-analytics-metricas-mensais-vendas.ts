@@ -56,12 +56,24 @@ export const useAnalyticsMetricasMensaisVendas = (funcionariaId?: number) => {
   });
 };
 
-export const useAnalyticsMetricasMensaisVendasReal = (funcionariaId?: number) => {
-  const { data: metrics, isLoading, error } = useAnalyticsMetricasMensaisVendas(funcionariaId);
+export const useAnalyticsMetricasMensaisVendasReal = (funcionariaId?: number, anoMes?: string) => {
+  const { data: allMetrics, isLoading, error } = useAnalyticsMetricasMensaisVendas(funcionariaId);
+  
+  // Filter by anoMes if provided
+  const metrics = useMemo(() => {
+    if (!allMetrics?.length) return null;
+    
+    if (anoMes) {
+      const filtered = allMetrics.filter(m => m.ano_mes.startsWith(anoMes));
+      return filtered.length > 0 ? filtered : null;
+    }
+    
+    return allMetrics;
+  }, [allMetrics, anoMes]);
 
   // Process real data from database
   const processedMetrics = useMemo(() => {
-    if (!metrics?.length) return null;
+    if (!metrics || metrics.length === 0) return null;
     
     const currentMonth = metrics[0];
     

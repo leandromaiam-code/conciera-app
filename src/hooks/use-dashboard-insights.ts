@@ -16,20 +16,20 @@ interface DashboardInsights {
   requestTypes: RequestType[];
 }
 
-export const useDashboardInsights = (funcionariaId?: number) => {
+export const useDashboardInsights = (funcionariaId?: number, selectedMonth?: Date) => {
   return useQuery({
-    queryKey: ['dashboard-insights', funcionariaId],
+    queryKey: ['dashboard-insights', funcionariaId, selectedMonth],
     queryFn: async (): Promise<DashboardInsights> => {
-      // Buscar picos de atividade baseado nas mensagens
-      const now = new Date();
-      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+      // Buscar picos de atividade baseado nas mensagens DO MÊS
+      const targetMonth = selectedMonth || new Date();
+      const startOfMonthDate = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), 1);
+      const endOfMonthDate = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0, 23, 59, 59);
 
       let mensagensQuery = supabase
         .from('ingestion_memoria_clientes_historico_01')
         .select('created_at')
-        .gte('created_at', startOfDay.toISOString())
-        .lte('created_at', endOfDay.toISOString());
+        .gte('created_at', startOfMonthDate.toISOString())
+        .lte('created_at', endOfMonthDate.toISOString());
 
       if (funcionariaId) {
         mensagensQuery = mensagensQuery.eq('funcionaria_id', funcionariaId);
@@ -50,16 +50,18 @@ export const useDashboardInsights = (funcionariaId?: number) => {
         .sort((a, b) => b.quantidade - a.quantidade)
         .slice(0, 3);
 
-      // Buscar tipos de solicitação baseado nos agendamentos e conversas
+      // Buscar tipos de solicitação baseado nos agendamentos e conversas DO MÊS
       let agendamentosQuery = supabase
         .from('core_agendamentos')
         .select('id, conversa_id')
-        .gte('created_at', startOfDay.toISOString());
+        .gte('created_at', startOfMonthDate.toISOString())
+        .lte('created_at', endOfMonthDate.toISOString());
 
       let conversasQuery = supabase
         .from('core_conversas')
         .select('id')
-        .gte('created_at', startOfDay.toISOString());
+        .gte('created_at', startOfMonthDate.toISOString())
+        .lte('created_at', endOfMonthDate.toISOString());
 
       if (funcionariaId) {
         conversasQuery = conversasQuery.eq('funcionaria_id', funcionariaId);

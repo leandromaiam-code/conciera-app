@@ -12,12 +12,12 @@ interface SecondaryKPIs {
   comparecimentoGrowth: number;
 }
 
-export const useDashboardSecondaryKPIs = (funcionariaId?: number) => {
+export const useDashboardSecondaryKPIs = (funcionariaId?: number, selectedMonth?: Date) => {
   return useQuery({
-    queryKey: ['dashboard-secondary-kpis', funcionariaId],
+    queryKey: ['dashboard-secondary-kpis', funcionariaId, selectedMonth],
     queryFn: async () => {
-      // Buscar métricas do mês atual e anterior
-      const currentMonth = new Date();
+      // Buscar métricas do mês selecionado e anterior
+      const currentMonth = selectedMonth ? new Date(selectedMonth) : new Date();
       currentMonth.setDate(1);
       
       const previousMonth = new Date(currentMonth);

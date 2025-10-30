@@ -1,12 +1,17 @@
-import { MessageSquare, Calendar, TrendingUp } from "lucide-react";
 import { useAnalyticsConversionFunnel } from "@/hooks/use-analytics-conversion-funnel";
+import { TrendingUp, Users, CalendarCheck, TrendingDown } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /**
- * Widget de Funil de Conversão
- * Exibe métricas de conversão em tempo real com navegação para detalhes
+ * Widget de Funil de Conversão - Novos Leads → Agendamentos → Taxa
+ * Foca exclusivamente no processo de conversão de leads
  */
-export const ConversionFunnelWidget = () => {
-  const { funnelData, isLoading } = useAnalyticsConversionFunnel();
+interface ConversionFunnelWidgetProps {
+  selectedMonth?: Date;
+}
+
+export const ConversionFunnelWidget = ({ selectedMonth }: ConversionFunnelWidgetProps) => {
+  const { funnelData, isLoading } = useAnalyticsConversionFunnel(undefined, selectedMonth);
 
   if (isLoading || !funnelData) {
     return (
@@ -23,23 +28,23 @@ export const ConversionFunnelWidget = () => {
   const funnelItems = [
     {
       title: "Novos Leads",
-      subtitle: "Hoje",
+      subtitle: "Este mês",
       value: funnelData.newLeads,
       trend: funnelData.trend.leads,
-      icon: MessageSquare,
-      color: "text-dourado",
-      bgColor: "bg-dourado/10",
-      onClick: () => console.log("Navigate to Conversas - Leads filter")
-    },
-    {
-      title: "Agendamentos", 
-      subtitle: "Convertidos hoje",
-      value: funnelData.scheduledAppointments,
-      trend: funnelData.trend.appointments,
-      icon: Calendar,
+      icon: Users,
       color: "text-esmeralda",
       bgColor: "bg-esmeralda/10",
-      onClick: () => console.log("Navigate to Agenda view")
+      onClick: () => console.log("Navegar para leads")
+    },
+    {
+      title: "Agendamentos",
+      subtitle: "Este mês",
+      value: funnelData.scheduledAppointments,
+      trend: funnelData.trend.appointments,
+      icon: CalendarCheck,
+      color: "text-dourado",
+      bgColor: "bg-dourado/10",
+      onClick: () => console.log("Navegar para agendamentos")
     },
     {
       title: "Taxa de Conversão",
@@ -49,7 +54,7 @@ export const ConversionFunnelWidget = () => {
       icon: TrendingUp,
       color: "text-onyx",
       bgColor: "bg-onyx/10",
-      onClick: () => console.log("Navigate to Analytics view")
+      onClick: () => console.log("Navegar para analytics")
     }
   ];
 
@@ -66,10 +71,14 @@ export const ConversionFunnelWidget = () => {
               <item.icon size={20} className={item.color} />
             </div>
             <div className={`text-xs font-semibold flex items-center gap-xxs ${
-              item.trend > 0 ? 'text-esmeralda' : 'text-erro'
+              item.trend >= 0 ? 'text-esmeralda' : 'text-erro'
             }`}>
-              <TrendingUp size={12} className={item.trend < 0 ? 'rotate-180' : ''} />
-              +{item.trend}%
+              {item.trend >= 0 ? (
+                <TrendingUp size={12} />
+              ) : (
+                <TrendingDown size={12} />
+              )}
+              {item.trend >= 0 ? '+' : ''}{item.trend}%
             </div>
           </div>
 

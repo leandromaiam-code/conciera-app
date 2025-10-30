@@ -2066,6 +2066,7 @@ export type Database = {
         }[]
       }
       get_user_empresa_id: { Args: never; Returns: number }
+      reset_metricas_diarias: { Args: never; Returns: undefined }
       save_user_connection: {
         Args: {
           p_access_token: string
