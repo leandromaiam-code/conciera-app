@@ -356,13 +356,13 @@ export const TasksView = ({ onPageChange }: { onPageChange: (page: string) => vo
         </Card>
       ) : (
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+          <div className="flex gap-4 overflow-x-auto pb-4 min-w-full">
             {STATUS_OPTIONS.map((status) => (
               <Droppable droppableId={status} key={status}>
                 {(provided, snapshot) => (
                   <div
                     className={cn(
-                      "flex-shrink-0 w-[85vw] sm:w-80 flex flex-col rounded-lg transition-colors p-2 snap-center",
+                      "flex-shrink-0 w-[280px] flex flex-col rounded-lg transition-colors p-2",
                       snapshot.isDraggingOver && "bg-accent/50"
                     )}
                   >

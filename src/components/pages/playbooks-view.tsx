@@ -51,7 +51,7 @@ export const PlaybooksView = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-onyx">Gestão de Playbooks</h1>
+        <h1 className="text-3xl font-bold text-onyx">Processos Personalizados</h1>
         <Button className="bg-dourado text-onyx hover:bg-dourado/90">
           <Plus className="w-4 h-4 mr-2" />
           Novo Playbook
