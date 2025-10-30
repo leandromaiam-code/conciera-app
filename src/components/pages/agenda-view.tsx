@@ -11,7 +11,7 @@ import { useCoreAgendamentosReal } from "@/hooks/use-core-agendamentos-real";
 import { useToast } from "@/hooks/use-toast";
 import { CoreAgendamentos } from "@/types/briefing-types";
 import { AgendamentoFormDialog } from "@/components/agenda/agendamento-form-dialog";
-import { DisponibilidadeDialog } from "@/components/agenda/disponibilidade-dialog";
+import { DisponibilidadeGridDialog } from "@/components/agenda/disponibilidade-grid-dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -394,7 +394,7 @@ export const AgendaView = () => {
         onSuccess={refetch}
       />
 
-      <DisponibilidadeDialog
+      <DisponibilidadeGridDialog
         open={showDisponibilidadeDialog}
         onClose={() => setShowDisponibilidadeDialog(false)}
       />

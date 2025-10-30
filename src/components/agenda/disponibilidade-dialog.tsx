@@ -48,6 +48,7 @@ export const DisponibilidadeDialog = ({ open, onClose }: DisponibilidadeDialogPr
     tipo: 'ambos' as DisponibilidadeAgenda['tipo'],
     procedimento: 'todos',
     ativo: true,
+    is_recorrente: true,
   });
 
   const handleAdd = () => {

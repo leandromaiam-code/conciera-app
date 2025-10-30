@@ -13,6 +13,9 @@ export interface DisponibilidadeAgenda {
   tipo: 'primeira_consulta' | 'retorno' | 'ambos';
   procedimento: string;
   ativo: boolean;
+  data_inicio?: string;
+  data_fim?: string;
+  is_recorrente: boolean;
   created_at?: string;
   updated_at?: string;
 }
