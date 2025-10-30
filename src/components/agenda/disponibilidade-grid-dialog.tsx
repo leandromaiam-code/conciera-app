@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useDisponibilidadeAgenda, DisponibilidadeAgenda } from "@/hooks/use-disponibilidade-agenda";
 import { Switch } from "@/components/ui/switch";
@@ -38,6 +39,8 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
   
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to?: Date | undefined }>({ from: undefined, to: undefined });
   const [editingSlot, setEditingSlot] = useState<{ dia: string; turno: string; slot: DisponibilidadeAgenda | null } | null>(null);
+  const [periodoHorarioInicio, setPeriodoHorarioInicio] = useState("00:00");
+  const [periodoHorarioFim, setPeriodoHorarioFim] = useState("23:59");
   
   const recorrentes = disponibilidades.filter(d => d.is_recorrente);
   const periodos = disponibilidades.filter(d => !d.is_recorrente);
@@ -99,8 +102,8 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
     await createDisponibilidade.mutateAsync({
       dia_semana: 'segunda' as any, // Não usado para períodos
       turno: 'manha',
-      horario_inicio: '08:00',
-      horario_fim: '18:00',
+      horario_inicio: periodoHorarioInicio,
+      horario_fim: periodoHorarioFim,
       tipo: 'ambos',
       procedimento: 'todos',
       ativo: false, // Bloqueio por padrão
@@ -110,6 +113,20 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
     });
 
     setDateRange({ from: undefined, to: undefined });
+    setPeriodoHorarioInicio("00:00");
+    setPeriodoHorarioFim("23:59");
+    toast.success("Período de bloqueio adicionado");
+  };
+
+  const handleDeleteSlot = async (dia: string, turno: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const existing = recorrentes.find(
+      d => d.dia_semana === dia && d.turno === turno && d.is_recorrente
+    );
+    if (existing) {
+      await deleteDisponibilidade.mutateAsync(existing.id);
+      toast.success("Disponibilidade removida");
+    }
   };
 
   const isSlotActive = (dia: string, turno: string) => {
@@ -134,7 +151,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
 
           <TabsContent value="semanal" className="space-y-4 bg-background">
             <div className="text-sm text-foreground/70 mb-4 p-4 bg-muted/50 rounded-lg border">
-              💡 Clique nos slots para ativar/desativar ou use o ícone <Pencil className="w-3 h-3 inline mx-1" /> para editar horários específicos
+              💡 Clique nos slots para editar horários ou no <Trash2 className="w-3 h-3 inline mx-1" /> para remover
             </div>
 
             {/* Grid de Disponibilidade */}
@@ -161,7 +178,7 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                     const slot = recorrentes.find(d => d.dia_semana === dia.value && d.turno === turno.value);
                     
                     return (
-                      <div key={turno.value} className="border-r border-t last:border-r-0 p-2 bg-background">
+                      <div key={turno.value} className="border-r border-t last:border-r-0 p-2 bg-background relative group">
                         <button
                           onClick={(e) => handleSlotClick(dia.value, turno.value, e)}
                           className={`w-full h-full min-h-[70px] rounded-md transition-all flex flex-col items-center justify-center gap-1.5 border-2 ${
@@ -187,6 +204,15 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                             </>
                           )}
                         </button>
+                        {slot && (
+                          <button
+                            onClick={(e) => handleDeleteSlot(dia.value, turno.value, e)}
+                            className="absolute top-3 right-3 p-1 rounded bg-destructive hover:bg-destructive/90 text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                            title="Remover disponibilidade"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        )}
                       </div>
                     );
                   })}
@@ -230,6 +256,37 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                 </div>
               </div>
 
+              <div className="space-y-3">
+                <Label className="text-base font-semibold text-foreground">Horário do Bloqueio</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="periodo-inicio" className="text-sm">
+                      Início
+                    </Label>
+                    <Input
+                      id="periodo-inicio"
+                      type="time"
+                      value={periodoHorarioInicio}
+                      onChange={(e) => setPeriodoHorarioInicio(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="periodo-fim" className="text-sm">
+                      Fim
+                    </Label>
+                    <Input
+                      id="periodo-fim"
+                      type="time"
+                      value={periodoHorarioFim}
+                      onChange={(e) => setPeriodoHorarioFim(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Padrão: dia inteiro (00:00 - 23:59)
+                </p>
+              </div>
+
               <div className="flex gap-2">
                 <Button onClick={handleAddPeriodo} disabled={!dateRange.from} size="lg">
                   <CalendarIcon className="w-4 h-4 mr-2" />
@@ -255,6 +312,9 @@ export function DisponibilidadeGridDialog({ open, onClose }: DisponibilidadeGrid
                           {periodo.data_fim && periodo.data_fim !== periodo.data_inicio && (
                             <> até {format(new Date(periodo.data_fim), "dd/MM/yyyy", { locale: ptBR })}</>
                           )}
+                        </div>
+                        <div className="text-sm text-muted-foreground mt-0.5">
+                          {periodo.horario_inicio} - {periodo.horario_fim}
                         </div>
                         <div className="text-sm font-medium mt-1">
                           {periodo.ativo ? (
