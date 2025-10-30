@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, Calendar as CalendarIcon, Phone, AlertCircle, Edit, Trash2, CheckCircle, XCircle } from "lucide-react";
+import { Clock, Calendar as CalendarIcon, Phone, AlertCircle, Edit, Trash2, CheckCircle, XCircle, Plus } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useCoreAgendamentosReal } from "@/hooks/use-core-agendamentos-real";
 import { useToast } from "@/hooks/use-toast";
 import { CoreAgendamentos } from "@/types/briefing-types";
 import { AgendamentoFormDialog } from "@/components/agenda/agendamento-form-dialog";
+import { DisponibilidadeDialog } from "@/components/agenda/disponibilidade-dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -76,6 +77,7 @@ export const AgendaView = () => {
   const [editingAgendamentoId, setEditingAgendamentoId] = useState<bigint | undefined>(undefined);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [agendamentoToDelete, setAgendamentoToDelete] = useState<bigint | null>(null);
+  const [showDisponibilidadeDialog, setShowDisponibilidadeDialog] = useState(false);
   
   // Memoize date calculations to prevent unnecessary re-renders
   const { startOfDay, endOfDay } = useMemo(() => {
@@ -177,10 +179,19 @@ export const AgendaView = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <Button 
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => setShowDisponibilidadeDialog(true)}
+          >
+            <CalendarIcon className="w-4 h-4 mr-2" />
+            Configurar Disponibilidade
+          </Button>
+          
+          <Button 
             className="bg-dourado text-onyx hover:bg-dourado/90 w-full sm:w-auto"
             onClick={handleNovoAgendamento}
           >
-            <CalendarIcon className="w-4 h-4 mr-2" />
+            <Plus className="w-4 h-4 mr-2" />
             Novo Agendamento
           </Button>
           
@@ -381,6 +392,11 @@ export const AgendaView = () => {
         onOpenChange={setShowFormDialog}
         agendamentoId={editingAgendamentoId}
         onSuccess={refetch}
+      />
+
+      <DisponibilidadeDialog
+        open={showDisponibilidadeDialog}
+        onClose={() => setShowDisponibilidadeDialog(false)}
       />
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

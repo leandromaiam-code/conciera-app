@@ -481,6 +481,48 @@ export type Database = {
           },
         ]
       }
+      config_disponibilidade_agenda: {
+        Row: {
+          ativo: boolean
+          created_at: string | null
+          dia_semana: string
+          empresa_id: number
+          horario_fim: string
+          horario_inicio: string
+          id: number
+          procedimento: string | null
+          tipo: string
+          turno: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string | null
+          dia_semana: string
+          empresa_id: number
+          horario_fim: string
+          horario_inicio: string
+          id?: number
+          procedimento?: string | null
+          tipo?: string
+          turno: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string | null
+          dia_semana?: string
+          empresa_id?: number
+          horario_fim?: string
+          horario_inicio?: string
+          id?: number
+          procedimento?: string | null
+          tipo?: string
+          turno?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       config_estilo_funcionaria: {
         Row: {
           audio_id: string | null
