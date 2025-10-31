@@ -75,16 +75,16 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
           </div>
 
           <div className="text-center space-y-2">
-            <h3 className="font-semibold text-lg">Conecte seu Instagram</h3>
-            <p className="text-sm text-muted-foreground">
+            <h3 className="font-semibold text-lg text-foreground">Conecte seu Instagram</h3>
+            <p className="text-sm text-foreground/80">
               Autorize o Conciera a gerenciar suas mensagens diretas do Instagram para automatizar respostas e melhorar
               o atendimento aos seus clientes.
             </p>
           </div>
 
-          <div className="bg-muted/50 p-4 rounded-lg space-y-2">
-            <p className="text-xs font-medium">Permissões necessárias:</p>
-            <ul className="text-xs text-muted-foreground space-y-1">
+          <div className="bg-muted p-4 rounded-lg space-y-2 border">
+            <p className="text-xs font-medium text-foreground">Permissões necessárias:</p>
+            <ul className="text-xs text-foreground/70 space-y-1">
               <li>✓ Ler e enviar mensagens diretas</li>
               <li>✓ Acessar informações básicas da conta</li>
               <li>✓ Gerenciar conversas</li>
