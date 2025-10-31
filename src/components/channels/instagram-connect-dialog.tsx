@@ -30,7 +30,8 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
         client_id: APP_ID,
         redirect_uri: REDIRECT_URI,
         response_type: "code",
-        scope: "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_insights",
+        scope:
+          "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_manage_insights",
         state: state,
       });
 
