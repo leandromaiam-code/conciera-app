@@ -51,6 +51,7 @@ export function EditarScriptDialog({ isOpen, onClose, empresaId }: EditarScriptD
     tipo_fechamento: "",
     agendamento: "",
     script_agendamento: "",
+    script_pagamento: "",
     script_completo: "",
     categoria: "captacao",
     status: "ativo",
@@ -115,6 +116,7 @@ export function EditarScriptDialog({ isOpen, onClose, empresaId }: EditarScriptD
           tipo_fechamento: script.tipo_fechamento || "",
           agendamento: script.agendamento || "",
           script_agendamento: script.script_agendamento || "",
+          script_pagamento: (script as any).script_pagamento || "",
           script_completo: script.script_completo || "",
           categoria: script.categoria || "captacao",
           status: script.status || "ativo",
@@ -203,179 +205,119 @@ export function EditarScriptDialog({ isOpen, onClose, empresaId }: EditarScriptD
               <Loader2 className="w-8 h-8 animate-spin text-dourado" />
             </div>
           ) : (
-            <Tabs defaultValue="spin-vendas" className="flex-1 flex flex-col overflow-hidden">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="spin-vendas">SPIN & Vendas</TabsTrigger>
+            <Tabs defaultValue="qualificacao" className="flex-1 flex flex-col overflow-hidden">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="qualificacao">Qualificação</TabsTrigger>
+                <TabsTrigger value="atendimento">Script de Atendimento</TabsTrigger>
                 <TabsTrigger value="agendamento">Agendamento</TabsTrigger>
+                <TabsTrigger value="pagamento">Pagamento</TabsTrigger>
               </TabsList>
 
               <ScrollArea className="flex-1 pr-4">
-                {/* Tab 1: SPIN & Vendas */}
-                <TabsContent value="spin-vendas" className="space-y-6 mt-4">
-                  <div className="space-y-4">
-                    <h3 className="text-base font-semibold border-b pb-2">Scripts SPIN</h3>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="script_situacao">Script Situação</Label>
-                      <Textarea
-                        id="script_situacao"
-                        value={formData.script_situacao}
-                        onChange={(e) => handleChange("script_situacao", e.target.value)}
-                        placeholder="Perguntas sobre a situação atual do cliente..."
-                        rows={4}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_situacao_conexao">Script Situação Conexão</Label>
-                      <Textarea
-                        id="script_situacao_conexao"
-                        value={formData.script_situacao_conexao}
-                        onChange={(e) => handleChange("script_situacao_conexao", e.target.value)}
-                        placeholder="Conexão para perguntas de situação..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_problema">Script Problema</Label>
-                      <Textarea
-                        id="script_problema"
-                        value={formData.script_problema}
-                        onChange={(e) => handleChange("script_problema", e.target.value)}
-                        placeholder="Perguntas sobre problemas e dores..."
-                        rows={4}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_problema_conexao">Script Problema Conexão</Label>
-                      <Textarea
-                        id="script_problema_conexao"
-                        value={formData.script_problema_conexao}
-                        onChange={(e) => handleChange("script_problema_conexao", e.target.value)}
-                        placeholder="Conexão para perguntas de problema..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_implicacao">Script Implicação</Label>
-                      <Textarea
-                        id="script_implicacao"
-                        value={formData.script_implicacao}
-                        onChange={(e) => handleChange("script_implicacao", e.target.value)}
-                        placeholder="Perguntas sobre implicações do problema..."
-                        rows={4}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_implicacao_conexao">Script Implicação Conexão</Label>
-                      <Textarea
-                        id="script_implicacao_conexao"
-                        value={formData.script_implicacao_conexao}
-                        onChange={(e) => handleChange("script_implicacao_conexao", e.target.value)}
-                        placeholder="Conexão para perguntas de implicação..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_necessidade">Script Necessidade</Label>
-                      <Textarea
-                        id="script_necessidade"
-                        value={formData.script_necessidade}
-                        onChange={(e) => handleChange("script_necessidade", e.target.value)}
-                        placeholder="Perguntas sobre necessidades e soluções..."
-                        rows={4}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_necessidade_conexao">Script Necessidade Conexão</Label>
-                      <Textarea
-                        id="script_necessidade_conexao"
-                        value={formData.script_necessidade_conexao}
-                        onChange={(e) => handleChange("script_necessidade_conexao", e.target.value)}
-                        placeholder="Conexão para perguntas de necessidade..."
-                        rows={3}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h3 className="text-base font-semibold border-b pb-2">Scripts de Vendas</h3>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="script_apresentacao_produto_servico">Script Apresentação Produto/Serviço</Label>
-                      <Textarea
-                        id="script_apresentacao_produto_servico"
-                        value={formData.script_apresentacao_produto_servico}
-                        onChange={(e) => handleChange("script_apresentacao_produto_servico", e.target.value)}
-                        placeholder="Como apresentar produtos e serviços..."
-                        rows={5}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_qualificacao">Script Qualificação</Label>
-                      <Textarea
-                        id="script_qualificacao"
-                        value={formData.script_qualificacao}
-                        onChange={(e) => handleChange("script_qualificacao", e.target.value)}
-                        placeholder="Como qualificar o lead..."
-                        rows={5}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_fechamento">Script Fechamento</Label>
-                      <Textarea
-                        id="script_fechamento"
-                        value={formData.script_fechamento}
-                        onChange={(e) => handleChange("script_fechamento", e.target.value)}
-                        placeholder="Como fazer o fechamento da venda..."
-                        rows={5}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="script_fechamento2">Script Fechamento 2</Label>
-                      <Textarea
-                        id="script_fechamento2"
-                        value={formData.script_fechamento2}
-                        onChange={(e) => handleChange("script_fechamento2", e.target.value)}
-                        placeholder="Alternativa de fechamento..."
-                        rows={5}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="tipo_fechamento">Tipo de Fechamento</Label>
-                      <Input
-                        id="tipo_fechamento"
-                        value={formData.tipo_fechamento}
-                        onChange={(e) => handleChange("tipo_fechamento", e.target.value)}
-                        placeholder="Ex: direto, consultivo, assumptivo"
-                      />
-                    </div>
+                {/* Tab 1: Qualificação */}
+                <TabsContent value="qualificacao" className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="script_qualificacao">Perguntas de Qualificação</Label>
+                    <Textarea
+                      id="script_qualificacao"
+                      value={formData.script_qualificacao}
+                      onChange={(e) => handleChange("script_qualificacao", e.target.value)}
+                      placeholder="Perguntas para qualificar o lead..."
+                      rows={10}
+                    />
                   </div>
                 </TabsContent>
 
-                {/* Tab 2: Agendamento */}
-                <TabsContent value="agendamento" className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="agendamento">Agendamento</Label>
+                {/* Tab 2: Script de Atendimento */}
+                <TabsContent value="atendimento" className="space-y-4 mt-4">
+                  <div className="space-y-4">
                     <Textarea
-                      id="agendamento"
-                      value={formData.agendamento}
-                      onChange={(e) => handleChange("agendamento", e.target.value)}
-                      placeholder="Informações sobre agendamento..."
-                      rows={6}
+                      value={formData.script_situacao}
+                      onChange={(e) => handleChange("script_situacao", e.target.value)}
+                      placeholder="Script Situação"
+                      rows={4}
+                    />
+
+                    <Textarea
+                      value={formData.script_situacao_conexao}
+                      onChange={(e) => handleChange("script_situacao_conexao", e.target.value)}
+                      placeholder="Script Situação Conexão"
+                      rows={3}
+                    />
+
+                    <Textarea
+                      value={formData.script_problema}
+                      onChange={(e) => handleChange("script_problema", e.target.value)}
+                      placeholder="Script Problema"
+                      rows={4}
+                    />
+
+                    <Textarea
+                      value={formData.script_problema_conexao}
+                      onChange={(e) => handleChange("script_problema_conexao", e.target.value)}
+                      placeholder="Script Problema Conexão"
+                      rows={3}
+                    />
+
+                    <Textarea
+                      value={formData.script_implicacao}
+                      onChange={(e) => handleChange("script_implicacao", e.target.value)}
+                      placeholder="Script Implicação"
+                      rows={4}
+                    />
+
+                    <Textarea
+                      value={formData.script_implicacao_conexao}
+                      onChange={(e) => handleChange("script_implicacao_conexao", e.target.value)}
+                      placeholder="Script Implicação Conexão"
+                      rows={3}
+                    />
+
+                    <Textarea
+                      value={formData.script_necessidade}
+                      onChange={(e) => handleChange("script_necessidade", e.target.value)}
+                      placeholder="Script Necessidade"
+                      rows={4}
+                    />
+
+                    <Textarea
+                      value={formData.script_necessidade_conexao}
+                      onChange={(e) => handleChange("script_necessidade_conexao", e.target.value)}
+                      placeholder="Script Necessidade Conexão"
+                      rows={3}
+                    />
+
+                    <Textarea
+                      value={formData.script_apresentacao_produto_servico}
+                      onChange={(e) => handleChange("script_apresentacao_produto_servico", e.target.value)}
+                      placeholder="Script Apresentação Produto/Serviço"
+                      rows={5}
+                    />
+
+                    <Textarea
+                      value={formData.script_fechamento}
+                      onChange={(e) => handleChange("script_fechamento", e.target.value)}
+                      placeholder="Script Fechamento"
+                      rows={5}
+                    />
+
+                    <Textarea
+                      value={formData.script_fechamento2}
+                      onChange={(e) => handleChange("script_fechamento2", e.target.value)}
+                      placeholder="Script Fechamento 2"
+                      rows={5}
+                    />
+
+                    <Input
+                      value={formData.tipo_fechamento}
+                      onChange={(e) => handleChange("tipo_fechamento", e.target.value)}
+                      placeholder="Tipo de Fechamento"
                     />
                   </div>
+                </TabsContent>
 
+                {/* Tab 3: Agendamento */}
+                <TabsContent value="agendamento" className="space-y-4 mt-4">
                   <div className="space-y-2">
                     <Label htmlFor="script_agendamento">Script Agendamento</Label>
                     <Textarea
@@ -383,7 +325,21 @@ export function EditarScriptDialog({ isOpen, onClose, empresaId }: EditarScriptD
                       value={formData.script_agendamento}
                       onChange={(e) => handleChange("script_agendamento", e.target.value)}
                       placeholder="Como conduzir o agendamento..."
-                      rows={6}
+                      rows={10}
+                    />
+                  </div>
+                </TabsContent>
+
+                {/* Tab 4: Pagamento */}
+                <TabsContent value="pagamento" className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="script_pagamento">Script Pagamento</Label>
+                    <Textarea
+                      id="script_pagamento"
+                      value={formData.script_pagamento}
+                      onChange={(e) => handleChange("script_pagamento", e.target.value)}
+                      placeholder="Como conduzir o pagamento..."
+                      rows={10}
                     />
                   </div>
                 </TabsContent>
