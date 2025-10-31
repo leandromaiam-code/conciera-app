@@ -283,8 +283,8 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 p-sm space-y-sm overflow-y-auto h-[calc(100vh-140px)]">
+      {/* Messages - Adjusted to account for input area */}
+      <div className="flex-1 p-sm space-y-sm overflow-y-auto" style={{ height: 'calc(100vh - 80px - 140px)' }}>
         {messages.map((message) => (
           <div
             key={message.id}
@@ -326,50 +326,48 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area - Two sections: scrollable previews + fixed input bar */}
-      <div className="border-t border-cinza-borda bg-white flex flex-col">
-        {/* Scrollable area for previews and indicators */}
-        {(selectedFile || isRecording) && (
-          <div className="p-sm pb-0 max-h-[80px] overflow-y-auto space-y-xs">
-            {/* File Preview - Compact */}
-            {selectedFile && (
-              <div className="p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between h-12">
-                <div className="flex items-center gap-xs flex-1 min-w-0">
-                  {filePreview && (
-                    <img 
-                      src={filePreview} 
-                      alt="Preview" 
-                      className="w-8 h-8 rounded object-cover flex-shrink-0"
-                    />
-                  )}
-                  <span className="text-xs text-[hsl(var(--grafite))] truncate">
-                    {selectedFile.type.startsWith('audio/') ? '🎤' : '🖼️'} 
-                    {' '}{selectedFile.name}
-                  </span>
-                </div>
-                <Button 
-                  size="icon" 
-                  variant="ghost" 
-                  onClick={clearFile}
-                  className="h-6 w-6 flex-shrink-0"
-                >
-                  <X size={14} />
-                </Button>
+      {/* Input Area - FIXED HEIGHT 140px total */}
+      <div className="absolute bottom-0 left-0 right-0 h-[140px] border-t border-cinza-borda bg-white flex flex-col">
+        {/* Scrollable area for previews and indicators - max 90px */}
+        <div className="flex-1 overflow-y-auto p-sm pb-0 space-y-xs">
+          {/* File Preview - Compact */}
+          {selectedFile && (
+            <div className="p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between min-h-[48px]">
+              <div className="flex items-center gap-xs flex-1 min-w-0">
+                {filePreview && (
+                  <img 
+                    src={filePreview} 
+                    alt="Preview" 
+                    className="w-8 h-8 rounded object-cover flex-shrink-0"
+                  />
+                )}
+                <span className="text-xs text-[hsl(var(--grafite))] truncate">
+                  {selectedFile.type.startsWith('audio/') ? '🎤' : '🖼️'} 
+                  {' '}{selectedFile.name}
+                </span>
               </div>
-            )}
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                onClick={clearFile}
+                className="h-6 w-6 flex-shrink-0"
+              >
+                <X size={14} />
+              </Button>
+            </div>
+          )}
 
-            {/* Recording Indicator - Compact */}
-            {isRecording && (
-              <div className="flex items-center gap-xs px-xs py-1 bg-red-50 border border-red-200 rounded-md">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                <span className="text-xs text-red-700 font-medium">Gravando...</span>
-              </div>
-            )}
-          </div>
-        )}
+          {/* Recording Indicator - Compact */}
+          {isRecording && (
+            <div className="flex items-center gap-xs px-xs py-1 bg-red-50 border border-red-200 rounded-md">
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-xs text-red-700 font-medium">Gravando...</span>
+            </div>
+          )}
+        </div>
 
-        {/* Fixed Input bar - Always visible at bottom */}
-        <div className="p-sm flex items-end gap-xs flex-shrink-0">
+        {/* Fixed Input bar - Always visible at bottom - 50px */}
+        <div className="h-[50px] p-sm flex items-center gap-xs flex-shrink-0 border-t border-cinza-borda/50">
           {/* Audio Input - Record or Upload */}
           <input
             ref={audioInputRef}
@@ -412,28 +410,28 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
             <ImageIcon size={20} className="text-[hsl(var(--grafite))]" />
           </Button>
 
-          {/* Text Input */}
+          {/* Text Input - Single row */}
           <Textarea
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Digite uma mensagem..."
             disabled={isSending}
-            className="flex-1 min-h-[40px] max-h-[120px] resize-none bg-white border-[hsl(var(--cinza-borda))] focus:ring-[hsl(var(--dourado))] focus:border-[hsl(var(--dourado))]"
+            className="flex-1 h-[34px] min-h-[34px] max-h-[34px] resize-none bg-white border-[hsl(var(--cinza-borda))] focus:ring-[hsl(var(--dourado))] focus:border-[hsl(var(--dourado))] py-2"
             rows={1}
           />
 
-          {/* Send Button */}
+          {/* Send Button - Fixed size */}
           <Button
             onClick={handleSendMessage}
             disabled={isSending || (!inputMessage.trim() && !selectedFile)}
-            className="rounded-full h-10 w-10 bg-[hsl(var(--esmeralda))] hover:bg-[hsl(var(--esmeralda))]/90 text-white"
+            className="rounded-full h-[34px] w-[34px] bg-[hsl(var(--esmeralda))] hover:bg-[hsl(var(--esmeralda))]/90 text-white flex-shrink-0"
             size="icon"
           >
             {isSending ? (
-              <Loader2 className="animate-spin" size={20} />
+              <Loader2 className="animate-spin" size={18} />
             ) : (
-              <span className="text-xl">➤</span>
+              <span className="text-lg">➤</span>
             )}
           </Button>
         </div>
