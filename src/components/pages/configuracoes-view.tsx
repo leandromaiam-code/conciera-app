@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import { Settings, Instagram, MessageSquare, Mail, Phone, Zap, Brain, Shield, DollarSign, Globe, Settings2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCoreEmpresa } from "@/hooks/use-core-empresa";
@@ -90,6 +91,7 @@ export const ConfiguracoesView = () => {
   const [valorMedioConsulta, setValorMedioConsulta] = useState("");
   const [specialistname, setSpecialistName] = useState("");
   const [services, setServices] = useState("");
+  const [orientacoesAdicionais, setOrientacoesAdicionais] = useState("");
   const [notificacoesPush, setNotificacoesPush] = useState(true);
 
   // Modal states
@@ -110,6 +112,7 @@ export const ConfiguracoesView = () => {
       setValorMedioConsulta(empresa.core_empresa_preco_consulta || "");
       setSpecialistName(empresa.core_empresa_profissionais_empresa || "");
       setServices(empresa.core_empresa_servicos || "");
+      setOrientacoesAdicionais(empresa.core_empresa_orientacoes_adicionais || "");
     }
   }, [empresa]);
 
@@ -129,6 +132,7 @@ export const ConfiguracoesView = () => {
         core_empresa_preco_consulta: valorMedioConsulta,
         core_empresa_profissionais_empresa: specialistname,
         core_empresa_servicos: services,
+        core_empresa_orientacoes_adicionais: orientacoesAdicionais,
       });
 
       toast({
@@ -281,6 +285,20 @@ export const ConfiguracoesView = () => {
               <Label htmlFor="services">Procedimentos</Label>
               <Input id="services" value={services} onChange={(e) => setServices(e.target.value)} className="mt-1" />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="orientacoes-adicionais">Orientações Adicionais</Label>
+            <Textarea
+              id="orientacoes-adicionais"
+              placeholder="Informações adicionais, instruções especiais ou orientações importantes"
+              value={orientacoesAdicionais}
+              onChange={(e) => setOrientacoesAdicionais(e.target.value)}
+              rows={3}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="valor-medio">Valor Médio da Consulta</Label>
               <div className="relative mt-1">

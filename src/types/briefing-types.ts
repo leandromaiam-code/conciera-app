@@ -115,6 +115,7 @@ export interface CoreEmpresa {
   core_empresa_problema_cliente?: string;
   core_empresa_cliente_ideal?: string;
   core_empresa_servicos?: string;
+  core_empresa_orientacoes_adicionais?: string;
   core_empresa_created_at: string;
   core_empresa_updated_at: string;
 }

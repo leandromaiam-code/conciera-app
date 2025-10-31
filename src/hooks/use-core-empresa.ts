@@ -63,6 +63,7 @@ export const useCoreEmpresa = (empresaId?: number): UseCoreEmpresaResult => {
           core_empresa_servicos: (row as any).servicos || '',
           core_empresa_preco_consulta: row.preco_consulta || '',
           core_empresa_profissionais_empresa: row.profissionais_empresa || '',
+          core_empresa_orientacoes_adicionais: (row as any).orientacoes_adicionais || '',
           core_empresa_created_at: row.created_at || new Date().toISOString(),
           core_empresa_updated_at: row.updated_at || new Date().toISOString()
         };

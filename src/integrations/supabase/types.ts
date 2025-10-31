@@ -976,6 +976,7 @@ export type Database = {
           script_implicacao_conexao: string | null
           script_necessidade: string | null
           script_necessidade_conexao: string | null
+          script_pagamento: string | null
           script_problema: string | null
           script_problema_conexao: string | null
           script_qualificacao: string | null
@@ -1011,6 +1012,7 @@ export type Database = {
           script_implicacao_conexao?: string | null
           script_necessidade?: string | null
           script_necessidade_conexao?: string | null
+          script_pagamento?: string | null
           script_problema?: string | null
           script_problema_conexao?: string | null
           script_qualificacao?: string | null
@@ -1046,6 +1048,7 @@ export type Database = {
           script_implicacao_conexao?: string | null
           script_necessidade?: string | null
           script_necessidade_conexao?: string | null
+          script_pagamento?: string | null
           script_problema?: string | null
           script_problema_conexao?: string | null
           script_qualificacao?: string | null
@@ -1409,6 +1412,7 @@ export type Database = {
           horario_atendimento: string | null
           id: number
           nome: string
+          orientacoes_adicionais: string | null
           preco_consulta: string | null
           problema_cliente: string | null
           profissionais_empresa: string | null
@@ -1432,6 +1436,7 @@ export type Database = {
           horario_atendimento?: string | null
           id?: number
           nome: string
+          orientacoes_adicionais?: string | null
           preco_consulta?: string | null
           problema_cliente?: string | null
           profissionais_empresa?: string | null
@@ -1455,6 +1460,7 @@ export type Database = {
           horario_atendimento?: string | null
           id?: number
           nome?: string
+          orientacoes_adicionais?: string | null
           preco_consulta?: string | null
           problema_cliente?: string | null
           profissionais_empresa?: string | null
