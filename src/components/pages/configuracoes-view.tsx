@@ -185,26 +185,6 @@ export const ConfiguracoesView = () => {
     }
   };
 
-  const handleSaveSistema = async () => {
-    if (!sistema) return;
-
-    try {
-      await updateSistema({
-        config_configuracoes_sistema_notificacoes_push: notificacoesPush,
-      });
-
-      toast({
-        title: "Sucesso",
-        description: "Configurações da IA atualizadas com sucesso!",
-      });
-    } catch (error) {
-      toast({
-        title: "Erro",
-        description: "Erro ao salvar configurações da IA.",
-        variant: "destructive",
-      });
-    }
-  };
 
   const handleSavePixKey = async (pixKey: string) => {
     if (!sistema) return;
@@ -492,7 +472,29 @@ export const ConfiguracoesView = () => {
                 <Label className="text-base">Notificações Push</Label>
                 <p className="text-sm text-grafite">Receber notificações de novas conversas</p>
               </div>
-              <Switch checked={notificacoesPush} onCheckedChange={setNotificacoesPush} />
+              <Switch 
+                checked={notificacoesPush} 
+                disabled={!sistema || sistemaSaving}
+                onCheckedChange={async (checked) => {
+                  if (!sistema) return;
+                  setNotificacoesPush(checked);
+                  try {
+                    await updateSistema({ config_configuracoes_sistema_notificacoes_push: checked });
+                    toast({
+                      title: "Sucesso",
+                      description: `Notificações ${checked ? 'ativadas' : 'desativadas'}`,
+                    });
+                  } catch (error) {
+                    console.error("Erro ao atualizar notificações:", error);
+                    setNotificacoesPush(!checked); // Reverter em caso de erro
+                    toast({
+                      title: "Erro",
+                      description: "Não foi possível atualizar a configuração",
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              />
             </div>
 
             <Separator />
@@ -525,14 +527,6 @@ export const ConfiguracoesView = () => {
               </Button>
             </div>
           </div>
-
-          <Button
-            className="bg-dourado text-onyx hover:bg-dourado/90"
-            onClick={handleSaveSistema}
-            disabled={sistemaSaving}
-          >
-            {sistemaSaving ? "Salvando..." : "Salvar Configurações"}
-          </Button>
         </CardContent>
       </Card>
 
