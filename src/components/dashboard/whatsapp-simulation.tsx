@@ -327,16 +327,16 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
       </div>
 
       {/* Input Area - Functional */}
-      <div className="p-sm border-t border-cinza-borda bg-white">
+      <div className="p-sm border-t border-cinza-borda bg-white space-y-xs">
         {/* File Preview - Fixed height to prevent covering send button */}
         {selectedFile && (
-          <div className="mb-xs p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between max-h-20">
+          <div className="p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between h-16">
             <div className="flex items-center gap-xs flex-1 min-w-0">
               {filePreview && (
                 <img 
                   src={filePreview} 
                   alt="Preview" 
-                  className="w-12 h-12 rounded object-cover flex-shrink-0"
+                  className="w-10 h-10 rounded object-cover flex-shrink-0"
                 />
               )}
               <span className="text-xs text-[hsl(var(--grafite))] truncate">
@@ -357,11 +357,20 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
 
         {/* Recording Indicator */}
         {isRecording && (
-          <div className="mb-xs p-xs bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
+          <div className="p-xxs bg-red-50 border border-red-200 rounded-lg flex items-center justify-between h-10">
             <div className="flex items-center gap-xs">
               <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
               <span className="text-xs text-red-700 font-medium">Gravando áudio...</span>
             </div>
+            <Button 
+              size="icon" 
+              variant="ghost" 
+              onClick={stopRecording}
+              className="h-8 w-8 flex-shrink-0 hover:bg-red-100"
+              title="Parar gravação"
+            >
+              <StopCircle size={16} className="text-red-600" />
+            </Button>
           </div>
         )}
 
