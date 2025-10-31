@@ -182,7 +182,7 @@ export const PlaybooksAutomationView = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Processos</h2>
-          <p className="text-muted-foreground">Configure fluxos automáticos de mensagens para lembretes e reativação</p>
+          <p className="text-grafite">Configure fluxos automáticos de mensagens para lembretes e reativação</p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={showArchived} onValueChange={(value: "active" | "archived") => setShowArchived(value)}>
