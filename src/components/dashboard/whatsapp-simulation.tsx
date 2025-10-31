@@ -326,45 +326,50 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area - Functional */}
-      <div className="p-sm border-t border-cinza-borda bg-white min-h-[60px] max-h-[180px] flex flex-col">
-        {/* File Preview - Compact size */}
-        {selectedFile && (
-          <div className="p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between h-12 mb-xs flex-shrink-0">
-            <div className="flex items-center gap-xs flex-1 min-w-0">
-              {filePreview && (
-                <img 
-                  src={filePreview} 
-                  alt="Preview" 
-                  className="w-8 h-8 rounded object-cover flex-shrink-0"
-                />
-              )}
-              <span className="text-xs text-[hsl(var(--grafite))] truncate">
-                {selectedFile.type.startsWith('audio/') ? '🎤' : '🖼️'} 
-                {' '}{selectedFile.name}
-              </span>
-            </div>
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              onClick={clearFile}
-              className="h-6 w-6 flex-shrink-0"
-            >
-              <X size={14} />
-            </Button>
+      {/* Input Area - Two sections: scrollable previews + fixed input bar */}
+      <div className="border-t border-cinza-borda bg-white flex flex-col">
+        {/* Scrollable area for previews and indicators */}
+        {(selectedFile || isRecording) && (
+          <div className="p-sm pb-0 max-h-[80px] overflow-y-auto space-y-xs">
+            {/* File Preview - Compact */}
+            {selectedFile && (
+              <div className="p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between h-12">
+                <div className="flex items-center gap-xs flex-1 min-w-0">
+                  {filePreview && (
+                    <img 
+                      src={filePreview} 
+                      alt="Preview" 
+                      className="w-8 h-8 rounded object-cover flex-shrink-0"
+                    />
+                  )}
+                  <span className="text-xs text-[hsl(var(--grafite))] truncate">
+                    {selectedFile.type.startsWith('audio/') ? '🎤' : '🖼️'} 
+                    {' '}{selectedFile.name}
+                  </span>
+                </div>
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  onClick={clearFile}
+                  className="h-6 w-6 flex-shrink-0"
+                >
+                  <X size={14} />
+                </Button>
+              </div>
+            )}
+
+            {/* Recording Indicator - Compact */}
+            {isRecording && (
+              <div className="flex items-center gap-xs px-xs py-1 bg-red-50 border border-red-200 rounded-md">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                <span className="text-xs text-red-700 font-medium">Gravando...</span>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Recording Indicator - Compact */}
-        {isRecording && (
-          <div className="flex items-center gap-xs px-xs py-1 bg-red-50 border border-red-200 rounded-md mb-xs flex-shrink-0">
-            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-            <span className="text-xs text-red-700 font-medium">Gravando...</span>
-          </div>
-        )}
-
-        {/* Input bar - Always visible */}
-        <div className="flex items-end gap-xs flex-shrink-0">
+        {/* Fixed Input bar - Always visible at bottom */}
+        <div className="p-sm flex items-end gap-xs flex-shrink-0">
           {/* Audio Input - Record or Upload */}
           <input
             ref={audioInputRef}
