@@ -79,12 +79,14 @@ export const PersonalizarConcieraDialog = ({ isOpen, onClose, empresaId }: Perso
       setFuncionariaId(funcionaria.id);
       setNomeConciera(funcionaria.nome || "");
 
-      // 2. Buscar script de vendas
+      // 2. Buscar script de vendas (mais recente)
       const { data: script, error: scriptError } = await supabase
         .from("config_script_vendas")
         .select("id, objetivo, personalidade, foco")
         .eq("funcionaria_id", funcionaria.id)
-        .single();
+        .order("data", { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
       if (scriptError && scriptError.code !== "PGRST116") {
         // PGRST116 = not found
