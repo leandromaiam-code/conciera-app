@@ -19,6 +19,7 @@ import { InstagramConnectDialog } from "@/components/channels/instagram-connect-
 import { ScriptGenerationDialog } from "@/components/configuracoes/script-generation-dialog";
 import { PixConfigDialogDialog } from "@/components/configuracoes/pix-config-dialog";
 import { AgendaConfigDialog } from "@/components/configuracoes/agenda-config-dialog";
+import { AlterarSenhaDialog } from "@/components/configuracoes/alterar-senha-dialog";
 
 interface ChannelConfig {
   id: string;
@@ -95,6 +96,7 @@ export const ConfiguracoesView = () => {
   const [scriptModalOpen, setScriptModalOpen] = useState(false);
   const [pixModalOpen, setPixModalOpen] = useState(false);
   const [agendaModalOpen, setAgendaModalOpen] = useState(false);
+  const [alterarSenhaOpen, setAlterarSenhaOpen] = useState(false);
 
   // Update local state when database data loads
   useEffect(() => {
@@ -527,7 +529,9 @@ export const ConfiguracoesView = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Button variant="outline">Alterar Senha</Button>
+            <Button variant="outline" onClick={() => setAlterarSenhaOpen(true)}>
+              Alterar Senha
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -590,6 +594,11 @@ export const ConfiguracoesView = () => {
         isGoogleConnected={sistema?.google_calendar_connected || false}
         onSave={handleSaveAgendaType}
         onGoogleConnect={handleGoogleCalendarConnect}
+      />
+
+      <AlterarSenhaDialog
+        open={alterarSenhaOpen}
+        onOpenChange={setAlterarSenhaOpen}
       />
     </div>
   );
