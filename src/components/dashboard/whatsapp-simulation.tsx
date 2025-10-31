@@ -1,7 +1,9 @@
-import { X, Phone, MoreVertical, Mic, Image as ImageIcon, Loader2, StopCircle } from "lucide-react";
+import { X, Phone, MoreVertical, Mic, Image as ImageIcon, Loader2, StopCircle, Star } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 
 interface Message {
@@ -28,6 +30,11 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [whatWorked, setWhatWorked] = useState("");
+  const [whatNeeds, setWhatNeeds] = useState("");
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -267,6 +274,63 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
     }
   };
 
+  // Handle feedback submission
+  const handleSubmitFeedback = async () => {
+    if (rating === 0) {
+      toast({
+        title: "Avaliação necessária",
+        description: "Por favor, selecione uma nota de 1 a 5 estrelas.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmittingFeedback(true);
+
+    try {
+      const feedbackPayload = {
+        rating,
+        o_que_funcionou_bem: whatWorked,
+        o_que_precisa_melhorar: whatNeeds,
+        session_id: sessionIdRef.current,
+        empresa_id: empresaId,
+      };
+
+      const response = await fetch(
+        "https://n8n-n8n.ajpgd7.easypanel.host/webhook/feedback_simulacao",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(feedbackPayload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Webhook returned ${response.status}`);
+      }
+
+      toast({
+        title: "Feedback enviado!",
+        description: "Obrigado pela sua avaliação.",
+      });
+
+      // Reset feedback form
+      setIsFeedbackOpen(false);
+      setRating(0);
+      setWhatWorked("");
+      setWhatNeeds("");
+    } catch (error) {
+      console.error("Erro ao enviar feedback:", error);
+      toast({
+        title: "Erro ao enviar feedback",
+        description: "Não foi possível enviar sua avaliação. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingFeedback(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -285,6 +349,15 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
         <div className="flex items-center gap-xs">
           <Phone size={20} />
           <MoreVertical size={20} />
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsFeedbackOpen(true)}
+            className="text-white hover:bg-white/20"
+            title="Avaliar simulação"
+          >
+            <Star size={20} />
+          </Button>
           <Button 
             variant="ghost" 
             size="icon" 
@@ -449,6 +522,88 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
           </Button>
         </div>
       </div>
+
+      {/* Feedback Dialog */}
+      <Dialog open={isFeedbackOpen} onOpenChange={setIsFeedbackOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Avaliação da Simulação</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-md py-sm">
+            {/* Star Rating */}
+            <div className="space-y-xs">
+              <Label>Qualidade do Atendimento</Label>
+              <div className="flex gap-xs">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setRating(star)}
+                    className="transition-transform hover:scale-110"
+                  >
+                    <Star
+                      size={32}
+                      className={`${
+                        star <= rating
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* What Worked Well */}
+            <div className="space-y-xs">
+              <Label htmlFor="whatWorked">O que funcionou bem</Label>
+              <Textarea
+                id="whatWorked"
+                value={whatWorked}
+                onChange={(e) => setWhatWorked(e.target.value)}
+                placeholder="Descreva o que funcionou bem na simulação..."
+                rows={3}
+              />
+            </div>
+
+            {/* What Needs Improvement */}
+            <div className="space-y-xs">
+              <Label htmlFor="whatNeeds">O que precisa melhorar</Label>
+              <Textarea
+                id="whatNeeds"
+                value={whatNeeds}
+                onChange={(e) => setWhatNeeds(e.target.value)}
+                placeholder="Descreva o que precisa ser melhorado..."
+                rows={3}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsFeedbackOpen(false)}
+              disabled={isSubmittingFeedback}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleSubmitFeedback}
+              disabled={isSubmittingFeedback || rating === 0}
+            >
+              {isSubmittingFeedback ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Enviando...
+                </>
+              ) : (
+                "Enviar Avaliação"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
