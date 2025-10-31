@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const InstagramCallback = () => {
   const navigate = useNavigate();
@@ -57,12 +58,22 @@ export const InstagramCallback = () => {
         localStorage.removeItem("instagram_oauth_state");
         localStorage.removeItem("instagram_oauth_timestamp");
 
-        // Recuperar empresa_id do localStorage
-        const empresaId = localStorage.getItem("instagram_oauth_empresa_id");
-        localStorage.removeItem("instagram_oauth_empresa_id"); // Limpar após uso
-
         if (!code) {
           throw new Error("Código de autorização não recebido");
+        }
+
+        // Buscar empresa_id do usuário logado
+        const { data: { user } } = await supabase.auth.getUser();
+        let empresaId: number | null = null;
+        
+        if (user) {
+          const { data: userData } = await supabase
+            .from("core_users")
+            .select("empresa_id")
+            .eq("auth_id", user.id)
+            .maybeSingle();
+          
+          empresaId = userData?.empresa_id || null;
         }
 
         // Envia o code para seu backend
@@ -73,7 +84,7 @@ export const InstagramCallback = () => {
           },
           body: JSON.stringify({ 
             code,
-            empresa_id: empresaId ? parseInt(empresaId) : null 
+            empresa_id: empresaId
           }),
         });
 

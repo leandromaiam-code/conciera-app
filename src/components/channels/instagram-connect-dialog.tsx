@@ -2,7 +2,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 interface InstagramConnectDialogProps {
   isOpen: boolean;
@@ -12,11 +11,11 @@ interface InstagramConnectDialogProps {
 export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDialogProps) => {
   const { toast } = useToast();
 
-  const handleInstagramConnect = async () => {
+  const handleInstagramConnect = () => {
     try {
       // Configurações do seu App Meta
       const APP_ID = "1487078672559424";
-      const REDIRECT_URI = "https://app.conciera.com.br/instagram/callback";
+      const REDIRECT_URI = `${window.location.origin}/instagram-callback`;
 
       // Gera um código aleatório para segurança (state)
       const state = generateRandomState();
@@ -24,20 +23,6 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
       // Salva o state no localStorage temporariamente
       localStorage.setItem("instagram_oauth_state", state);
       localStorage.setItem("instagram_oauth_timestamp", Date.now().toString());
-
-      // Buscar empresa_id do usuário logado
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: userData } = await supabase
-          .from("core_users")
-          .select("empresa_id")
-          .eq("auth_id", user.id)
-          .maybeSingle();
-        
-        if (userData?.empresa_id) {
-          localStorage.setItem("instagram_oauth_empresa_id", userData.empresa_id.toString());
-        }
-      }
 
       // Constrói a URL do OAuth
       const params = new URLSearchParams({
