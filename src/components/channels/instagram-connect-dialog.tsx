@@ -82,12 +82,24 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
             </p>
           </div>
 
-          <div className="bg-muted p-4 rounded-lg space-y-2 border">
-            <p className="text-xs font-medium text-foreground">Permissões necessárias:</p>
-            <ul className="text-xs text-foreground/70 space-y-1">
-              <li>✓ Ler e enviar mensagens diretas</li>
-              <li>✓ Acessar informações básicas da conta</li>
-              <li>✓ Gerenciar conversas</li>
+          <div className="bg-card p-4 rounded-lg space-y-3 border-2 border-primary/20 shadow-sm">
+            <p className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <span className="text-primary">🔐</span>
+              Permissões necessárias
+            </p>
+            <ul className="text-sm text-foreground space-y-2">
+              <li className="flex items-start gap-2">
+                <span className="text-primary font-bold">✓</span>
+                <span>Ler e enviar mensagens diretas</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary font-bold">✓</span>
+                <span>Acessar informações básicas da conta</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary font-bold">✓</span>
+                <span>Gerenciar conversas</span>
+              </li>
             </ul>
           </div>
 
