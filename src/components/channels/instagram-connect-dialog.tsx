@@ -15,7 +15,7 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
     try {
       // Configurações do seu App Meta
       const APP_ID = "1487078672559424";
-      const REDIRECT_URI = `${window.location.origin}/instagram-callback`;
+      const REDIRECT_URI = `${window.location.origin}/instagram/callback`;
 
       // Gera um código aleatório para segurança (state)
       const state = generateRandomState();
