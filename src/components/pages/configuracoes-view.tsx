@@ -21,6 +21,7 @@ import { PixConfigDialogDialog } from "@/components/configuracoes/pix-config-dia
 import { AgendaConfigDialog } from "@/components/configuracoes/agenda-config-dialog";
 import { AlterarSenhaDialog } from "@/components/configuracoes/alterar-senha-dialog";
 import { PersonalizarConcieraDialog } from "@/components/configuracoes/personalizar-conciera-dialog";
+import { EditarScriptDialog } from "@/components/configuracoes/editar-script-dialog";
 
 interface ChannelConfig {
   id: string;
@@ -99,6 +100,7 @@ export const ConfiguracoesView = () => {
   const [agendaModalOpen, setAgendaModalOpen] = useState(false);
   const [alterarSenhaOpen, setAlterarSenhaOpen] = useState(false);
   const [personalizarConcieraOpen, setPersonalizarConcieraOpen] = useState(false);
+  const [editarScriptOpen, setEditarScriptOpen] = useState(false);
 
   // Update local state when database data loads
   useEffect(() => {
@@ -526,6 +528,21 @@ export const ConfiguracoesView = () => {
                 Configurar
               </Button>
             </div>
+
+            <Separator />
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-base">Editar Script</Label>
+                <p className="text-sm text-grafite">Visualize e edite os campos do script de vendas</p>
+              </div>
+              <Button
+                className="bg-dourado text-onyx hover:bg-dourado/90"
+                onClick={() => setEditarScriptOpen(true)}
+              >
+                Configurar
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -615,6 +632,12 @@ export const ConfiguracoesView = () => {
       <PersonalizarConcieraDialog
         isOpen={personalizarConcieraOpen}
         onClose={() => setPersonalizarConcieraOpen(false)}
+        empresaId={profile?.empresa_id}
+      />
+
+      <EditarScriptDialog
+        isOpen={editarScriptOpen}
+        onClose={() => setEditarScriptOpen(false)}
         empresaId={profile?.empresa_id}
       />
     </div>
