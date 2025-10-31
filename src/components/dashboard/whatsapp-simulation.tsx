@@ -327,16 +327,16 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
       </div>
 
       {/* Input Area - Functional */}
-      <div className="p-sm border-t border-cinza-borda bg-white space-y-xs">
-        {/* File Preview - Fixed height to prevent covering send button */}
+      <div className="p-sm border-t border-cinza-borda bg-white h-[140px] flex flex-col">
+        {/* File Preview - Compact size */}
         {selectedFile && (
-          <div className="p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between h-16 shrink-0">
+          <div className="p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between h-12 mb-xs flex-shrink-0">
             <div className="flex items-center gap-xs flex-1 min-w-0">
               {filePreview && (
                 <img 
                   src={filePreview} 
                   alt="Preview" 
-                  className="w-10 h-10 rounded object-cover flex-shrink-0"
+                  className="w-8 h-8 rounded object-cover flex-shrink-0"
                 />
               )}
               <span className="text-xs text-[hsl(var(--grafite))] truncate">
@@ -355,16 +355,16 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
           </div>
         )}
 
-        <div className="flex flex-col gap-xxs">
-          {/* Recording Indicator - Inline */}
-          {isRecording && (
-            <div className="flex items-center gap-xs px-xs py-xxs bg-red-50 border border-red-200 rounded-md">
-              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-red-700 font-medium">Gravando...</span>
-            </div>
-          )}
-          
-          <div className="flex items-end gap-xs">
+        {/* Recording Indicator - Compact */}
+        {isRecording && (
+          <div className="flex items-center gap-xs px-xs py-1 bg-red-50 border border-red-200 rounded-md mb-xs flex-shrink-0">
+            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            <span className="text-xs text-red-700 font-medium">Gravando...</span>
+          </div>
+        )}
+
+        {/* Input bar - Always at bottom */}
+        <div className="flex items-end gap-xs mt-auto">
           {/* Audio Input - Record or Upload */}
           <input
             ref={audioInputRef}
@@ -431,7 +431,6 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
               <span className="text-xl">➤</span>
             )}
           </Button>
-          </div>
         </div>
       </div>
     </div>
