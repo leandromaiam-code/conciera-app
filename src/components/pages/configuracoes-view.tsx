@@ -20,6 +20,7 @@ import { ScriptGenerationDialog } from "@/components/configuracoes/script-genera
 import { PixConfigDialogDialog } from "@/components/configuracoes/pix-config-dialog";
 import { AgendaConfigDialog } from "@/components/configuracoes/agenda-config-dialog";
 import { AlterarSenhaDialog } from "@/components/configuracoes/alterar-senha-dialog";
+import { PersonalizarConcieraDialog } from "@/components/configuracoes/personalizar-conciera-dialog";
 
 interface ChannelConfig {
   id: string;
@@ -97,6 +98,7 @@ export const ConfiguracoesView = () => {
   const [pixModalOpen, setPixModalOpen] = useState(false);
   const [agendaModalOpen, setAgendaModalOpen] = useState(false);
   const [alterarSenhaOpen, setAlterarSenhaOpen] = useState(false);
+  const [personalizarConcieraOpen, setPersonalizarConcieraOpen] = useState(false);
 
   // Update local state when database data loads
   useEffect(() => {
@@ -497,12 +499,27 @@ export const ConfiguracoesView = () => {
 
             <div className="flex items-center justify-between">
               <div>
-                <Label className="text-base">Personalização da IA</Label>
+                <Label className="text-base">Geração de Script</Label>
                 <p className="text-sm text-grafite">Configure o script de atendimento personalizado</p>
               </div>
               <Button
                 className="bg-dourado text-onyx hover:bg-dourado/90"
                 onClick={() => setScriptModalOpen(true)}
+              >
+                Configurar
+              </Button>
+            </div>
+
+            <Separator />
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-base">Personalizar Conciera</Label>
+                <p className="text-sm text-grafite">Configure o nome e comportamento da assistente virtual</p>
+              </div>
+              <Button
+                className="bg-dourado text-onyx hover:bg-dourado/90"
+                onClick={() => setPersonalizarConcieraOpen(true)}
               >
                 Configurar
               </Button>
@@ -599,6 +616,12 @@ export const ConfiguracoesView = () => {
       <AlterarSenhaDialog
         open={alterarSenhaOpen}
         onOpenChange={setAlterarSenhaOpen}
+      />
+
+      <PersonalizarConcieraDialog
+        isOpen={personalizarConcieraOpen}
+        onClose={() => setPersonalizarConcieraOpen(false)}
+        empresaId={profile?.empresa_id}
       />
     </div>
   );
