@@ -327,7 +327,7 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
       </div>
 
       {/* Input Area - Functional */}
-      <div className="p-sm border-t border-cinza-borda bg-white h-[140px] flex flex-col">
+      <div className="p-sm border-t border-cinza-borda bg-white min-h-[60px] max-h-[180px] flex flex-col">
         {/* File Preview - Compact size */}
         {selectedFile && (
           <div className="p-xs bg-[hsl(var(--cinza-fundo-hover))] rounded-lg flex items-center justify-between h-12 mb-xs flex-shrink-0">
@@ -363,8 +363,8 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
           </div>
         )}
 
-        {/* Input bar - Always at bottom */}
-        <div className="flex items-end gap-xs mt-auto">
+        {/* Input bar - Always visible */}
+        <div className="flex items-end gap-xs flex-shrink-0">
           {/* Audio Input - Record or Upload */}
           <input
             ref={audioInputRef}
