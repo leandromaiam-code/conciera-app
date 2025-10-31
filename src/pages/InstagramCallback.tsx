@@ -24,7 +24,7 @@ export const InstagramCallback = () => {
             description: errorDescription || "Você cancelou a conexão com Instagram.",
             variant: "destructive",
           });
-          navigate("/settings"); // Ajuste a rota conforme necessário
+          navigate("/");
           return;
         }
 
@@ -38,7 +38,7 @@ export const InstagramCallback = () => {
             description: "Token de segurança inválido. Tente novamente.",
             variant: "destructive",
           });
-          navigate("/settings");
+          navigate("/");
           return;
         }
 
@@ -49,7 +49,7 @@ export const InstagramCallback = () => {
             description: "A sessão de autorização expirou. Tente novamente.",
             variant: "destructive",
           });
-          navigate("/settings");
+          navigate("/");
           return;
         }
 
@@ -81,7 +81,7 @@ export const InstagramCallback = () => {
           description: "Sua conta do Instagram foi conectada com sucesso.",
         });
 
-        navigate("/settings?tab=integrations"); // Ajuste conforme necessário
+        navigate("/");
       } catch (error) {
         console.error("Erro no callback do Instagram:", error);
         toast({
@@ -89,7 +89,7 @@ export const InstagramCallback = () => {
           description: "Ocorreu um erro ao conectar sua conta. Tente novamente.",
           variant: "destructive",
         });
-        navigate("/settings");
+        navigate("/");
       }
     };
 
