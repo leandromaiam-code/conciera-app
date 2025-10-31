@@ -30,10 +30,10 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
 
       // BUSCAR empresa_id do usuário
       const { data: userData, error: userError } = await supabase
-        .from("usuarios")
+        .from("core_users")
         .select("empresa_id")
-        .eq("id", user.id)
-        .single();
+        .eq("auth_id", user.id)
+        .maybeSingle();
 
       if (userError || !userData?.empresa_id) {
         toast({
