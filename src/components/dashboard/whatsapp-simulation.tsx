@@ -178,19 +178,32 @@ export const WhatsAppSimulation = ({ isOpen, onClose, empresaId }: WhatsAppSimul
       setInputMessage("");
       clearFile();
 
+      // Prepare webhook payload
+      const webhookPayload = {
+        mensagem: messageContent,
+        tipo: messageType,
+        session_id: sessionIdRef.current,
+        funcionaria_id: empresaId,
+        empresa_id: empresaId,
+      };
+
+      // Log for debugging audio/image base64
+      if (messageType === 'audio' || messageType === 'imagem') {
+        console.log(`Enviando ${messageType}:`, {
+          tipo: messageType,
+          base64Length: messageContent.length,
+          base64Preview: messageContent.substring(0, 100) + '...',
+          mimeType: selectedFile?.type
+        });
+      }
+
       // Send to N8N webhook
       const response = await fetch(
         "https://n8n-n8n.ajpgd7.easypanel.host/webhook/conciera_ai_simulacao",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            mensagem: messageContent,
-            tipo: messageType,
-            session_id: sessionIdRef.current,
-            funcionaria_id: empresaId,
-            empresa_id: empresaId,
-          }),
+          body: JSON.stringify(webhookPayload),
         }
       );
 
