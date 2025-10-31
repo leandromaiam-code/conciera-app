@@ -57,6 +57,10 @@ export const InstagramCallback = () => {
         localStorage.removeItem("instagram_oauth_state");
         localStorage.removeItem("instagram_oauth_timestamp");
 
+        // Recuperar empresa_id do localStorage
+        const empresaId = localStorage.getItem("instagram_oauth_empresa_id");
+        localStorage.removeItem("instagram_oauth_empresa_id"); // Limpar após uso
+
         if (!code) {
           throw new Error("Código de autorização não recebido");
         }
@@ -67,7 +71,10 @@ export const InstagramCallback = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ code }),
+          body: JSON.stringify({ 
+            code,
+            empresa_id: empresaId ? parseInt(empresaId) : null 
+          }),
         });
 
         if (!response.ok) {
