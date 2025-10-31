@@ -14,8 +14,8 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
   const handleInstagramConnect = () => {
     try {
       // Configurações do seu App Meta
-      const APP_ID = "1487078672559424"; // Substitua pelo seu App ID
-      const REDIRECT_URI = "https://app.conciera.com.br/instagram/callback"; // Ajuste conforme necessário
+      const APP_ID = "1487078672559424";
+      const REDIRECT_URI = "https://app.conciera.com.br/instagram/callback";
 
       // Gera um código aleatório para segurança (state)
       const state = generateRandomState();
@@ -26,11 +26,12 @@ export const InstagramConnectDialog = ({ isOpen, onClose }: InstagramConnectDial
 
       // Constrói a URL do OAuth
       const params = new URLSearchParams({
+        force_reauth: "true",
         client_id: APP_ID,
         redirect_uri: REDIRECT_URI,
-        scope:
-          "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish",
         response_type: "code",
+        scope:
+          "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights",
         state: state,
       });
 
